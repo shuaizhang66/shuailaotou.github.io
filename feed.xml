@@ -1,0 +1,2821 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>张帅区块链博客</title>
+    <description>张帅，江湖人称帅哥，区块链技术全能技术人才。</description>
+    <link>http://localhost:4000/</link>
+    <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml"/>
+    <pubDate>Thu, 03 May 2018 16:05:20 +0800</pubDate>
+    <lastBuildDate>Thu, 03 May 2018 16:05:20 +0800</lastBuildDate>
+    <generator>Jekyll v3.5.1</generator>
+    
+      <item>
+        <title>go</title>
+        <description>&lt;blockquote&gt;
+  &lt;p&gt;整理：张帅 博客 : zhangshuai.ren&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;##基本概念介绍&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;树(tree)  :&lt;/strong&gt;    一种分层的数据结构，类比家谱&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;二叉搜索树（binary tree）：&lt;/strong&gt; 左节点的值均小于有节点的二叉树&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;深度（depth）：&lt;/strong&gt;从 &lt;strong&gt;root&lt;/strong&gt;根结点到当前节点唯一路径的长度&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;高度（height）：&lt;/strong&gt;从当前节点到一片树叶最长的路径的长度&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;根（root）：&lt;/strong&gt;深度为0的树节点&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;内部节点（internal node）：&lt;/strong&gt;至少有一个字节点的节点&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;树叶节点（leaf）：&lt;/strong&gt;无字节点的节点&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;兄弟节点（sibling）&lt;/strong&gt;：拥有相同父节点的字节点波、&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://p7rz9r9fd.bkt.clouddn.com/1-1.png&quot; alt=&quot;1-1&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;###应用
+文件系统和数据库系统一般都采用树（特别是B树）的数据结构数据，主要为排序和检索的效率。二叉树是一种最基本最典型的排序树，对于学习和研究树的特性，但是本身很少在实际中进行应用。就像冒泡排序一样，二叉树因为效率问题并不实用。&lt;/p&gt;
+
+&lt;p&gt;###二叉树的常用操作&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt; Insert（v） //向二叉树的合适位置插入节点&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Remove(v). // 移除树中所有值为v的节点&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Search(v)   //检查值为v的元素是否在树中&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Min().    //获取二叉树中最小的值&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Max()     //获取二叉树中最大的值&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;InOrderTraverse()  //中序遍历树&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;PreOrderTraverse()  //先序遍历树&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;PostOrderTraverse() //后序遍历树&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;String()     //在命令行格式化打印出二叉树&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;同样适用genny提供代码的复用性，树类型命名为：ItemBinarySearchTree,树节点的结构体定义如下：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;在命令端使用 
+go get &quot;github.com/cheekybits/genny/generic&quot; 
+命令获取这个包
+
+import (
+    &quot;fmt&quot;
+    &quot;sync&quot;
+
+    &quot;github.com/cheekybits/genny/generic&quot;  
+)
+
+
+type Item generic.Type   //generic.Type 为&quot;github.com/cheekybits/genny/generic&quot;这个包下面的一个空接口类型，type为generic.Type起别名为Item
+
+type Node struct{
+    key        int    //中序遍历的节点序号
+    value      Item   //节点存储的值
+    left       *Node  //左节点
+    right      *Node   //右面节点
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;###插入操作与遍历
+插入操作需要使用到递归，插入操作需要从上到下的查找新节点在树中合适的位置，新节点的值小于任意节点，则向左子树继续寻找，同理向右子树寻找，直到树叶节点再插入。&lt;/p&gt;
+
+&lt;p&gt;遍历操作有三种方式：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;中序遍历􏱴􏱿􏲸􏲹􏰁（in-order􏰂􏰃􏰟􏰜􏰀）：&lt;/strong&gt;左子树（L）–&amp;gt;根节点􏰨􏰋􏰗（D）–&amp;gt;右树（R） 􏰤􏰀􏰃 1-&amp;gt;2-&amp;gt;3-&amp;gt;4-&amp;gt;5-&amp;gt;6-&amp;gt;7-&amp;gt;8-&amp;gt;9-&amp;gt;10- &amp;gt;11 （LDR）&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;先序遍历（pre-order）：&lt;/strong&gt;根节点􏰂􏰃􏰨􏰋􏰗（D）–&amp;gt;􏰟􏰜􏰀左子树（L）–&amp;gt;􏰤􏰜􏰀􏰃右树（R） 8-&amp;gt;4-&amp;gt;2-&amp;gt;1-&amp;gt;3-&amp;gt;6-&amp;gt;5-&amp;gt;7 &amp;gt;10-&amp;gt;9- &amp;gt;11。（DLR）&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;后序遍历（pre-order）：&lt;/strong&gt;左子树􏰂􏰃􏰨􏰋􏰗（L)–&amp;gt;􏰟􏰜􏰀右子树（R）–&amp;gt;􏰤􏰜􏰀􏰃根节点（D） 8-&amp;gt;4-&amp;gt;2-&amp;gt;1-&amp;gt;3-&amp;gt;6-&amp;gt;5-&amp;gt;7 &amp;gt;10-&amp;gt;9- &amp;gt;11 （LRD）&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;em&gt;根据根节点的位置来看是什么序列遍历&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://p7rz9r9fd.bkt.clouddn.com/1-2.png&quot; alt=&quot;1-2&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;String()&lt;/code&gt; 可视化树结构&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://p7rz9r9fd.bkt.clouddn.com/1-3.png&quot; alt=&quot;1-3&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;###代码实现
+&lt;strong&gt;Insert&lt;/strong&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;//向二叉树合适的位置插入节点
+func (tree *ItemBinarySearchTree) Insert(key int, value Item) {
+
+//为了确保操作二叉树的数据安全，对数据操作进行读写上锁
+	tree.lock.Lock()
+	defer tree.lock.Unlock()
+	newNode := &amp;amp;Node{key, value, nil, nil}
+//如果当前的树为空，那么插入的节点作为根节点
+	if tree.root == nil {
+		tree.root = newNode
+	} else {
+	//调用下面的插入函数，另起一个方法👇
+		insertNode(tree.root, newNode)
+	}
+
+}
+
+//找到合适的位置
+func insertNode(node, newNode *Node) {
+
+//当新节点的值小于节点的值的时候，应该插入到节点的左侧
+	if newNode.key &amp;lt; node.key {
+	//如果旧节点左侧没有节点，那么旧节点直接赋值新节点
+		if node.left == nil {
+			node.left = newNode
+		} else {
+		//否则将左节点作为老节点，继续寻找左节点的左节点
+			insertNode(node.left, newNode)
+		}
+	} else {
+	//与上面同理
+		if node.right == nil {
+			node.right = newNode
+		} else {
+			insertNode(node.right, newNode)
+		}
+	}
+
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;Search&lt;/strong&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;//检查key的元素是否存在
+func (tree *ItemBinarySearchTree) Search(key int) bool {
+
+	tree.lock.Lock()
+	defer tree.lock.Unlock()
+	return search(tree.root, key)
+
+}
+func search(node *Node, key int) bool {
+
+	if node == nil {
+		return false
+	}
+  //如果key的值小于节点的值，那么应该插入到左子树
+	if key &amp;lt; node.key {
+	//将左子树作为新节点，继续查询
+		return search(node.left, key)
+	}
+	
+	// 如果key的值大于节点的值，那么应该插入右子树
+	if key &amp;gt; node.key {
+	//将右子树作为新节点，继续查询
+		return search(node.right, key)
+	}
+
+//如果当前key的值==node.key 返回true
+	return true
+
+}
+
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;Remove&lt;/strong&gt;
+#####删除节点的流程&lt;/p&gt;
+
+&lt;p&gt;先递归查找，再删除节点。但是在删除时需要根据节点拥有子节点的数量，分如下3中情况：
+&lt;img src=&quot;http://p7rz9r9fd.bkt.clouddn.com/1-4.png&quot; alt=&quot;&quot; /&gt;
+####代码实现&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
+func (tree *ItemBinarySearchTree) remove(key int) {
+
+	tree.lock.Lock()
+	defer tree.lock.Unlock()
+	remove(tree.root, key)
+	
+}
+
+func remove(node *Node, key int) *Node {
+	if node == nil {
+		return nil
+	}
+	
+   // 如果key&amp;lt; node.key 则向左寻找
+	
+	if key &amp;lt; node.key {
+	
+		// 将左节点作为新节点递归继续寻找
+		
+		node.left = remove(node.left, key)
+		return node
+	}
+
+	// 如果key&amp;gt; node.key 则向右寻找
+
+	if key &amp;gt; node.key {
+	
+	// 将右节点作为新节点递归继续寻找
+	
+		node.right = remove(node.right, key)
+		return node
+	}
+
+//如果key==node.key 判断node有没有左右子树，如果没有，则直接删除
+	if node.left == nil &amp;amp;&amp;amp; node.right == nil {
+
+		node = nil
+		return node
+	}
+//如果key==node.key 判断node有没有左右子树，如果有右子树，则将右子树直接赋值给当前节点，完成覆盖删除
+	if node.left == nil {
+		node = node.right
+		return node
+	}
+	
+	//如果key==node.key 判断node有没有左右子树，如果有右子树，则将右子树直接赋值给当前节点，完成覆盖删除
+	
+	if node.right == nil {
+		node = node.left
+		return node
+	}
+
+	mostLeftMode := node.right
+// 要删除的节点有2个字节点，找到右子树的最左节点，替换当前节点􏱚􏱐􏲝􏰈􏰖􏰗􏰛 
+	for {
+	
+	//一直遍历找到最左节点
+		if mostLeftMode != nil &amp;amp;&amp;amp; mostLeftMode.left != nil {
+			mostLeftMode = mostLeftMode.left
+		} else {
+			break
+		}
+
+	}
+
+// 使用右子树的最左节点替换当前的节点，即删除当前节点
+	node.key, node.value = mostLeftMode.key,mostLeftMode.value
+
+	node.right = remove(node.right, node.key)
+
+	return node
+
+}
+
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;Max&lt;/strong&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;//获取最大节点即为二叉树最右节点，根据二叉树的性质
+
+func (tree *ItemBinarySearchTree) Max() *Item {
+
+	tree.lock.Lock()
+	defer tree.lock.Unlock()
+	node := tree.root
+	if node == nil {
+		return nil
+	}
+	for {
+
+		if node.right == nil {
+			return &amp;amp;node.value
+		}
+
+		node = node.right
+	}
+
+}
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;Min&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-'&quot;&gt;
+// 根据二叉树的性质,获取最大节点即为二叉树最右节点
+
+func (tree *ItemBinarySearchTree) Min() *Item {
+
+	tree.lock.Lock()
+	defer tree.lock.Unlock()
+
+	node := tree.root
+
+	if node == nil {
+		return nil
+	}
+
+	for {
+		if node.left == nil {
+			return &amp;amp;node.value
+		} else {
+			node = node.left
+		}
+
+	}
+
+}
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;Traverse&lt;/strong&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
+// 先序遍历：根节点 -&amp;gt; 左子树 -&amp;gt;右子树
+func (tree *ItemBinarySearchTree) PreOrderTraverse(printFunc func(Item)) {
+
+	tree.lock.Lock()
+	defer tree.lock.Unlock()
+	
+	preOrderTraverse(tree.root, printFunc)
+
+}
+
+func preOrderTraverse(node *Node, printFunc func(Item)) {
+
+	if node != nil {
+	//先打印根节点
+		printFunc(node.value)
+		
+		//然后递归调用自己，将左节点作为新节点，打印
+		preOrderTraverse(node.left, printFunc)
+		//然后递归调用自己，将右节点作为新节点，打印
+		preOrderTraverse(node.right, printFunc)
+
+	}
+
+}
+
+// 中序遍历： 左子树 -&amp;gt;根节点 -&amp;gt;右子树
+func (tree *ItemBinarySearchTree) PostOrderTraverse(printFunc func(Item)) {
+
+	tree.lock.Lock()
+	defer tree.lock.Unlock()
+
+	postOrderTraverse(tree.root, printFunc)
+
+}
+
+func postOrderTraverse(node *Node, printFunc func(Item)) {
+
+	if node != nil {
+    //递归调用自己，将左节点作为新节点，打印
+		preOrderTraverse(node.left, printFunc)
+		//打印根节点
+		printFunc(node.value)
+		//递归调用自己，将右节点作为新节点，打印
+		preOrderTraverse(node.right, printFunc)
+
+	}
+
+}
+
+
+// 后序遍历： 左子树  -&amp;gt;右子树-&amp;gt;根节点
+
+func (tree *ItemBinarySearchTree) InOrderTraverse(printFunc func(Item)) {
+
+	tree.lock.Lock()
+	defer tree.lock.Unlock()
+
+	inOrderTraverse(tree.root, printFunc)
+
+}
+
+func inOrderTraverse(node *Node, printFunc func(Item)) {
+
+	if node != nil {
+     //递归调用自己，将左节点作为新节点，打印
+		preOrderTraverse(node.left, printFunc)
+		//递归调用自己，将右节点作为新节点，打印
+		preOrderTraverse(node.right, printFunc)
+		//打印根节点
+		printFunc(node.value)
+
+	}
+
+}
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;&lt;em&gt;String&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
+//后序遍历打印树的结构
+func (tree *ItemBinarySearchTree) String() {
+	tree.lock.Lock()
+	defer tree.lock.Unlock()
+	if tree.root == nil {
+		println(&quot;Tree is empty&quot;)
+		return
+	}
+	stringify(tree.root, 0)
+	println(&quot;----------------------------&quot;)
+}
+func stringify(node *Node, level int) {
+	if node == nil {
+		return
+	}
+	format := &quot;&quot;
+	for i := 0; i &amp;lt; level; i++ {
+		format += &quot;\t&quot; // 􏰨􏰊􏰖􏰗􏰈􏰥􏰦􏳜􏱆􏳝􏳞􏰯􏰦根据节点的深度决定缩进长度
+
+	}
+	format += &quot;----[ &quot;
+	level++
+	//  先递归打印左子树􏱈􏱉􏱊􏱋􏱌􏰟􏰜􏰀 
+	stringify(node.left, level)
+	// 􏱋􏱌􏰠打印值
+	fmt.Printf(format+&quot;%d\n&quot;, node.key) 
+	/// 􏱍􏱉􏱊􏱋􏱌􏰤再递归打印右子树
+	 stringify(node.right, level)
+}
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;##总结
+􏱎􏰣􏰒􏰓􏰝􏰞􏰀􏰈􏱃􏱄􏰍􏱏􏱐􏱑􏱒􏱅􏱉􏱊􏰼􏱓􏰍􏱔􏱕􏱖􏱗􏱘􏱙􏰄􏱆􏱚􏰆􏱛􏱜􏱝􏱉􏱊􏰈􏱞􏱟􏱠􏱡􏰍 对于二叉树的操作，增删查都与递归相关，所以实现的时候一定要分析清楚递归的终止条件，在正确的条件下return，避开死循环。&lt;/p&gt;
+
+</description>
+        <pubDate>Thu, 03 May 2018 00:00:00 +0800</pubDate>
+        <link>http://localhost:4000/2018/05/03/go/</link>
+        <guid isPermaLink="true">http://localhost:4000/2018/05/03/go/</guid>
+        
+        <category>二叉树</category>
+        
+        
+      </item>
+    
+      <item>
+        <title>Golang经典笔试题及答案（下篇）</title>
+        <description>&lt;blockquote&gt;
+  &lt;p&gt;整理：黎跃春&lt;/p&gt;
+
+  &lt;p&gt;博客：http://liyuechun.org&lt;/p&gt;
+
+  &lt;p&gt;官网：http://kongyixueyuan.com&lt;/p&gt;
+
+  &lt;p&gt;备注：如有错误，请指正，不断更新迭代&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h3 id=&quot;1-下面代码能运行吗为什么&quot;&gt;1. 下面代码能运行吗？为什么&lt;/h3&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;type Param map[string]interface{}
+
+type Show struct {
+	Param
+}
+
+func main1() {
+	s := new(Show)
+	s.Param[&quot;RMB&quot;] = 10000
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;运行结果：&lt;/strong&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;panic: assignment to entry in nil map
+
+goroutine 1 [running]:
+main.main()
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;如上所示，运行过程中会发生异常，原因是因为字典&lt;code class=&quot;highlighter-rouge&quot;&gt;Param&lt;/code&gt;的默认值为&lt;code class=&quot;highlighter-rouge&quot;&gt;nil&lt;/code&gt;，当给字典&lt;code class=&quot;highlighter-rouge&quot;&gt;nil&lt;/code&gt;增加键值对是就会发生运行时错误&lt;code class=&quot;highlighter-rouge&quot;&gt;panic: assignment to entry in nil map&lt;/code&gt;。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;正确的修改方案如下：&lt;/strong&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;package main
+
+import &quot;fmt&quot;
+
+type Param map[string]interface{}
+
+type Show struct {
+	Param
+}
+
+func main() {
+
+	// 创建Show结构体对象
+	s := new(Show)
+	// 为字典Param赋初始值
+	s.Param = Param{}
+	// 修改键值对
+	s.Param[&quot;RMB&quot;] = 10000
+	fmt.Println(s)
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;运行结果如下：&lt;/strong&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;amp;{map[RMB:10000]}
+
+Process finished with exit code 0
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;2-请说出下面代码存在什么问题&quot;&gt;2. 请说出下面代码存在什么问题&lt;/h3&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;type student struct {
+	Name string
+}
+
+func f(v interface{}) {
+	switch msg := v.(type) {
+    	case *student, student:
+    		msg.Name
+	}
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;有两个问题：&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;问题一：&lt;code class=&quot;highlighter-rouge&quot;&gt;interface{}&lt;/code&gt;是一个没有声明任何方法的接口。&lt;/li&gt;
+  &lt;li&gt;问题二：&lt;code class=&quot;highlighter-rouge&quot;&gt;Name&lt;/code&gt;是一个属性，而不是方法，&lt;code class=&quot;highlighter-rouge&quot;&gt;interface{}&lt;/code&gt;类型的变量无法调用属性。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&quot;3-写出打印的结果&quot;&gt;3. 写出打印的结果。&lt;/h3&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;type People struct {
+	name string `json:&quot;name&quot;`
+}
+
+func main() {
+	js := `{
+		&quot;name&quot;:&quot;11&quot;
+	}`
+	var p People
+	err := json.Unmarshal([]byte(js), &amp;amp;p)
+	if err != nil {
+		fmt.Println(&quot;err: &quot;, err)
+		return
+	}
+	fmt.Println(&quot;people: &quot;, p)
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;输出内容如下：&lt;/strong&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;people:  {}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;p中的属性值为空的原因是因为，name的首字母小写，修改成大写，重新运行即可。&lt;/strong&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;package main
+
+import (
+	&quot;encoding/json&quot;
+	&quot;fmt&quot;
+)
+
+type People struct {
+	Name string `json:&quot;name&quot;`
+}
+
+func main() {
+	js := `{
+        &quot;name&quot;:&quot;11&quot;
+    }`
+	var p People
+	err := json.Unmarshal([]byte(js), &amp;amp;p)
+	if err != nil {
+		fmt.Println(&quot;err: &quot;, err)
+		return
+	}
+	fmt.Println(&quot;people: &quot;, p)
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;运行结果如下：&lt;/strong&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;people:  {11}
+
+Process finished with exit code 0
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;4-下面的代码是有问题的请说明原因&quot;&gt;4. 下面的代码是有问题的，请说明原因。&lt;/h3&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;package main
+
+import &quot;fmt&quot;
+
+type People struct {
+	Name string
+}
+
+func (p *People) String() string {
+	return fmt.Sprintf(&quot;print: %v&quot;, p)
+}
+
+func main() {
+	p := &amp;amp;People{}
+	p.String()
+}
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;运行结果如下：&lt;/strong&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;runtime: goroutine stack exceeds 1000000000-byte limit
+fatal error: stack overflow
+
+runtime stack:
+runtime.throw(0x10c122b, 0xe)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;如下所示，上面的代码出现了栈溢出，原因是因为%v格式化字符串是本身会调用String()方法，上面的栈溢出是因为无限递归所致。&lt;/strong&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;5-请找出下面代码的问题所在&quot;&gt;5. 请找出下面代码的问题所在。&lt;/h3&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;package main
+
+import (
+	&quot;fmt&quot;
+	&quot;time&quot;
+)
+
+func main() {
+	ch := make(chan int, 1000)
+	go func() {
+		for i := 0; i &amp;lt; 10; i++ {
+			ch &amp;lt;- i
+		}
+	}()
+	go func() {
+		for {
+			a, ok := &amp;lt;-ch
+			if !ok {
+				fmt.Println(&quot;close&quot;)
+				return
+			}
+			fmt.Println(&quot;a: &quot;, a)
+		}
+	}()
+	close(ch)
+	fmt.Println(&quot;ok&quot;)
+	time.Sleep(time.Second * 100)
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;运行结果如下：&lt;/strong&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;panic: send on closed channel
+ok
+
+goroutine 5 [running]:
+main.main.func1(0xc420098000)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;解析：出现上面错误的原因是因为提前关闭通道所致。&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;正确代码如下：&lt;/strong&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;package main
+
+import (
+	&quot;fmt&quot;
+	&quot;time&quot;
+)
+
+func main() {
+	// 创建一个缓冲通道
+	ch := make(chan int, 1000)
+
+	go func() {
+		for i := 0; i &amp;lt; 10; i++ {
+			ch &amp;lt;- i
+		}
+	}()
+
+	go func() {
+		for i := 0; i &amp;lt; 10; i++ {
+			a, ok := &amp;lt;-ch
+			
+			if !ok {
+				fmt.Println(&quot;close&quot;)
+				close(ch)
+				return
+			}
+			fmt.Println(&quot;a: &quot;, a)
+		}
+	}()
+
+	fmt.Println(&quot;ok&quot;)
+	time.Sleep(time.Second)
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;运行结果如下：&lt;/strong&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ok
+a:  0
+a:  1
+a:  2
+a:  3
+a:  4
+a:  5
+a:  6
+a:  7
+a:  8
+a:  9
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;6-请说明下面代码书写是否正确&quot;&gt;6. 请说明下面代码书写是否正确。&lt;/h3&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;var value int32
+
+func SetValue(delta int32) {
+	for {
+		v := value
+		if atomic.CompareAndSwapInt32(&amp;amp;value, v(v+delta)) {
+			break
+		}
+	}
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;atomic.CompareAndSwapInt32&lt;/code&gt;里面一共三个参数，上面的书写错误，正确的书写是：&lt;code class=&quot;highlighter-rouge&quot;&gt;atomic.CompareAndSwapInt32(&amp;amp;value, v,v+delta)&lt;/code&gt;&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;func CompareAndSwapInt32(addr *int32, old, new int32) (swapped bool)&lt;/code&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;第一个参数的值应该是指向被操作值的指针值。该值的类型即为&lt;code class=&quot;highlighter-rouge&quot;&gt;*int32&lt;/code&gt;。&lt;/li&gt;
+  &lt;li&gt;后两个参数的类型都是&lt;code class=&quot;highlighter-rouge&quot;&gt;int32&lt;/code&gt;类型。它们的值应该分别代表被操作值的旧值和新值&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;CompareAndSwapInt32·函数在被调用之后会先判断参数&lt;/code&gt;addr&lt;code class=&quot;highlighter-rouge&quot;&gt;指向的被操作值与参数&lt;/code&gt;old`的值是否相等。&lt;/li&gt;
+  &lt;li&gt;仅当此判断得到肯定的结果之后，该函数才会用参数&lt;code class=&quot;highlighter-rouge&quot;&gt;new&lt;/code&gt;代表的新值替换掉原先的旧值。否则，后面的替换操作就会被忽略。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;完整代码如下：&lt;/strong&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;package main
+
+import (
+	&quot;sync/atomic&quot;
+	&quot;fmt&quot;
+)
+
+var value int32
+
+func SetValue(delta int32) {
+	for {
+		v := value
+		// 比较并交换
+
+		if atomic.CompareAndSwapInt32(&amp;amp;value, v,v+delta) {
+			fmt.Println(value)
+			break
+		}
+	}
+}
+
+func main()  {
+	SetValue(100)
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;运行结果为&lt;code class=&quot;highlighter-rouge&quot;&gt;100&lt;/code&gt;.&lt;/strong&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;7-下面的程序运行后为什么会爆异常&quot;&gt;7. 下面的程序运行后为什么会爆异常。&lt;/h3&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;package main
+
+import (
+	&quot;fmt&quot;
+	&quot;time&quot;
+)
+
+type Project struct{}
+
+func (p *Project) deferError() {
+	if err := recover(); err != nil {
+		fmt.Println(&quot;recover: &quot;, err)
+	}
+}
+
+func (p *Project) exec(msgchan chan interface{}) {
+	for msg := range msgchan {
+		m := msg.(int)
+		fmt.Println(&quot;msg: &quot;, m)
+	}
+}
+
+func (p *Project) run(msgchan chan interface{}) {
+	for {
+		defer p.deferError()
+		go p.exec(msgchan)
+		time.Sleep(time.Second * 2)
+	}
+}
+
+func (p *Project) Main() {
+	a := make(chan interface{}, 100)
+	go p.run(a)
+	go func() {
+		for {
+			a &amp;lt;- &quot;1&quot;
+			time.Sleep(time.Second)
+		}
+	}()
+	time.Sleep(time.Second * 100)
+}
+
+func main() {
+	p := new(Project)
+	p.Main()
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;运行结果如下：&lt;/strong&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;panic: interface conversion: interface {} is string, not int
+
+goroutine 17 [running]:
+main.(*Project).exec(0x1157c08, 0xc420068060)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;出现异常的原因是因为写入到管道的数据类型为&lt;code class=&quot;highlighter-rouge&quot;&gt;string&lt;/code&gt;,而&lt;code class=&quot;highlighter-rouge&quot;&gt;m := msg.(int)&lt;/code&gt;这句代码里面却使用了&lt;code class=&quot;highlighter-rouge&quot;&gt;int&lt;/code&gt;，修改方法，将&lt;code class=&quot;highlighter-rouge&quot;&gt;int&lt;/code&gt;修改为&lt;code class=&quot;highlighter-rouge&quot;&gt;string&lt;/code&gt;即可。&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;完整正确代码如下：&lt;/strong&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;package main
+
+import (
+	&quot;fmt&quot;
+	&quot;time&quot;
+)
+
+type Project struct{}
+
+func (p *Project) deferError() {
+	if err := recover(); err != nil {
+		fmt.Println(&quot;recover: &quot;, err)
+	}
+}
+
+func (p *Project) exec(msgchan chan interface{}) {
+	for msg := range msgchan {
+		m := msg.(string)
+		fmt.Println(&quot;msg: &quot;, m)
+	}
+}
+
+func (p *Project) run(msgchan chan interface{}) {
+	for {
+		defer p.deferError()
+		go p.exec(msgchan)
+		time.Sleep(time.Second * 2)
+	}
+}
+
+func (p *Project) Main() {
+	a := make(chan interface{}, 100)
+	go p.run(a)
+	go func() {
+		for {
+			a &amp;lt;- &quot;1&quot;
+			time.Sleep(time.Second)
+		}
+	}()
+	time.Sleep(time.Second * 100)
+}
+
+func main() {
+	p := new(Project)
+	p.Main()
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;运行结果如下：&lt;/strong&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;msg:  1
+msg:  1
+msg:  1
+.
+.
+.
+msg:  1
+msg:  1
+msg:  1
+msg:  1
+msg:  1
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;8-请说出下面代码哪里写错了&quot;&gt;8. 请说出下面代码哪里写错了。&lt;/h3&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;func main() {
+	abc := make(chan int, 1000)
+	for i := 0; i &amp;lt; 10; i++ {
+		abc &amp;lt;- i
+	}
+	go func() {
+		for {
+			a := &amp;lt;-abc
+			fmt.Println(&quot;a: &quot;, a)
+		}
+	}()
+	close(abc)
+	fmt.Println(&quot;close&quot;)
+	time.Sleep(time.Second * 100)
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;go中的for循环是死循环，应该设置出口。正确代码如下：&lt;/code&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;package main
+
+import (
+	&quot;fmt&quot;
+	&quot;time&quot;
+)
+
+func main() {
+	abc := make(chan int, 1000)
+	for i := 0; i &amp;lt; 10; i++ {
+		abc &amp;lt;- i
+	}
+	go func() {
+		for {
+			a,ok := &amp;lt;-abc
+			if !ok {
+				fmt.Println(&quot;结束！&quot;)
+				return
+			}
+			fmt.Println(&quot;a: &quot;, a)
+		}
+	}()
+	close(abc)
+	fmt.Println(&quot;close&quot;)
+	time.Sleep(time.Second * 100)
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;运行结果为：&lt;/strong&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;close
+a:  0
+a:  1
+a:  2
+a:  3
+a:  4
+a:  5
+a:  6
+a:  7
+a:  8
+a:  9
+结束！
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;9-请说出下面代码执行时为什么会报错&quot;&gt;9. 请说出下面代码，执行时为什么会报错&lt;/h3&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;type Student struct {
+	name string
+}
+
+func main() {
+	m := map[string]Student{&quot;people&quot;: {&quot;liyuechun&quot;}}
+	m[&quot;people&quot;].name = &quot;wuyanzu&quot;
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;答案：报错的原因是因为不能修改字典中&lt;code class=&quot;highlighter-rouge&quot;&gt;value&lt;/code&gt;为结构体的属性值。&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;代码作如下修改方可运行：&lt;/strong&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;package main
+
+import &quot;fmt&quot;
+
+type Student struct {
+	name string
+}
+
+func main() {
+	m := map[string]Student{&quot;people&quot;: {&quot;liyuechun&quot;}}
+	fmt.Println(m)
+	fmt.Println(m[&quot;people&quot;])
+
+	// 不能修改字典中结构体属性的值
+	//m[&quot;people&quot;].name = &quot;wuyanzu&quot;
+	
+	var s Student = m[&quot;people&quot;] //深拷贝
+	s.name = &quot;xietingfeng&quot;
+	fmt.Println(m)
+	fmt.Println(s)
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;运行结果如下：&lt;/strong&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;map[people:{liyuechun}]
+{liyuechun}
+map[people:{liyuechun}]
+{wuyanzu}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;10-请说出下面的代码存在什么问题&quot;&gt;10. 请说出下面的代码存在什么问题&lt;/h3&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;type query func(string) string
+
+func exec(name string, vs ...query) string {
+	ch := make(chan string)
+	fn := func(i int) {
+		ch &amp;lt;- vs[i](name)
+	}
+	for i, _ := range vs {
+		go fn(i)
+	}
+	return &amp;lt;-ch
+}
+
+func main() {
+	ret := exec(&quot;111&quot;, func(n string) string {
+		return n + &quot;func1&quot;
+	}, func(n string) string {
+		return n + &quot;func2&quot;
+	}, func(n string) string {
+		return n + &quot;func3&quot;
+	}, func(n string) string {
+		return n + &quot;func4&quot;
+	})
+	fmt.Println(ret)
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;return &amp;lt;-ch&lt;/code&gt;&lt;/strong&gt;之执行一次，所以不管传入多少&lt;code class=&quot;highlighter-rouge&quot;&gt;query&lt;/code&gt;函数，都只是读取最先执行完的&lt;code class=&quot;highlighter-rouge&quot;&gt;query&lt;/code&gt;。&lt;/p&gt;
+
+&lt;h3 id=&quot;关注区块链部落实时获取最新技术文章&quot;&gt;关注区块链部落，实时获取最新技术文章&lt;/h3&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://om1c35wrq.bkt.clouddn.com/%E5%8C%BA%E5%9D%97%E9%93%BE%E9%83%A8%E8%90%BD-1.jpg&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+</description>
+        <pubDate>Fri, 27 Apr 2018 00:00:00 +0800</pubDate>
+        <link>http://localhost:4000/2018/04/27/golang-interview/</link>
+        <guid isPermaLink="true">http://localhost:4000/2018/04/27/golang-interview/</guid>
+        
+        <category>笔试题</category>
+        
+        
+      </item>
+    
+      <item>
+        <title>Golang经典笔试题及答案（上篇）</title>
+        <description>&lt;blockquote&gt;
+  &lt;p&gt;整理：黎跃春
+博客：http://liyuechun.org
+官网：http://kongyixueyuan.com&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h3 id=&quot;1-写出下面代码输出内容&quot;&gt;1. 写出下面代码输出内容&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-Go&quot;&gt;package main
+
+import (
+	&quot;fmt&quot;
+)
+
+func main() {
+	defer_call()
+}
+
+func defer_call() {
+
+	defer func() {
+		fmt.Println(&quot;打印前&quot;)
+	}()
+
+	defer func() {
+		fmt.Println(&quot;打印中&quot;)
+	}()
+
+	defer func() {
+		fmt.Println(&quot;打印后&quot;)
+	}()
+
+	panic(&quot;触发异常&quot;)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;在这个案例中，&lt;code class=&quot;highlighter-rouge&quot;&gt;触发异常&lt;/code&gt;这几个字打印的顺序其实是不确定的。&lt;code class=&quot;highlighter-rouge&quot;&gt;defer&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;panic&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;recover&lt;/code&gt;一般都会配套使用来捕捉异常。先看下面的案例：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;案例一&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;package main
+
+import (
+	&quot;fmt&quot;
+)
+
+func main() {
+	defer_call()
+}
+
+func defer_call() {
+
+	defer func() {
+		fmt.Println(&quot;打印前&quot;)
+	}()
+
+	defer func() {
+		fmt.Println(&quot;打印中&quot;)
+	}()
+
+	defer func() { // 必须要先声明defer，否则recover()不能捕获到panic异常
+
+		if err := recover();err != nil {
+			fmt.Println(err) //err 就是panic传入的参数
+		}
+		fmt.Println(&quot;打印后&quot;)
+	}()
+
+	panic(&quot;触发异常&quot;)
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;输出内容为：&lt;/strong&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;触发异常
+打印后
+打印中
+打印前
+
+Process finished with exit code 0
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;案例二&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;package main
+
+import (
+	&quot;fmt&quot;
+)
+
+func main() {
+	defer_call()
+}
+
+func defer_call() {
+
+	defer func() {
+		fmt.Println(&quot;打印前&quot;)
+	}()
+
+	defer func() { // 必须要先声明defer，否则recover()不能捕获到panic异常
+		if err := recover();err != nil {
+			fmt.Println(err) //err 就是panic传入的参数
+		}
+		fmt.Println(&quot;打印中&quot;)
+	}()
+
+	defer func() {
+
+		fmt.Println(&quot;打印后&quot;)
+	}()
+
+	panic(&quot;触发异常&quot;)
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;输出内容为：&lt;/strong&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;打印后
+触发异常
+打印中
+打印前
+
+Process finished with exit code 0
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;案例三&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;package main
+
+import (
+	&quot;fmt&quot;
+)
+
+func main() {
+	defer_call()
+}
+
+func defer_call() {
+
+	defer func() {
+		if err := recover();err != nil {
+			fmt.Println(err) //err 就是panic传入的参数
+		}
+		fmt.Println(&quot;打印前&quot;)
+	}()
+
+	defer func() { // 必须要先声明defer，否则recover()不能捕获到panic异常
+		if err := recover();err != nil {
+			fmt.Println(err) //err 就是panic传入的参数
+		}
+		fmt.Println(&quot;打印中&quot;)
+	}()
+
+	defer func() {
+		if err := recover();err != nil {
+			fmt.Println(err) //err 就是panic传入的参数
+		}
+		fmt.Println(&quot;打印后&quot;)
+	}()
+
+	panic(&quot;触发异常&quot;)
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;输出内容为：&lt;/strong&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;触发异常
+打印后
+打印中
+打印前
+
+Process finished with exit code 0
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;总结：&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;defer&lt;/code&gt;函数属延迟执行，延迟到调用者函数执行 &lt;code class=&quot;highlighter-rouge&quot;&gt;return&lt;/code&gt; 命令前被执行。多个&lt;code class=&quot;highlighter-rouge&quot;&gt;defer&lt;/code&gt;之间按&lt;code class=&quot;highlighter-rouge&quot;&gt;LIFO&lt;/code&gt;先进后出顺序执行。&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Go&lt;/code&gt;中可以抛出一个&lt;code class=&quot;highlighter-rouge&quot;&gt;panic&lt;/code&gt;的异常，然后在&lt;code class=&quot;highlighter-rouge&quot;&gt;defer&lt;/code&gt;中通过&lt;code class=&quot;highlighter-rouge&quot;&gt;recover&lt;/code&gt;捕获这个异常，然后正常处理。&lt;/li&gt;
+  &lt;li&gt;如果同时有多个&lt;code class=&quot;highlighter-rouge&quot;&gt;defer&lt;/code&gt;，那么异常会被最近的&lt;code class=&quot;highlighter-rouge&quot;&gt;recover()&lt;/code&gt;捕获并正常处理。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&quot;2-以下代码有什么问题说明原因&quot;&gt;2. 以下代码有什么问题，说明原因&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-Go&quot;&gt;package main
+import (
+	&quot;fmt&quot;
+)
+type student struct {
+	Name string
+	Age  int
+}
+func pase_student() map[string]*student {
+	m := make(map[string]*student)
+	stus := []student{
+		{Name: &quot;zhou&quot;, Age: 24},
+		{Name: &quot;li&quot;, Age: 23},
+		{Name: &quot;wang&quot;, Age: 22},
+	}
+	for _, stu := range stus {
+		m[stu.Name] = &amp;amp;stu
+	}
+	return m
+}
+func main() {
+	students := pase_student()
+	for k, v := range students {
+		fmt.Printf(&quot;key=%s,value=%v \n&quot;, k, v)
+	}
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;运行结果：&lt;/strong&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;key=zhou,value=&amp;amp;{wang 22} 
+key=li,value=&amp;amp;{wang 22} 
+key=wang,value=&amp;amp;{wang 22} 
+
+Process finished with exit code 0
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;修改一下代码：&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;将下面的代码：&lt;/strong&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;for _, stu := range stus {
+    m[stu.Name] = &amp;amp;stu
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;修改为：&lt;/strong&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;for _, stu := range stus {
+	fmt.Printf(&quot;%v\t%p\n&quot;,stu,&amp;amp;stu)
+	m[stu.Name] = &amp;amp;stu
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;运行结果为：&lt;/strong&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;shen&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;24&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;	&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;xc&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;4200&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;4020&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;li&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;23&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;	&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;xc&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;4200&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;4020&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;wang&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;22&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;	&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;xc&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;4200&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;4020&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;key=shen,value=&amp;amp;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;wang&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;22&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; 
+&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;key=li,value=&amp;amp;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;wang&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;22&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; 
+&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;key=wang,value=&amp;amp;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;wang&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;22&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; 
+
+&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;Process&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;finished&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;with&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;exit&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;code&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;通过上面的案例，我们不难发现&lt;code class=&quot;highlighter-rouge&quot;&gt;stu&lt;/code&gt;&lt;/strong&gt;变量的地址始终保持不变，每次遍历仅进行&lt;code class=&quot;highlighter-rouge&quot;&gt;struct&lt;/code&gt;值拷贝，故&lt;code class=&quot;highlighter-rouge&quot;&gt;m[stu.Name]=&amp;amp;stu&lt;/code&gt;实际上一直指向同一个地址，最终该地址的值为遍历的最后一个&lt;code class=&quot;highlighter-rouge&quot;&gt;struct&lt;/code&gt;的值拷贝。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;形同如下代码：&lt;/strong&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;var stu student 
+for _, stu = range stus {
+	m[stu.Name] = &amp;amp;stu
+} 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;修正方案，取数组中原始值的地址：&lt;/strong&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;for i, _ := range stus {
+	stu:=stus[i]
+	m[stu.Name] = &amp;amp;stu
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;重新运行，效果如下：&lt;/strong&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;shen&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;24&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;	&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;xc&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;42000&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;060&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;li&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;23&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;	&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;xc&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;42000&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;wang&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;22&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;	&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;xc&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;42000&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;e&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;key=shen,value=&amp;amp;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;shen&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;24&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; 
+&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;key=li,value=&amp;amp;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;li&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;23&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; 
+&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;key=wang,value=&amp;amp;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;wang&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;22&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; 
+
+&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;Process&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;finished&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;with&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;exit&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;code&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;3-下面的代码会输出什么并说明原因&quot;&gt;3. 下面的代码会输出什么，并说明原因&lt;/h3&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;package main
+
+import (
+	&quot;fmt&quot;
+	&quot;runtime&quot;
+	&quot;sync&quot;
+)
+
+func init() {
+	fmt.Println(&quot;Current Go Version:&quot;, runtime.Version())
+}
+func main() {
+	runtime.GOMAXPROCS(1)
+
+	count := 10
+	wg := sync.WaitGroup{}
+	wg.Add(count * 2)
+	for i := 0; i &amp;lt; count; i++ {
+		go func() {
+			fmt.Printf(&quot;[%d]&quot;, i)
+			wg.Done()
+		}()
+	}
+	for i := 0; i &amp;lt; count; i++ {
+		go func(i int) {
+			fmt.Printf(&quot;-%d-&quot;, i)
+			wg.Done()
+		}(i)
+	}
+	wg.Wait()
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;运行效果：&lt;/strong&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Current Go Version: go1.10.1
+-9-[10][10][10][10][10][10][10][10][10][10]-0--1--2--3--4--5--6--7--8-
+Process finished with exit code 0
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;两个&lt;code class=&quot;highlighter-rouge&quot;&gt;for&lt;/code&gt;循环内部&lt;code class=&quot;highlighter-rouge&quot;&gt;go func&lt;/code&gt; 调用参数i的方式是不同的，导致结果完全不同。这也是新手容易遇到的坑。&lt;/p&gt;
+
+&lt;p&gt;第一个&lt;code class=&quot;highlighter-rouge&quot;&gt;go func&lt;/code&gt;中&lt;code class=&quot;highlighter-rouge&quot;&gt;i&lt;/code&gt;是外部&lt;code class=&quot;highlighter-rouge&quot;&gt;for&lt;/code&gt;的一个变量，地址不变化。遍历完成后，最终&lt;code class=&quot;highlighter-rouge&quot;&gt;i=10&lt;/code&gt;。故&lt;code class=&quot;highlighter-rouge&quot;&gt;go func&lt;/code&gt;执行时，&lt;code class=&quot;highlighter-rouge&quot;&gt;i&lt;/code&gt;的值始终是&lt;code class=&quot;highlighter-rouge&quot;&gt;10&lt;/code&gt;（&lt;code class=&quot;highlighter-rouge&quot;&gt;10&lt;/code&gt;次遍历很快完成）。&lt;/p&gt;
+
+&lt;p&gt;第二个&lt;code class=&quot;highlighter-rouge&quot;&gt;go func&lt;/code&gt;中&lt;code class=&quot;highlighter-rouge&quot;&gt;i&lt;/code&gt;是函数参数，与外部&lt;code class=&quot;highlighter-rouge&quot;&gt;for&lt;/code&gt;中的&lt;code class=&quot;highlighter-rouge&quot;&gt;i&lt;/code&gt;完全是两个变量。尾部(&lt;code class=&quot;highlighter-rouge&quot;&gt;i&lt;/code&gt;)将发生值拷贝，&lt;code class=&quot;highlighter-rouge&quot;&gt;go func&lt;/code&gt;内部指向值拷贝地址。&lt;/p&gt;
+
+&lt;h3 id=&quot;4-下面代码会输出什么&quot;&gt;4. 下面代码会输出什么？&lt;/h3&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;package main
+
+import &quot;fmt&quot;
+
+type People struct{}
+
+func (p *People) ShowA() {
+	fmt.Println(&quot;showA&quot;)
+	p.ShowB()
+}
+func (p *People) ShowB() {
+	fmt.Println(&quot;showB&quot;)
+}
+
+type Teacher struct {
+	People
+}
+
+func (t *Teacher) ShowB() {
+	fmt.Println(&quot;teacher showB&quot;)
+}
+
+func main() {
+	t := Teacher{}
+	t.ShowA()
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;运行结果如下：&lt;/strong&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;showA
+showB
+
+Process finished with exit code 0
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Go&lt;/code&gt;中没有继承,上面这种写法叫组合。&lt;/p&gt;
+
+&lt;p&gt;上面的&lt;code class=&quot;highlighter-rouge&quot;&gt;t.ShowA()&lt;/code&gt;等价于&lt;code class=&quot;highlighter-rouge&quot;&gt;t.People.ShowA()&lt;/code&gt;，将上面的代码修改如下：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;func main() {
+	t := Teacher{}
+	t.ShowA()
+	fmt.Println(&quot;---------------&quot;)
+	t.People.ShowA()
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;运行结果为：&lt;/strong&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;showA
+showB
+---------------
+showA
+showB
+
+Process finished with exit code 0
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;5-下面代码会触发异常吗请详细说明&quot;&gt;5. 下面代码会触发异常吗？请详细说明&lt;/h3&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;package main
+
+func main() {
+	runtime.GOMAXPROCS(1)
+	int_chan := make(chan int, 1)
+	string_chan := make(chan string, 1)
+	int_chan &amp;lt;- 1
+	string_chan &amp;lt;- &quot;hello&quot;
+	select {
+    	case value := &amp;lt;-int_chan:
+    		fmt.Println(value)
+    	case value := &amp;lt;-string_chan:
+    		panic(value)
+	}
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;有可能会发生异常，如果没有&lt;code class=&quot;highlighter-rouge&quot;&gt;selct&lt;/code&gt;这段代码，就会出现线程阻塞，当有&lt;code class=&quot;highlighter-rouge&quot;&gt;selct&lt;/code&gt;这个语句后，系统会随机抽取一个&lt;code class=&quot;highlighter-rouge&quot;&gt;case&lt;/code&gt;进行判断，只有有其中一条语句正常&lt;code class=&quot;highlighter-rouge&quot;&gt;return&lt;/code&gt;，此程序将立即执行。&lt;/p&gt;
+
+&lt;h3 id=&quot;6-下面代码输出什么&quot;&gt;6. 下面代码输出什么？&lt;/h3&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;package main
+
+import &quot;fmt&quot;
+
+func calc(index string, a, b int) int {
+	ret := a + b
+	fmt.Println(index, a, b, ret)
+	return ret
+}
+
+func main() {
+	a := 1
+	b := 2
+	defer calc(&quot;1&quot;, a, calc(&quot;10&quot;, a, b))
+	a = 0
+	defer calc(&quot;2&quot;, a, calc(&quot;20&quot;, a, b))
+	b = 1
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;运行结果如下：&lt;/strong&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;10 1 2 3
+20 0 2 2
+2 0 2 2
+1 1 3 4
+
+Process finished with exit code 0
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;在解题前需要明确两个概念：&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;defer&lt;/code&gt;是在函数末尾的&lt;code class=&quot;highlighter-rouge&quot;&gt;return&lt;/code&gt;前执行，先进后执行。&lt;/li&gt;
+  &lt;li&gt;函数调用时 &lt;code class=&quot;highlighter-rouge&quot;&gt;int&lt;/code&gt; 参数发生值拷贝。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;不管代码顺序如何，&lt;code class=&quot;highlighter-rouge&quot;&gt;defer calc func&lt;/code&gt;中参数&lt;code class=&quot;highlighter-rouge&quot;&gt;b&lt;/code&gt;必须先计算，故会在运行到第三行时，执行&lt;code class=&quot;highlighter-rouge&quot;&gt;calc(&quot;10&quot;,a,b)&lt;/code&gt;输出：&lt;code class=&quot;highlighter-rouge&quot;&gt;10 1 2 3&lt;/code&gt;得到值&lt;code class=&quot;highlighter-rouge&quot;&gt;3&lt;/code&gt;，将&lt;code class=&quot;highlighter-rouge&quot;&gt;cal(&quot;1&quot;,1,3)&lt;/code&gt;存放到延后执执行函数队列中。&lt;/p&gt;
+
+&lt;p&gt;执行到第五行时，现行计算&lt;code class=&quot;highlighter-rouge&quot;&gt;calc(&quot;20&quot;, a, b)&lt;/code&gt;即&lt;code class=&quot;highlighter-rouge&quot;&gt;calc(&quot;20&quot;, 0, 2)&lt;/code&gt;输出：&lt;code class=&quot;highlighter-rouge&quot;&gt;20 0 2 2&lt;/code&gt;得到值&lt;code class=&quot;highlighter-rouge&quot;&gt;2&lt;/code&gt;,将&lt;code class=&quot;highlighter-rouge&quot;&gt;cal(&quot;2&quot;,0,2)&lt;/code&gt;存放到延后执行函数队列中。&lt;/p&gt;
+
+&lt;p&gt;执行到末尾行，按队列先进后出原则依次执行：&lt;code class=&quot;highlighter-rouge&quot;&gt;cal(&quot;2&quot;,0,2)、cal(&quot;1&quot;,1,3) &lt;/code&gt;，依次输出：&lt;code class=&quot;highlighter-rouge&quot;&gt;2 0 2 2、1 1 3 4&lt;/code&gt; 。&lt;/p&gt;
+
+&lt;h3 id=&quot;7-请写出以下输入内容&quot;&gt;7. 请写出以下输入内容&lt;/h3&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;package main
+
+import &quot;fmt&quot;
+
+func main() {
+	s := make([]int, 5)
+	fmt.Printf(&quot;%p\n&quot;, s)
+	s = append(s, 1, 2, 3)
+	fmt.Printf(&quot;%p\n&quot;, s) //new pointer
+	fmt.Println(s)
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;运行结果:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;0xc4200180c0
+0xc42001c0a0
+[0 0 0 0 0 1 2 3]
+
+Process finished with exit code 0
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;8-下面的代码有什么问题&quot;&gt;8. 下面的代码有什么问题&lt;/h3&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
+package main
+
+import (
+	&quot;fmt&quot;
+	&quot;sync&quot;
+)
+
+type UserAges struct {
+	ages map[string]int
+	sync.Mutex
+}
+
+func (ua *UserAges) Add(name string, age int) {
+	ua.Lock()
+	defer ua.Unlock()
+	ua.ages[name] = age
+}
+
+func (ua *UserAges) Get(name string) int {
+	if age, ok := ua.ages[name]; ok {
+		return age
+	}
+	return -1
+}
+
+func main() {
+	count := 1000
+	gw := sync.WaitGroup{}
+	gw.Add(count * 3)
+	u := UserAges{ages: map[string]int{}}
+	add := func(i int) {
+		u.Add(fmt.Sprintf(&quot;user_%d&quot;, i), i)
+		gw.Done()
+	}
+	
+	for i := 0; i &amp;lt; count; i++ {
+		go add(i)
+		go add(i)
+	}
+	
+	for i := 0; i &amp;lt; count; i++ {
+		go func(i int) {
+			defer gw.Done()
+			u.Get(fmt.Sprintf(&quot;user_%d&quot;, i))
+		}(i)
+	}
+	gw.Wait()
+	fmt.Println(&quot;Done&quot;)
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;输出结果：&lt;/strong&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;fatal error: concurrent map read and map write
+
+goroutine 2022 [running]:
+runtime.throw(0x10c5472, 0x21)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;结论：&lt;/strong&gt; 在执行 &lt;code class=&quot;highlighter-rouge&quot;&gt;Get&lt;/code&gt; 方法时可能被&lt;code class=&quot;highlighter-rouge&quot;&gt;panic&lt;/code&gt;。&lt;/p&gt;
+
+&lt;p&gt;虽然有使用&lt;code class=&quot;highlighter-rouge&quot;&gt;sync.Mutex&lt;/code&gt;做写锁，但是&lt;code class=&quot;highlighter-rouge&quot;&gt;map&lt;/code&gt;是并发读写不安全的。&lt;code class=&quot;highlighter-rouge&quot;&gt;map&lt;/code&gt;属于引用类型，并发读写时多个协程见是通过指针访问同一个地址，即访问共享变量，此时同时读写资源存在竞争关系。所以会报错误信息:&lt;code class=&quot;highlighter-rouge&quot;&gt;fatal error: concurrent map read and map write&lt;/code&gt;。&lt;/p&gt;
+
+&lt;p&gt;如果第一次没复现&lt;code class=&quot;highlighter-rouge&quot;&gt;panic&lt;/code&gt;问题，可以再次运行，复现该问题。那么如何改善呢? 在&lt;code class=&quot;highlighter-rouge&quot;&gt;Go1.9&lt;/code&gt;新版本中将提供并发安全的&lt;code class=&quot;highlighter-rouge&quot;&gt;map&lt;/code&gt;。首先需要了解两种锁的不同：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;sync.Mutex&lt;/code&gt;互斥锁&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;sync.RWMutex&lt;/code&gt;读写锁，基于互斥锁的实现，可以加多个读锁或者一个写锁。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;RWMutex相关方法：&lt;/strong&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;type RWMutex
+    func (rw *RWMutex) Lock() 
+    func (rw *RWMutex) RLock()
+    func (rw *RWMutex) RLocker() Locker
+    func (rw *RWMutex) RUnlock()
+    func (rw *RWMutex) Unlock()
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;代码改进如下：&lt;/strong&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;package main
+
+import (
+	&quot;fmt&quot;
+	&quot;sync&quot;
+)
+
+type UserAges struct {
+	ages map[string]int
+	sync.RWMutex
+}
+
+func (ua *UserAges) Add(name string, age int) {
+	ua.Lock()
+	defer ua.Unlock()
+	ua.ages[name] = age
+}
+
+func (ua *UserAges) Get(name string) int {
+	ua.RLock()
+	defer ua.RUnlock()
+	if age, ok := ua.ages[name]; ok {
+		return age
+	}
+
+	return -1
+}
+
+func main() {
+	count := 10000
+	gw := sync.WaitGroup{}
+	gw.Add(count * 3)
+	u := UserAges{ages: map[string]int{}}
+	add := func(i int) {
+		u.Add(fmt.Sprintf(&quot;user_%d&quot;, i), i)
+		gw.Done()
+	}
+	for i := 0; i &amp;lt; count; i++ {
+		go add(i)
+		go add(i)
+	}
+	for i := 0; i &amp;lt; count; i++ {
+		go func(i int) {
+			defer gw.Done()
+			u.Get(fmt.Sprintf(&quot;user_%d&quot;, i))
+			fmt.Print(&quot;.&quot;)
+		}(i)
+	}
+	gw.Wait()
+	fmt.Println(&quot;Done&quot;)
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;运行结果如下：&lt;/strong&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;.
+.
+.
+.
+Done
+
+Process finished with exit code 0
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;9-下面的迭代会有什么问题&quot;&gt;9. 下面的迭代会有什么问题？&lt;/h3&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;package main
+
+import &quot;fmt&quot;
+import &quot;sync&quot;
+import &quot;time&quot;
+
+type ThreadSafeSet struct {
+	sync.RWMutex
+	s []int
+}
+
+func (set *ThreadSafeSet) Iter() &amp;lt;-chan interface{} {
+	ch := make(chan interface{})
+	go func() {
+		set.RLock()
+
+		for elem := range set.s {
+			ch &amp;lt;- elem
+			fmt.Print(&quot;get:&quot;, elem, &quot;,&quot;)
+		}
+
+		close(ch)
+		set.RUnlock()
+
+	}()
+	return ch
+}
+
+func main() {
+	//read()
+	unRead()
+}
+func read() {
+	set := ThreadSafeSet{}
+	set.s = make([]int, 100)
+	ch := set.Iter()
+	closed := false
+	for {
+		select {
+		case v, ok := &amp;lt;-ch:
+			if ok {
+				fmt.Print(&quot;read:&quot;, v, &quot;,&quot;)
+			} else {
+				closed = true
+			}
+		}
+		if closed {
+			fmt.Print(&quot;closed&quot;)
+			break
+		}
+	}
+	fmt.Print(&quot;Done&quot;)
+}
+
+func unRead() {
+	set := ThreadSafeSet{}
+	set.s = make([]int, 100)
+	ch := set.Iter()
+	_ = ch
+	time.Sleep(5 * time.Second)
+	fmt.Print(&quot;Done&quot;)
+}
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;结论：&lt;/strong&gt;内部迭代出现阻塞。默认初始化时无缓冲区，需要等待接收者读取后才能继续写入。&lt;/p&gt;
+
+&lt;p&gt;chan在使用make初始化时可附带一个可选参数来设置缓冲区。默认无缓冲，题目中便初始化的是无缓冲区的chan，这样只有写入的元素直到被读取后才能继续写入，不然就一直阻塞。&lt;/p&gt;
+
+&lt;p&gt;设置缓冲区大小后，写入数据时可连续写入到缓冲区中，直到缓冲区被占满。从chan中接收一次便可从缓冲区中释放一次。可以理解为chan是可以设置吞吐量的处理池。&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;ch := make(chan interface{}) &lt;/code&gt;和 &lt;code class=&quot;highlighter-rouge&quot;&gt;ch := make(chan interface{},1)&lt;/code&gt;是不一样的
+无缓冲的 不仅仅是只能向 &lt;code class=&quot;highlighter-rouge&quot;&gt;ch&lt;/code&gt; 通道放 一个值 而是一直要有人接收，那么&lt;code class=&quot;highlighter-rouge&quot;&gt;ch &amp;lt;- elem&lt;/code&gt;才会继续下去，要不然就一直阻塞着，也就是说有接收者才去放，没有接收者就阻塞。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;而缓冲为&lt;code class=&quot;highlighter-rouge&quot;&gt;1&lt;/code&gt;则即使没有接收者也不会阻塞，因为缓冲大小是&lt;code class=&quot;highlighter-rouge&quot;&gt;1&lt;/code&gt;只有当 放第二个值的时候 第一个还没被人拿走，这时候才会阻塞&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h3 id=&quot;10-以下代码能编译过去吗为什么&quot;&gt;10. 以下代码能编译过去吗？为什么？&lt;/h3&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;package main
+import (
+	&quot;fmt&quot;
+)
+type People interface {
+	Speak(string) string
+}
+type Stduent struct{}
+func (stu *Stduent) Speak(think string) (talk string) {
+	if think == &quot;bitch&quot; {
+		talk = &quot;You are a good boy&quot;
+	} else {
+		talk = &quot;hi&quot;
+	}
+	return
+}
+func main() {
+	var peo People = Stduent{}
+	think := &quot;bitch&quot;
+	fmt.Println(peo.Speak(think))
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;结论：&lt;/strong&gt;编译失败，值类型 &lt;code class=&quot;highlighter-rouge&quot;&gt;Student{}&lt;/code&gt; 未实现接口&lt;code class=&quot;highlighter-rouge&quot;&gt;People&lt;/code&gt;的方法，不能定义为 &lt;code class=&quot;highlighter-rouge&quot;&gt;People&lt;/code&gt; 类型。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;两种正确修改方法：&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;方法一&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;package main
+import (
+	&quot;fmt&quot;
+)
+type People interface {
+	Speak(string) string
+}
+
+type Stduent struct{}
+
+func (stu Stduent) Speak(think string) (talk string) {
+	if think == &quot;bitch&quot; {
+		talk = &quot;You are a good boy&quot;
+	} else {
+		talk = &quot;hi&quot;
+	}
+	return
+}
+func main() {
+	var peo People = Stduent{}
+	think := &quot;hi&quot;
+	fmt.Println(peo.Speak(think))
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;方法二&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;package main
+import (
+	&quot;fmt&quot;
+)
+type People interface {
+	Speak(string) string
+}
+
+type Stduent struct{}
+
+func (stu Stduent) Speak(think string) (talk string) {
+	if think == &quot;bitch&quot; {
+		talk = &quot;You are a good boy&quot;
+	} else {
+		talk = &quot;hi&quot;
+	}
+	return
+}
+func main() {
+	var peo People = &amp;amp;Stduent{}
+	think := &quot;bitch&quot;
+	fmt.Println(peo.Speak(think))
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;总结：&lt;/strong&gt;指针类型的结构体对象可以同时调用结构体值类型和指针类型对应的方法。而值类型的结构体对象只能调用值类型对应的接口方法。&lt;/p&gt;
+
+&lt;h3 id=&quot;关注区块链部落实时获取最新技术文章&quot;&gt;关注区块链部落，实时获取最新技术文章&lt;/h3&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://om1c35wrq.bkt.clouddn.com/%E5%8C%BA%E5%9D%97%E9%93%BE%E9%83%A8%E8%90%BD-1.jpg&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+</description>
+        <pubDate>Tue, 24 Apr 2018 00:00:00 +0800</pubDate>
+        <link>http://localhost:4000/2018/04/24/golang-interview/</link>
+        <guid isPermaLink="true">http://localhost:4000/2018/04/24/golang-interview/</guid>
+        
+        <category>笔试题</category>
+        
+        
+      </item>
+    
+      <item>
+        <title>第三篇 - EOS DAWN-V3.0.0 智能合约开发之Hello World</title>
+        <description>&lt;blockquote&gt;
+  &lt;p&gt;作者：黎跃春 | 孔壹学院创始人
+视频网站：http://kongyixueyuan.com
+微信搜索「kongyixueyuan」添加莉莉微信申请进群
+黎跃春区块链博客：http://liyuechun.org&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;不管是&lt;code class=&quot;highlighter-rouge&quot;&gt;C、C++、Java&lt;/code&gt;还是任何其他语言，一般刚开始学习的时候，我们都会从&lt;code class=&quot;highlighter-rouge&quot;&gt;HelloWorld&lt;/code&gt;开始，这篇文章主要讲解&lt;code class=&quot;highlighter-rouge&quot;&gt;EOS DAWN-V3.0.0&lt;/code&gt; 智能合约开发之&lt;code class=&quot;highlighter-rouge&quot;&gt;Hello World&lt;/code&gt;。&lt;/p&gt;
+
+&lt;p&gt;在看这篇文章之前，请先阅读下面两篇入门文章。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;http://liyuechun.org/2018/04/04/eos-dev/&quot;&gt;第一篇 - 手把手教你理清EOS各种开发环境搭建来龙去脉&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://liyuechun.org/2018/04/13/eos-contract/&quot;&gt;第二篇 - EOS Currency 合约案例&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;1-编写合约代码&quot;&gt;1. 编写合约代码&lt;/h3&gt;
+
+&lt;p&gt;在桌面创建一个文件夹，比如：&lt;code class=&quot;highlighter-rouge&quot;&gt;0418&lt;/code&gt;，用&lt;code class=&quot;highlighter-rouge&quot;&gt;Atom&lt;/code&gt;打开&lt;code class=&quot;highlighter-rouge&quot;&gt;0418&lt;/code&gt;文件夹。新建文件&lt;code class=&quot;highlighter-rouge&quot;&gt;Hello.cpp&lt;/code&gt;文件，并将下面的源码拷贝到&lt;code class=&quot;highlighter-rouge&quot;&gt;Hello.cpp&lt;/code&gt;文件中。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#include &amp;lt;eosiolib/eosio.hpp&amp;gt;
+#include &amp;lt;eosiolib/print.hpp&amp;gt;
+
+// 视频网站：http://kongyixueyuan.com
+// 个人博客：http://liyuechun.org
+// 公众号：区块链部落
+// 进技术群，请加微信（kongyixueyuan）
+
+//用eosio命名空间
+using namespace eosio;
+
+//所有的智能合约都继承自contract类
+class Hello : public eosio::contract {
+
+  public:
+      using contract::contract;
+
+      /// @abi action
+      void hi( account_name user ) {
+         print( &quot;Hello, &quot;, name{user} );
+      }
+
+};
+EOSIO_ABI( Hello, (hi) )
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;2-生成wast文件&quot;&gt;2. 生成&lt;code class=&quot;highlighter-rouge&quot;&gt;.wast&lt;/code&gt;文件&lt;/h3&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;liyuechun:Project yuechunli$ eosiocpp -o Hello.wast Hello.cpp
+liyuechun:Project yuechunli$ ls
+Hello.cpp	Hello.wast
+liyuechun:Project yuechunli$ 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;3-生成abi文件&quot;&gt;3. 生成&lt;code class=&quot;highlighter-rouge&quot;&gt;.abi&lt;/code&gt;文件&lt;/h3&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;liyuechun:Project yuechunli$ eosiocpp -g Hello.abi Hello.cpp 
+Generated Hello.abi ...
+liyuechun:Project yuechunli$ ls
+Hello.abi	Hello.cpp	Hello.wast
+liyuechun:Project yuechunli$
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Hello.abi&lt;/code&gt;文件内容如下：&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;____comment&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;This file was generated by eosio-abigen. DO NOT EDIT - 2018-04-18T08:15:50&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;types&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[],&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;structs&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;name&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;hi&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;base&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;fields&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+          &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;name&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;user&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+          &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;type&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;account_name&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;actions&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;name&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;hi&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;type&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;hi&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;ricardian_contract&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;tables&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[],&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;clauses&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;4-创建钱包账号&quot;&gt;4. 创建钱包账号&lt;/h3&gt;
+
+&lt;h5 id=&quot;41-创建钱包&quot;&gt;4.1 创建钱包&lt;/h5&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;liyuechun:Hello yuechunli$ cleos wallet create
+Creating wallet: default
+Save password to use in the future to unlock this wallet.
+Without password imported keys will not be retrievable.
+&quot;PW5J3rx7Bfg9zb8Kf2owTytccFyJqtDTrqnUX8iBRRUvbwM8RyzRL&quot;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;PW5J3rx7Bfg9zb8Kf2owTytccFyJqtDTrqnUX8iBRRUvbwM8RyzRL&lt;/code&gt;必须保存好，解锁钱包时需要使用到这个密码。&lt;/p&gt;
+
+&lt;h5 id=&quot;42-创建两组key&quot;&gt;4.2 创建两组key&lt;/h5&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;liyuechun:Hello yuechunli$ ./cleos create key
+-bash: ./cleos: No such file or directory
+liyuechun:Hello yuechunli$ cleos create key
+Private key: 5K7QdknUZsF9apdBhD8TDMZGJjw8zJ8esYwS173YyFRv2453Z9t
+Public key: EOS5RU8VsYBLnN5snGeUKmt1sDDzpvQbGyW7LPP6qEryaFctYieCK
+liyuechun:Hello yuechunli$ cleos create key
+Private key: 5J8kComGiQHZyNmH6VvkHgtFggeQemazLpihKR4QW75DNkWTVdA
+Public key: EOS5fqiC3VFAJ1riMrKf8vzD28nqd4EpXvZGpXt6YewEBnH8DYinG
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h5 id=&quot;43-向钱包导入私钥&quot;&gt;4.3 向钱包导入私钥&lt;/h5&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;liyuechun:Hello yuechunli$ cleos wallet import 5K7QdknUZsF9apdBhD8TDMZGJjw8zJ8esYwS173YyFRv2453Z9t
+imported private key for: EOS5RU8VsYBLnN5snGeUKmt1sDDzpvQbGyW7LPP6qEryaFctYieCK
+liyuechun:Hello yuechunli$ cleos wallet import 5J8kComGiQHZyNmH6VvkHgtFggeQemazLpihKR4QW75DNkWTVdA
+imported private key for: EOS5fqiC3VFAJ1riMrKf8vzD28nqd4EpXvZGpXt6YewEBnH8DYinG
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h5 id=&quot;44-创建账户&quot;&gt;4.4 创建账户&lt;/h5&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;liyuechun:cleos yuechunli$ ./cleos create account eosio liyc111 EOS5RU8VsYBLnN5snGeUKmt1sDDzpvQbGyW7LPP6qEryaFctYieCK EOS5fqiC3VFAJ1riMrKf8vzD28nqd4EpXvZGpXt6YewEBnH8DYinG
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;5-部署合约&quot;&gt;5. 部署合约&lt;/h3&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;liyuechun:build yuechunli$ cleos set contract liyc111 ./contracts/Hello
+Reading WAST/WASM from ./contracts/Hello/Hello.wast...
+Assembling WASM...
+Publishing contract...
+executed transaction: 21d891e425f3d65852432e2b6a78146e2e2992a267c9f28c8ce56cd5dbea98f2  1632 bytes  2200576 cycles
+#         eosio &amp;lt;= eosio::setcode               {&quot;account&quot;:&quot;liyc111&quot;,&quot;vmtype&quot;:0,&quot;vmversion&quot;:0,&quot;code&quot;:&quot;0061736d0100000001370b60027f7e0060027e7e006001...
+#         eosio &amp;lt;= eosio::setabi                {&quot;account&quot;:&quot;liyc111&quot;,&quot;abi&quot;:{&quot;types&quot;:[],&quot;structs&quot;:[{&quot;name&quot;:&quot;hi&quot;,&quot;base&quot;:&quot;&quot;,&quot;fields&quot;:[{&quot;name&quot;:&quot;user&quot;,&quot;t...
+liyuechun:build yuechunli$ cleos get code liyc111
+code hash: e387951f9a18870f2c151fbceea5b279a3861bdabab58ea87a67296a8a6583d0
+liyuechun:build yuechunli$ 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;6-执行合约&quot;&gt;6. 执行合约&lt;/h3&gt;
+
+&lt;h5 id=&quot;61-解锁钱包&quot;&gt;6.1 解锁钱包&lt;/h5&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;PW5J3rx7Bfg9zb8Kf2owTytccFyJqtDTrqnUX8iBRRUvbwM8RyzRL&lt;/code&gt;是创建钱包是的密码。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;liyuechun:build yuechunli$ cleos wallet unlock --password PW5J3rx7Bfg9zb8Kf2owTytccFyJqtDTrqnUX8iBRRUvbwM8RyzRL
+Unlocked: default
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h5 id=&quot;62-执行合约&quot;&gt;6.2 执行合约&lt;/h5&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;liyuechun:build yuechunli$ cleos push action liyc111 hi '{&quot;user&quot;:&quot;liyc1215&quot;}' -p liyc111
+executed transaction: 9abcaec2711ce31c693e5124af507f34aa666702bd5bb230ec31ddd6903248a8  232 bytes  102400 cycles
+#       liyc111 &amp;lt;= liyc111::hi                  {&quot;user&quot;:&quot;liyc1215&quot;}
+&amp;gt;&amp;gt; Hello, liyc1215
+liyuechun:build yuechunli$ 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;7-关注公众号获取最新视频教程&quot;&gt;7. 关注公众号获取最新视频教程&lt;/h3&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://om1c35wrq.bkt.clouddn.com/%E5%8C%BA%E5%9D%97%E9%93%BE%E9%83%A8%E8%90%BD-1.jpg&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+</description>
+        <pubDate>Wed, 18 Apr 2018 00:00:00 +0800</pubDate>
+        <link>http://localhost:4000/2018/04/18/eos-contract/</link>
+        <guid isPermaLink="true">http://localhost:4000/2018/04/18/eos-contract/</guid>
+        
+        <category>EOS</category>
+        
+        
+      </item>
+    
+      <item>
+        <title>第二篇 - EOS Currency 合约案例</title>
+        <description>&lt;blockquote&gt;
+  &lt;table&gt;
+    &lt;tbody&gt;
+      &lt;tr&gt;
+        &lt;td&gt;主讲人：黎跃春&lt;/td&gt;
+        &lt;td&gt;孔壹学院创始人&lt;/td&gt;
+      &lt;/tr&gt;
+    &lt;/tbody&gt;
+  &lt;/table&gt;
+
+  &lt;p&gt;课程咨询，添加莉莉微信(kongyixueyuan)咨询&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;切换到&lt;code class=&quot;highlighter-rouge&quot;&gt;eos/build/programs/cleos&lt;/code&gt;路径下面。&lt;/p&gt;
+
+&lt;h3 id=&quot;1-钱包设置&quot;&gt;1. 钱包设置&lt;/h3&gt;
+
+&lt;p&gt;秘钥需要保存好，后面解锁时会用到。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;liyuechun:cleos yuechunli$ ./cleos wallet create
+Creating wallet: default
+Save password to use in the future to unlock this wallet.
+Without password imported keys will not be retrievable.
+&quot;PW5HtkrzGaNKGNKVGXc6icWiWdo7PFsjWJAdE2dJbt5bSnbwb7spd&quot;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;2-为账号部署合约&quot;&gt;2. 为账号部署合约&lt;/h3&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;liyuechun:cleos yuechunli$ ./cleos set contract eosio ../../contracts/eosio.bios -p eosio
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;liyuechun:cleos yuechunli$ ./cleos set contract eosio ../../contracts/eosio.bios -p eosio 
+Reading WAST/WASM from ../../contracts/eosio.bios/eosio.bios.wast...
+Assembling WASM...
+Publishing contract...
+executed transaction: 32735994889238e18ba60341bb79f6b674738727e9d5996991f8f34b496e3a18  3288 bytes  2200576 cycles
+#         eosio &amp;lt;= eosio::setcode               {&quot;account&quot;:&quot;eosio&quot;,&quot;vmtype&quot;:0,&quot;vmversion&quot;:0,&quot;code&quot;:&quot;0061736d0100000001581060037f7e7f0060057f7e7e7e7e...
+#         eosio &amp;lt;= eosio::setabi                {&quot;account&quot;:&quot;eosio&quot;,&quot;abi&quot;:{&quot;types&quot;:[],&quot;structs&quot;:[{&quot;name&quot;:&quot;set_account_limits&quot;,&quot;base&quot;:&quot;&quot;,&quot;fields&quot;:[{&quot;n...
+liyuechun:cleos yuechunli$ 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;3-创建2个key导入key的私钥&quot;&gt;3. 创建2个&lt;code class=&quot;highlighter-rouge&quot;&gt;key&lt;/code&gt;，导入&lt;code class=&quot;highlighter-rouge&quot;&gt;key&lt;/code&gt;的私钥&lt;/h3&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;liyuechun:cleos yuechunli$ ./cleos create key
+Private key: 5Kg4i6WW6mfGXGjriU552KdAQ8tQyCU4mqtevVganWWbzQf1rD1
+Public key: EOS5MSkE5DGgSurc7k3Sv9kWrev6E3GBBqasdiiC3yajPwrW7c4Uq
+
+liyuechun:cleos yuechunli$ ./cleos create key 
+Private key: 5Kg2P7PRA7wWrW2s53JiaBur7PhDtDsCMZUwQ8Yvn8uAmu8xEMB
+Public key: EOS7wERhooVJwqYLuQn5v6UDZnL5KQpGJBDMQoktkxz4baNzicwLX
+
+liyuechun:cleos yuechunli$ ./cleos wallet import 5Kg4i6WW6mfGXGjriU552KdAQ8tQyCU4mqtevVganWWbzQf1rD1
+imported private key for: EOS5MSkE5DGgSurc7k3Sv9kWrev6E3GBBqasdiiC3yajPwrW7c4Uq
+liyuechun:cleos yuechunli$ ./cleos wallet import 5Kg2P7PRA7wWrW2s53JiaBur7PhDtDsCMZUwQ8Yvn8uAmu8xEMB
+imported private key for: EOS7wERhooVJwqYLuQn5v6UDZnL5KQpGJBDMQoktkxz4baNzicwLX
+liyuechun:cleos yuechunli$ 
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;4-根据生成的公钥创建帐号&quot;&gt;4. 根据生成的公钥，创建帐号&lt;/h3&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ liyuechun:cleos yuechunli$ ./cleos create account eosio eostoken EOS5MSkE5DGgSurc7k3Sv9kWrev6E3GBBqasdiiC3yajPwrW7c4Uq EOS7wERhooVJwqYLuQn5v6UDZnL5KQpGJBDMQoktkxz4baNzicwLX
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;liyuechun:cleos yuechunli$ ./cleos create account eosio eostoken EOS5MSkE5DGgSurc7k3Sv9kWrev6E3GBBqasdiiC3yajPwrW7c4Uq EOS7wERhooVJwqYLuQn5v6UDZnL5KQpGJBDMQoktkxz4baNzicwLX
+executed transaction: e691042df8074a25f47b8364f58a03c2c407e64d2cbc7248e1e9a611a06fe547  352 bytes  102400 cycles
+#         eosio &amp;lt;= eosio::newaccount            {&quot;creator&quot;:&quot;eosio&quot;,&quot;name&quot;:&quot;eostoken&quot;,&quot;owner&quot;:{&quot;threshold&quot;:1,&quot;keys&quot;:[{&quot;key&quot;:&quot;EOS5MSkE5DGgSurc7k3Sv9kW...
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;5-查看账号信息&quot;&gt;5. 查看账号信息&lt;/h3&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;liyuechun:cleos yuechunli$ ./cleos get account eostoken
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;liyuechun:cleos yuechunli$ ./cleos get account eostoken
+{
+  &quot;account_name&quot;: &quot;eostoken&quot;,
+  &quot;permissions&quot;: [{
+      &quot;perm_name&quot;: &quot;active&quot;,
+      &quot;parent&quot;: &quot;owner&quot;,
+      &quot;required_auth&quot;: {
+        &quot;threshold&quot;: 1,
+        &quot;keys&quot;: [{
+            &quot;key&quot;: &quot;EOS7wERhooVJwqYLuQn5v6UDZnL5KQpGJBDMQoktkxz4baNzicwLX&quot;,
+            &quot;weight&quot;: 1
+          }
+        ],
+        &quot;accounts&quot;: []
+      }
+    },{
+      &quot;perm_name&quot;: &quot;owner&quot;,
+      &quot;parent&quot;: &quot;&quot;,
+      &quot;required_auth&quot;: {
+        &quot;threshold&quot;: 1,
+        &quot;keys&quot;: [{
+            &quot;key&quot;: &quot;EOS5MSkE5DGgSurc7k3Sv9kWrev6E3GBBqasdiiC3yajPwrW7c4Uq&quot;,
+            &quot;weight&quot;: 1
+          }
+        ],
+        &quot;accounts&quot;: []
+      }
+    }
+  ]
+}
+liyuechun:cleos yuechunli$
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;6-检测并部署合约&quot;&gt;6. 检测，并部署合约&lt;/h3&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ ./cleos get code currency
+$ ./cleos set contract currency ../../contracts/currency 
+$ ./cleos get code currency 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;liyuechun:cleos yuechunli$ ./cleos get code currency 
+code hash: 0000000000000000000000000000000000000000000000000000000000000000
+liyuechun:cleos yuechunli$ ./cleos set contract currency ../../contracts/currency 
+Reading WAST/WASM from ../../contracts/currency/currency.wast...
+Assembling WASM...
+Publishing contract...
+executed transaction: eec4d42d5c1aab8785ce8e55618bf209d2e4dbcaf881e004c260c779d5571cef  7112 bytes  2200576 cycles
+#         eosio &amp;lt;= eosio::setcode               {&quot;account&quot;:&quot;currency&quot;,&quot;vmtype&quot;:0,&quot;vmversion&quot;:0,&quot;code&quot;:&quot;0061736d010000000199011860000060027e7e0060017...
+#         eosio &amp;lt;= eosio::setabi                {&quot;account&quot;:&quot;currency&quot;,&quot;abi&quot;:{&quot;types&quot;:[{&quot;new_type_name&quot;:&quot;account_name&quot;,&quot;type&quot;:&quot;name&quot;}],&quot;structs&quot;:[{&quot;n...
+liyuechun:cleos yuechunli$ ./cleos get code currency 
+code hash: d6c891fbdfcff597d82e17c81354574399b01d533e53d412093f03e1950fb9d4
+liyuechun:cleos yuechunli$ 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;7-创建货币&quot;&gt;7. 创建货币&lt;/h3&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ ./cleos push action currency create '{&quot;issuer&quot;:&quot;currency&quot;,&quot;maximum_supply&quot;:&quot;1000000.0000 CUR&quot;,&quot;can_freeze&quot;:&quot;0&quot;,&quot;can_recall&quot;:&quot;0&quot;,&quot;can_whitelist&quot;:&quot;0&quot;}' --permission currency@active
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;liyuechun:cleos yuechunli$ ./cleos push action currency create '{&quot;issuer&quot;:&quot;currency&quot;,&quot;maximum_supply&quot;:&quot;1000000.0000 CUR&quot;,&quot;can_freeze&quot;:&quot;0&quot;,&quot;can_recall&quot;:&quot;0&quot;,&quot;can_whitelist&quot;:&quot;0&quot;}' --permission currency@active
+executed transaction: ae92a14b810e1437e9a0e8ae0527268a1e0fbd834d8c0a6906c8b65d9b503dc4  248 bytes  103424 cycles
+#      currency &amp;lt;= currency::create             {&quot;issuer&quot;:&quot;currency&quot;,&quot;maximum_supply&quot;:&quot;1000000.0000 CUR&quot;,&quot;can_freeze&quot;:0,&quot;can_recall&quot;:0,&quot;can_whitelis...
+&amp;gt;&amp;gt; create
+liyuechun:cleos yuechunli$
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;8-发行货币&quot;&gt;8. 发行货币&lt;/h3&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ ./cleos push action currency issue '{&quot;to&quot;:&quot;currency&quot;,&quot;quantity&quot;:&quot;1000.0000 CUR&quot;,&quot;memo&quot;:&quot;&quot;}' --permission currency@active 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;liyuechun:cleos yuechunli$ ./cleos push action currency issue '{&quot;to&quot;:&quot;currency&quot;,&quot;quantity&quot;:&quot;1000.0000 CUR&quot;,&quot;memo&quot;:&quot;&quot;}' --permission currency@active 
+executed transaction: 7b8108d19aba6c8dcc601c321ef3c433cd2a3aedbd3ac1b217f06477792b40f7  248 bytes  106496 cycles
+#      currency &amp;lt;= currency::issue              {&quot;to&quot;:&quot;currency&quot;,&quot;quantity&quot;:&quot;1000.0000 CUR&quot;,&quot;memo&quot;:&quot;&quot;}
+&amp;gt;&amp;gt; issue
+liyuechun:cleos yuechunli$ 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;9-查看帐号信息&quot;&gt;9. 查看帐号信息&lt;/h3&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ ./cleos get table currency currency accounts 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;liyuechun:cleos yuechunli$ ./cleos get table currency currency accounts 
+{
+  &quot;rows&quot;: [{
+      &quot;balance&quot;: &quot;1000.0000 CUR&quot;,
+      &quot;frozen&quot;: 0,
+      &quot;whitelist&quot;: 1
+    }
+  ],
+  &quot;more&quot;: false
+}
+liyuechun:cleos yuechunli$ 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;10-转账&quot;&gt;10. 转账&lt;/h3&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ ./cleos push action currency transfer '{&quot;from&quot;:&quot;currency&quot;,&quot;to&quot;:&quot;eosio&quot;,&quot;quantity&quot;:&quot;20.0000 CUR&quot;,&quot;memo&quot;:&quot;my first transfer&quot;}' --permission currency@active 
+$ ./cleos get table currency currency accounts
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;liyuechun:cleos yuechunli$ ./cleos push action currency transfer '{&quot;from&quot;:&quot;currency&quot;,&quot;to&quot;:&quot;eosio&quot;,&quot;quantity&quot;:&quot;20.0000 CUR&quot;,&quot;memo&quot;:&quot;my first transfer&quot;}' --permission currency@active 
+executed transaction: 4a24e5a9afd17abe61dcb3b3aff06a1c5ec94663f803d3d1801bd7a5046fea9e  272 bytes  109568 cycles
+#      currency &amp;lt;= currency::transfer           {&quot;from&quot;:&quot;currency&quot;,&quot;to&quot;:&quot;eosio&quot;,&quot;quantity&quot;:&quot;20.0000 CUR&quot;,&quot;memo&quot;:&quot;my first transfer&quot;}
+&amp;gt;&amp;gt; transfer
+#         eosio &amp;lt;= currency::transfer           {&quot;from&quot;:&quot;currency&quot;,&quot;to&quot;:&quot;eosio&quot;,&quot;quantity&quot;:&quot;20.0000 CUR&quot;,&quot;memo&quot;:&quot;my first transfer&quot;}
+liyuechun:cleos yuechunli$ ./cleos get table currency currency accounts 
+{
+  &quot;rows&quot;: [{
+      &quot;balance&quot;: &quot;980.0000 CUR&quot;,
+      &quot;frozen&quot;: 0,
+      &quot;whitelist&quot;: 1
+    }
+  ],
+  &quot;more&quot;: false
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;11-视频获取方式&quot;&gt;11. 视频获取方式&lt;/h3&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;关注公众，发送&lt;code class=&quot;highlighter-rouge&quot;&gt;eos&lt;/code&gt;自动获取视频链接&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://om1c35wrq.bkt.clouddn.com/%E5%8C%BA%E5%9D%97%E9%93%BE%E9%83%A8%E8%90%BD-1.jpg&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+</description>
+        <pubDate>Fri, 13 Apr 2018 00:00:00 +0800</pubDate>
+        <link>http://localhost:4000/2018/04/13/eos-contract/</link>
+        <guid isPermaLink="true">http://localhost:4000/2018/04/13/eos-contract/</guid>
+        
+        <category>EOS</category>
+        
+        
+      </item>
+    
+      <item>
+        <title>第一篇 - 手把手教你理清EOS各种开发环境搭建来龙去脉</title>
+        <description>&lt;blockquote&gt;
+  &lt;table&gt;
+    &lt;tbody&gt;
+      &lt;tr&gt;
+        &lt;td&gt;主讲人：黎跃春&lt;/td&gt;
+        &lt;td&gt;孔壹学院创始人&lt;/td&gt;
+      &lt;/tr&gt;
+    &lt;/tbody&gt;
+  &lt;/table&gt;
+
+  &lt;p&gt;课程咨询，添加莉莉微信(kongyixueyuan)咨询&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;目前来讲，任何学习&lt;code class=&quot;highlighter-rouge&quot;&gt;EOS&lt;/code&gt;相关技术的资料都来自&lt;a href=&quot;https://github.com/EOSIO/eos&quot;&gt;https://github.com/EOSIO/eos&lt;/a&gt;，可能大家在搭建&lt;code class=&quot;highlighter-rouge&quot;&gt;EOS&lt;/code&gt;开发环境的过程中，会很迷茫，网上资料都很乱，自己也理不清头绪，不知如何下手。在这里，&lt;a href=&quot;http://liyuechun.org&quot;&gt;春哥&lt;/a&gt;将一步步为你揭开层层面纱。&lt;/p&gt;
+
+&lt;h3 id=&quot;1-硬件软件环境&quot;&gt;1. 硬件软件环境&lt;/h3&gt;
+
+&lt;p&gt;因为&lt;code class=&quot;highlighter-rouge&quot;&gt;EOS&lt;/code&gt;的版本太多，所以你需要先知道如何查看&lt;code class=&quot;highlighter-rouge&quot;&gt;EOS&lt;/code&gt;对应版本的相关资料。&lt;/p&gt;
+
+&lt;p&gt;打开&lt;code class=&quot;highlighter-rouge&quot;&gt;EOS Github&lt;/code&gt;官网&lt;a href=&quot;https://github.com/EOSIO/eos&quot;&gt;https://github.com/EOSIO/eos&lt;/a&gt;,如下图所示，点击&lt;code class=&quot;highlighter-rouge&quot;&gt;master&lt;/code&gt;,然后点击&lt;code class=&quot;highlighter-rouge&quot;&gt;tag&lt;/code&gt;，你将会看到不同的版本及其对应的文档。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://om1c35wrq.bkt.clouddn.com/eos-tag.gif&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;我在我电脑安装过各种各样的版本，踩过各种各样的莫名其妙的坑，这篇文章我将以如下配置为大家分享。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;操作系统&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://om1c35wrq.bkt.clouddn.com/Snip20180412_1.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;EOS&lt;/code&gt; 版本&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://om1c35wrq.bkt.clouddn.com/Snip20180412_2.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;2-编译设置开发环境&quot;&gt;2. 编译设置开发环境&lt;/h3&gt;
+
+&lt;h4 id=&quot;21-获取eos源码及其所有子模块&quot;&gt;2.1 获取&lt;code class=&quot;highlighter-rouge&quot;&gt;EOS&lt;/code&gt;源码及其所有子模块&lt;/h4&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ git clone https://github.com/eosio/eos --recursive
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;如果克隆代码时未带&lt;code class=&quot;highlighter-rouge&quot;&gt;--recursive&lt;/code&gt;参数，那么可切换到项目路径下面执行如下命令，更新子模块。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ git submodule update --init --recursive
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h4 id=&quot;22-编译源码生成可执行文件&quot;&gt;2.2 编译源码生成可执行文件&lt;/h4&gt;
+
+&lt;p&gt;切换到上面的项目根目录下面，执行如下命令。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;liyuechun:eos yuechunli$ ./eosio_build.sh darwin full
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;liyuechun:eos yuechunli$ ls
+CMakeLists.txt		debian			ring.dot
+CMakeModules		docs			ring.png
+Docker			eos-logo.png		scripts
+Doxyfile		eos.doxygen.in		star.dot
+HEADER			eosio_build.sh		star.png
+Jenkinsfile		externals		testnet-diagrams.sh
+LICENSE.txt		libraries		testnet.md
+README.md		mesh.dot		testnet.template
+build			mesh.png		tests
+circle.yml		plugins			tools
+contracts		programs
+liyuechun:eos yuechunli$ ./eosio_build.sh darwin full
+
+	Beginning build version: 1.2
+	2018年 4月12日 星期四 07时44分06秒 UTC
+	git head id: 96ee0325cc925ff3e90f865ebc72b01341196e08
+	Current branch: * master
+
+	ARCHITECTURE: Darwin
+
+	OS name: Darwin
+	OS Version: 10.13.3
+	CPU speed: 250.00Ghz
+	CPU cores: 4
+	Physical Memory: 16 Gbytes
+	Disk space total: 465G
+	Disk space available: 133G
+	.....
+	漫长等待，半小时左右，网络不好的话，40 - 50分钟。
+	[100%] Linking CXX executable chain_test
+ld: warning: PIE disabled. Absolute addressing (perhaps -mdynamic-no-pic) not allowed in code signed PIE, but used in ___gmpn_divexact_1 from /usr/local/lib/libgmp.a(dive_1.o). To fix this warning, don't compile with -mdynamic-no-pic or link with -Wl,-no_pie
+[100%] Built target chain_test
+
+
+	 _______  _______  _______ _________ _______
+	(  ____ \(  ___  )(  ____ \\__   __/(  ___  )
+	| (    \/| (   ) || (    \/   ) (   | (   ) |
+	| (__    | |   | || (_____    | |   | |   | |
+	|  __)   | |   | |(_____  )   | |   | |   | |
+	| (      | |   | |      ) |   | |   | |   | |
+	| (____/\| (___) |/\____) |___) (___| (___) |
+	(_______/(_______)\_______)\_______/(_______)
+
+	EOS.IO has been successfully built. 0:11:48
+
+	To verify your installation run the following commands:
+
+	/usr/local/bin/mongod -f /usr/local/etc/mongod.conf &amp;amp;
+	cd /Users/liyuechun/eos/build; make test
+
+	For more information:
+	EOS.IO website: https://eos.io
+	EOS.IO Telegram channel @ https://t.me/EOSProject
+	EOS.IO resources: https://eos.io/resources/
+	EOS.IO wiki: https://github.com/EOSIO/eos/wiki
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;EOS&lt;/code&gt;附带的可执行程序:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;liyuechun:programs yuechunli$ pwd
+/Users/liyuechun/Desktop/0402/eos/build/programs
+liyuechun:programs yuechunli$ ls
+CMakeFiles		cmake_install.cmake	keosd
+CTestTestfile.cmake	eosio-abigen		nodeos
+Makefile		eosio-applesedemo
+cleos			eosio-launcher
+liyuechun:programs yuechunli$ 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;nodeos：&lt;/code&gt; 区块链服务器节点生成组建&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;cleos：&lt;/code&gt; 和区块链交互的接口命令&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;keosd：&lt;/code&gt; &lt;code class=&quot;highlighter-rouge&quot;&gt;EOS&lt;/code&gt; 钱包&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;eosio-launcher：&lt;/code&gt;节点网络组成和部署的应用&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;所有这些程序&lt;code class=&quot;highlighter-rouge&quot;&gt;/eos/build/programs&lt;/code&gt;都存在于这个文件夹。&lt;/p&gt;
+
+&lt;h3 id=&quot;23-建立区块链节点&quot;&gt;2.3 建立区块链节点&lt;/h3&gt;
+
+&lt;p&gt;切换到目录&lt;code class=&quot;highlighter-rouge&quot;&gt;eos/build/programs/nodeos&lt;/code&gt;下面，然后执行如下命令。&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;./nodeos&lt;/code&gt;命令可附带 &lt;code class=&quot;highlighter-rouge&quot;&gt;--data-dir 节点文件夹名字&lt;/code&gt; 参数，默认文件夹为&lt;code class=&quot;highlighter-rouge&quot;&gt;nodeos&lt;/code&gt;。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;liyuechun:nodeos yuechunli$ ./nodeos 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;如下图所示，执行完&lt;code class=&quot;highlighter-rouge&quot;&gt;./nodeos&lt;/code&gt;程序后会抱错，并且有如下两个提示。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://om1c35wrq.bkt.clouddn.com/Snip20180412_3.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;generating default genesis file /Users/liyuechun/Library/Application Support/eosio/nodeos/config/genesis.json&lt;/code&gt;表示创建了一个&lt;code class=&quot;highlighter-rouge&quot;&gt;nodeos&lt;/code&gt;节点文件夹。&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;No producers configured! Please add producer IDs and private keys to configuration.&lt;/code&gt;表示&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;liyuechun:nodeos yuechunli$ cd /Users/liyuechun/Library/Application\ Support/eosio/
+liyuechun:eosio yuechunli$ ls
+nodeos
+liyuechun:eosio yuechunli$ cd nodeos/
+liyuechun:nodeos yuechunli$ ls
+config	data
+liyuechun:nodeos yuechunli$ cd config/
+liyuechun:config yuechunli$ ls
+config.ini	genesis.json
+liyuechun:config yuechunli$ cd ..
+liyuechun:nodeos yuechunli$ ls
+config	data
+liyuechun:nodeos yuechunli$ cd data/
+liyuechun:data yuechunli$ ls
+blocks		default.wallet	shared_mem
+liyuechun:data yuechunli$ 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;config&lt;/code&gt;是区块链配置文件，&lt;code class=&quot;highlighter-rouge&quot;&gt;data&lt;/code&gt;是区块链交易数据、钱包数据存储文件。我们需要修改&lt;code class=&quot;highlighter-rouge&quot;&gt;config.ini&lt;/code&gt;文件里面的相关配置。&lt;/p&gt;
+
+&lt;p&gt;我的文件的内容如下：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# Track only transactions whose scopes involve the listed accounts. Default is to track all transactions. (eosio::account_history_plugin)
+# filter_on_accounts =
+
+# Limits the maximum time (in milliseconds) processing a single get_transactions call. (eosio::account_history_plugin)
+get-transactions-time-limit = 3
+
+# File to read Genesis State from (eosio::chain_plugin)
+genesis-json = &quot;/Users/liyuechun/Library/Application Support/eosio/nodeos/config/genesis.json&quot;
+
+# override the initial timestamp in the Genesis State file (eosio::chain_plugin)
+# genesis-timestamp =
+
+# the location of the block log (absolute path or relative to application data dir) (eosio::chain_plugin)
+block-log-dir = &quot;blocks&quot;
+
+# Pairs of [BLOCK_NUM,BLOCK_ID] that should be enforced as checkpoints. (eosio::chain_plugin)
+# checkpoint =
+
+# Limits the maximum time (in milliseconds) that a reversible block is allowed to run before being considered invalid (eosio::chain_plugin)
+max-reversible-block-time = -1
+
+# Limits the maximum time (in milliseconds) that is allowed a pushed transaction's code to execute before being considered invalid (eosio::chain_plugin)
+max-pending-transaction-time = -1
+
+# Limits the maximum time (in milliseconds) that is allowed a to push deferred transactions at the start of a block (eosio::chain_plugin)
+max-deferred-transaction-time = 20
+
+# Override default WASM runtime (eosio::chain_plugin)
+# wasm-runtime =
+
+# Time to wait, in milliseconds, between creating next faucet created account. (eosio::faucet_testnet_plugin)
+faucet-create-interval-ms = 1000
+
+# Name to use as creator for faucet created accounts. (eosio::faucet_testnet_plugin)
+faucet-name = faucet
+
+# [public key, WIF private key] for signing for faucet creator account (eosio::faucet_testnet_plugin)
+faucet-private-key = [&quot;EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV&quot;,&quot;5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3&quot;]
+
+# The local IP and port to listen for incoming http connections. (eosio::http_plugin)
+http-server-address = 127.0.0.1:8888
+
+# Specify the Access-Control-Allow-Origin to be returned on each request. (eosio::http_plugin)
+# access-control-allow-origin =
+
+# Specify the Access-Control-Allow-Headers to be returned on each request. (eosio::http_plugin)
+# access-control-allow-headers =
+
+# Specify if Access-Control-Allow-Credentials: true should be returned on each request. (eosio::http_plugin)
+access-control-allow-credentials = false
+
+# The queue size between nodeos and MongoDB plugin thread. (eosio::mongo_db_plugin)
+mongodb-queue-size = 256
+
+# MongoDB URI connection string, see: https://docs.mongodb.com/master/reference/connection-string/. If not specified then plugin is disabled. Default database 'EOS' is used if not specified in URI. (eosio::mongo_db_plugin)
+# mongodb-uri =
+
+# The actual host:port used to listen for incoming p2p connections. (eosio::net_plugin)
+p2p-listen-endpoint = 0.0.0.0:9876
+
+# An externally accessible host:port for identifying this node. Defaults to p2p-listen-endpoint. (eosio::net_plugin)
+# p2p-server-address =
+
+# The public endpoint of a peer node to connect to. Use multiple p2p-peer-address options as needed to compose a network. (eosio::net_plugin)
+# p2p-peer-address =
+
+# The name supplied to identify this node amongst the peers. (eosio::net_plugin)
+agent-name = &quot;EOS Test Agent&quot;
+
+# Can be 'any' or 'producers' or 'specified' or 'none'. If 'specified', peer-key must be specified at least once. If only 'producers', peer-key is not required. 'producers' and 'specified' may be combined. (eosio::net_plugin)
+allowed-connection = any
+
+# Optional public key of peer allowed to connect.  May be used multiple times. (eosio::net_plugin)
+# peer-key =
+
+# Tuple of [PublicKey, WIF private key] (may specify multiple times) (eosio::net_plugin)
+# peer-private-key =
+
+# Log level: one of 'all', 'debug', 'info', 'warn', 'error', or 'off' (eosio::net_plugin)
+log-level-net-plugin = info
+
+# Maximum number of clients from which connections are accepted, use 0 for no limit (eosio::net_plugin)
+max-clients = 25
+
+# number of seconds to wait before cleaning up dead connections (eosio::net_plugin)
+connection-cleanup-period = 30
+
+# True to require exact match of peer network version. (eosio::net_plugin)
+network-version-match = 0
+
+# number of blocks to retrieve in a chunk from any individual peer during synchronization (eosio::net_plugin)
+sync-fetch-span = 100
+
+# Enable block production, even if the chain is stale. (eosio::producer_plugin)
+enable-stale-production = true
+
+# Percent of producers (0-100) that must be participating in order to produce blocks (eosio::producer_plugin)
+required-participation = 33
+
+# ID of producer controlled by this node (e.g. inita; may specify multiple times) (eosio::producer_plugin)
+producer-name = eosio
+
+# Tuple of [public key, WIF private key] (may specify multiple times) (eosio::producer_plugin)
+private-key = [&quot;EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV&quot;,&quot;5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3&quot;]
+
+# The path of the wallet files (absolute path or relative to application data dir) (eosio::wallet_plugin)
+wallet-dir = &quot;.&quot;
+
+# Timeout for unlocked wallet in seconds. Wallets will automatically lock after specified number of seconds of inactivity. Activity is defined as any wallet command e.g. list-wallets. (eosio::wallet_plugin)
+# unlock-timeout =
+
+# eosio key that will be imported automatically when a wallet is created. (eosio::wallet_plugin)
+# eosio-key =
+
+# Plugin(s) to enable, may be specified multiple times
+# Load the block producer plugin, so you can produce blocks
+plugin = eosio::producer_plugin
+# Wallet plugin
+plugin = eosio::wallet_api_plugin
+# As well as API and HTTP plugins
+plugin = eosio::chain_api_plugin
+plugin = eosio::http_plugin
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;你需要做如下设置：&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;genesis-json = &quot;/Users/liyuechun/Library/Application Support/eosio/nodeos/config/genesis.json&quot;&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;enable-stale-production = true&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;producer-name = eosio&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;plugin = eosio::producer_plugin&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;plugin = eosio::wallet_api_plugin&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;plugin = eosio::chain_api_plugin&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;plugin = eosio::http_plugin&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;接下来再次启动&lt;code class=&quot;highlighter-rouge&quot;&gt;./nodeos&lt;/code&gt;程序，每&lt;code class=&quot;highlighter-rouge&quot;&gt;0.5&lt;/code&gt;秒会产生一个区块。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;liyuechun:nodeos yuechunli$ ./nodeos 
+2212313ms thread-0   chain_plugin.cpp:99           plugin_initialize    ] initializing chain plugin
+2212313ms thread-0   wallet_plugin.cpp:41          plugin_initialize    ] initializing wallet plugin
+2212313ms thread-0   http_plugin.cpp:141           plugin_initialize    ] host: 127.0.0.1 port: 8888 
+2212313ms thread-0   http_plugin.cpp:144           plugin_initialize    ] configured http to listen on 127.0.0.1:8888
+2212313ms thread-0   net_plugin.cpp:2628           plugin_initialize    ] Initialize net plugin
+2212313ms thread-0   net_plugin.cpp:2644           plugin_initialize    ] Setting net_plugin logging level to info
+2212313ms thread-0   net_plugin.cpp:2669           plugin_initialize    ] host: 0.0.0.0 port: 9876 
+2212313ms thread-0   net_plugin.cpp:2745           plugin_initialize    ] my node_id is e03436889c70950da2180e6bc3b215d4283d078a54723ca32cd28c816aa4621b
+2212313ms thread-0   main.cpp:90                   main                 ] nodeos version 96ee0325
+2212313ms thread-0   main.cpp:91                   main                 ] eosio root is /Users/liyuechun/Library/Application Support
+2212329ms thread-0   chain_plugin.cpp:208          plugin_startup       ] starting chain in read/write mode
+2212329ms thread-0   chain_plugin.cpp:213          plugin_startup       ] Blockchain started; head block is #0, genesis timestamp is 2018-03-01T12:00:00.000
+2212329ms thread-0   producer_plugin.cpp:161       plugin_startup       ] producer plugin:  plugin_startup() begin
+2212329ms thread-0   producer_plugin.cpp:166       plugin_startup       ] Launching block production for 1 producers.
+
+*******************************
+*                             *
+*   ------ NEW CHAIN ------   *
+*   -  Welcome to EOSIO!  -   *
+*   -----------------------   *
+*                             *
+*******************************
+
+Your genesis seems to have an old timestamp
+Please consider using the --genesis-timestamp option to give your genesis a recent timestamp
+
+2212330ms thread-0   producer_plugin.cpp:176       plugin_startup       ] producer plugin:  plugin_startup() end
+2212330ms thread-0   http_plugin.cpp:213           plugin_startup       ] start listening for http requests
+2212330ms thread-0   wallet_api_plugin.cpp:70      plugin_startup       ] starting wallet_api_plugin
+2212330ms thread-0   http_plugin.cpp:242           add_handler          ] add api url: /v1/wallet/create
+2212330ms thread-0   http_plugin.cpp:242           add_handler          ] add api url: /v1/wallet/get_public_keys
+2212330ms thread-0   http_plugin.cpp:242           add_handler          ] add api url: /v1/wallet/import_key
+2212330ms thread-0   http_plugin.cpp:242           add_handler          ] add api url: /v1/wallet/list_keys
+2212330ms thread-0   http_plugin.cpp:242           add_handler          ] add api url: /v1/wallet/list_wallets
+2212330ms thread-0   http_plugin.cpp:242           add_handler          ] add api url: /v1/wallet/lock
+2212330ms thread-0   http_plugin.cpp:242           add_handler          ] add api url: /v1/wallet/lock_all
+2212330ms thread-0   http_plugin.cpp:242           add_handler          ] add api url: /v1/wallet/open
+2212330ms thread-0   http_plugin.cpp:242           add_handler          ] add api url: /v1/wallet/set_timeout
+2212330ms thread-0   http_plugin.cpp:242           add_handler          ] add api url: /v1/wallet/sign_transaction
+2212330ms thread-0   http_plugin.cpp:242           add_handler          ] add api url: /v1/wallet/unlock
+2212330ms thread-0   chain_api_plugin.cpp:62       plugin_startup       ] starting chain_api_plugin
+2212330ms thread-0   http_plugin.cpp:242           add_handler          ] add api url: /v1/chain/abi_bin_to_json
+2212330ms thread-0   http_plugin.cpp:242           add_handler          ] add api url: /v1/chain/abi_json_to_bin
+2212330ms thread-0   http_plugin.cpp:242           add_handler          ] add api url: /v1/chain/get_account
+2212330ms thread-0   http_plugin.cpp:242           add_handler          ] add api url: /v1/chain/get_block
+2212330ms thread-0   http_plugin.cpp:242           add_handler          ] add api url: /v1/chain/get_code
+2212330ms thread-0   http_plugin.cpp:242           add_handler          ] add api url: /v1/chain/get_currency_balance
+2212330ms thread-0   http_plugin.cpp:242           add_handler          ] add api url: /v1/chain/get_currency_stats
+2212330ms thread-0   http_plugin.cpp:242           add_handler          ] add api url: /v1/chain/get_info
+2212330ms thread-0   http_plugin.cpp:242           add_handler          ] add api url: /v1/chain/get_required_keys
+2212330ms thread-0   http_plugin.cpp:242           add_handler          ] add api url: /v1/chain/get_table_rows
+2212330ms thread-0   http_plugin.cpp:242           add_handler          ] add api url: /v1/chain/push_block
+2212330ms thread-0   http_plugin.cpp:242           add_handler          ] add api url: /v1/chain/push_transaction
+2212330ms thread-0   http_plugin.cpp:242           add_handler          ] add api url: /v1/chain/push_transactions
+2212330ms thread-0   net_plugin.cpp:2757           plugin_startup       ] starting listener, max clients is 25
+eosio generated block b8001d13... #1 @ 2018-04-12T08:36:52.500 with 0 trxs, lib: 0
+eosio generated block 96eab818... #2 @ 2018-04-12T08:36:53.000 with 0 trxs, lib: 1
+eosio generated block 635d105b... #3 @ 2018-04-12T08:36:53.500 with 0 trxs, lib: 2
+eosio generated block 29ef0516... #4 @ 2018-04-12T08:36:54.000 with 0 trxs, lib: 3
+eosio generated block 1fc1ac75... #5 @ 2018-04-12T08:36:54.500 with 0 trxs, lib: 4
+eosio generated block 041d331f... #6 @ 2018-04-12T08:36:55.000 with 0 trxs, lib: 5
+eosio generated block ebee3c7d... #7 @ 2018-04-12T08:36:55.500 with 0 trxs, lib: 6
+eosio generated block eecd62a0... #8 @ 2018-04-12T08:36:56.000 with 0 trxs, lib: 7
+eosio generated block c2b27ea5... #9 @ 2018-04-12T08:36:56.500 with 0 trxs, lib: 8
+eosio generated block 6c66dc13... #10 @ 2018-04-12T08:36:57.000 with 0 trxs, lib: 9
+eosio generated block 2534614c... #11 @ 2018-04-12T08:36:57.500 with 0 trxs, lib: 10
+eosio generated block cce2934b... #12 @ 2018-04-12T08:36:58.000 with 0 trxs, lib: 11
+eosio generated block 0165d88b... #13 @ 2018-04-12T08:36:58.500 with 0 trxs, lib: 12
+eosio generated block fa240aa7... #14 @ 2018-04-12T08:36:59.000 with 0 trxs, lib: 13
+eosio generated block 2965e8d4... #15 @ 2018-04-12T08:36:59.500 with 0 trxs, lib: 14
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;3-查看区块信息&quot;&gt;3. 查看区块信息&lt;/h3&gt;
+
+&lt;p&gt;重新打开一个终端，切换到如下路径。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;liyuechun:cleos yuechunli$ ./cleos -p 8888 get info
+{
+  &quot;server_version&quot;: &quot;96ee0325&quot;,
+  &quot;head_block_num&quot;: 342,
+  &quot;last_irreversible_block_num&quot;: 341,
+  &quot;head_block_id&quot;: &quot;0000015609ca5ec4f237bbe49e8eb3aa36dbe8ecec86133340567dad5caf01ba&quot;,
+  &quot;head_block_time&quot;: &quot;2018-04-12T08:39:43&quot;,
+  &quot;head_block_producer&quot;: &quot;eosio&quot;
+}
+liyuechun:cleos yuechunli$ ./cleos -p 8888 get info
+{
+  &quot;server_version&quot;: &quot;96ee0325&quot;,
+  &quot;head_block_num&quot;: 359,
+  &quot;last_irreversible_block_num&quot;: 358,
+  &quot;head_block_id&quot;: &quot;00000167a933b393bc3562ca2998080748a1ed24f79014848e7b0b34f2c0c429&quot;,
+  &quot;head_block_time&quot;: &quot;2018-04-12T08:39:51&quot;,
+  &quot;head_block_producer&quot;: &quot;eosio&quot;
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;5-视频获取方式&quot;&gt;5. 视频获取方式&lt;/h3&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;关注公众，发送&lt;code class=&quot;highlighter-rouge&quot;&gt;eos&lt;/code&gt;自动获取视频链接&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://om1c35wrq.bkt.clouddn.com/%E5%8C%BA%E5%9D%97%E9%93%BE%E9%83%A8%E8%90%BD-1.jpg&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+</description>
+        <pubDate>Wed, 04 Apr 2018 00:00:00 +0800</pubDate>
+        <link>http://localhost:4000/2018/04/04/eos-dev/</link>
+        <guid isPermaLink="true">http://localhost:4000/2018/04/04/eos-dev/</guid>
+        
+        <category>EOS</category>
+        
+        
+      </item>
+    
+  </channel>
+</rss>
