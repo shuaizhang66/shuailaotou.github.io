@@ -290,13 +290,13 @@ type Node struct{
 
 <ul>
   <li>
-    <p><strong>中序遍历􏱴􏱿􏲸􏲹􏰁（in-order􏰂􏰃􏰟􏰜􏰀）：</strong>左子树（L）–&gt;根节点􏰨􏰋􏰗（D）–&gt;右树（R） 􏰤􏰀􏰃 1-&gt;2-&gt;3-&gt;4-&gt;5-&gt;6-&gt;7-&gt;8-&gt;9-&gt;10- &gt;11 （LDR）</p>
+    <p><strong>中序遍历􏱴􏱿􏲸􏲹􏰁(in-order􏰂􏰃􏰟􏰜􏰀)：</strong>左子树（L）–&gt;根节点􏰨􏰋􏰗(D)–&gt;右树(R􏰤)􏰀􏰃 1-&gt;2-&gt;3-&gt;4-&gt;5-&gt;6-&gt;7-&gt;8-&gt;9-&gt;10- &gt;11 （LDR）</p>
   </li>
   <li>
-    <p><strong>先序遍历（pre-order）：</strong>根节点􏰂􏰃􏰨􏰋􏰗（D）–&gt;􏰟􏰜􏰀左子树（L）–&gt;􏰤􏰜􏰀􏰃右树（R） 8-&gt;4-&gt;2-&gt;1-&gt;3-&gt;6-&gt;5-&gt;7 &gt;10-&gt;9- &gt;11。（DLR）</p>
+    <p><strong>先序遍历（pre-order）：</strong>根节点􏰂􏰃􏰨􏰋􏰗(D)–&gt;􏰟􏰜􏰀左子树(L)–&gt;􏰤􏰜􏰀􏰃右树(R) 8-&gt;4-&gt;2-&gt;1-&gt;3-&gt;6-&gt;5-&gt;7 &gt;10-&gt;9- &gt;11（DLR）</p>
   </li>
   <li>
-    <p><strong>后序遍历（pre-order）：</strong>左子树􏰂􏰃􏰨􏰋􏰗（L)–&gt;􏰟􏰜􏰀右子树（R）–&gt;􏰤􏰜􏰀􏰃根节点（D） 8-&gt;4-&gt;2-&gt;1-&gt;3-&gt;6-&gt;5-&gt;7 &gt;10-&gt;9- &gt;11 （LRD）</p>
+    <p><strong>后序遍历（pre-order）：</strong>左子树􏰂􏰃􏰨􏰋􏰗(L)–&gt;􏰟􏰜􏰀右子树(R)–&gt;根节点（D） 8-&gt;4-&gt;2-&gt;1-&gt;3-&gt;6-&gt;5-&gt;7 &gt;10-&gt;9- &gt;11 （LRD）</p>
   </li>
 </ul>
 
@@ -631,16 +631,16 @@ func stringify(node *Node, level int) {
 	}
 	format := ""
 	for i := 0; i &lt; level; i++ {
-		format += "\t" // 􏰨􏰊􏰖􏰗􏰈􏰥􏰦􏳜􏱆􏳝􏳞􏰯􏰦根据节点的深度决定缩进长度
+		format += "\t" //根据节点的深度决定缩进长度
 
 	}
 	format += "----[ "
 	level++
-	//  先递归打印左子树􏱈􏱉􏱊􏱋􏱌􏰟􏰜􏰀 
+	//先递归打印左子树􏱈􏱉􏱊􏱋􏱌􏰟􏰜􏰀 
 	stringify(node.left, level)
-	// 􏱋􏱌􏰠打印值
+	//打印值
 	fmt.Printf(format+"%d\n", node.key) 
-	/// 􏱍􏱉􏱊􏱋􏱌􏰤再递归打印右子树
+	//再递归打印右子树
 	 stringify(node.right, level)
 }
 
@@ -648,7 +648,7 @@ func stringify(node *Node, level int) {
 </div>
 
 <h2 id="总结">总结</h2>
-<p>􏱎􏰣􏰒􏰓􏰝􏰞􏰀􏰈􏱃􏱄􏰍􏱏􏱐􏱑􏱒􏱅􏱉􏱊􏰼􏱓􏰍􏱔􏱕􏱖􏱗􏱘􏱙􏰄􏱆􏱚􏰆􏱛􏱜􏱝􏱉􏱊􏰈􏱞􏱟􏱠􏱡􏰍 <strong>对于二叉树的操作，增删查都与递归相关，所以实现的时候一定要分析清楚递归的终止条件，在正确的条件下return，避开死循环。</strong></p>
+<p><strong>对于二叉树的操作，增删查都与递归相关，所以实现的时候一定要分析清楚递归的终止条件，在正确的条件下return，避开死循环。</strong></p>
 
 
   </section>
@@ -719,7 +719,7 @@ func stringify(node *Node, level int) {
        <ul class="pager">
         
         <li class="previous">
-            <a href="/2018/04/27/golang-interview/" data-toggle="tooltip" data-placement="top" title="Golang经典笔试题及答案（下篇）">上一篇：  <span>Golang经典笔试题及答案（下篇）</span>
+            <a href="/2018/05/03/Go%E8%AF%AD%E8%A8%80%E7%AE%80%E5%8D%95%E5%AE%9E%E7%8E%B0%E6%AF%94%E7%89%B9%E5%B8%81%E6%8C%96%E7%9F%BF%E5%8E%9F%E7%90%86/" data-toggle="tooltip" data-placement="top" title="Go语言简单实现比特币挖矿原理">上一篇：  <span>Go语言简单实现比特币挖矿原理</span>
             </a>
         </li>
         

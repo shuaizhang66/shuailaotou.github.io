@@ -5,8 +5,8 @@
     <description>张帅，江湖人称帅哥，区块链技术全能技术人才。</description>
     <link>http://localhost:4000/</link>
     <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Thu, 03 May 2018 17:54:22 +0800</pubDate>
-    <lastBuildDate>Thu, 03 May 2018 17:54:22 +0800</lastBuildDate>
+    <pubDate>Thu, 03 May 2018 18:03:37 +0800</pubDate>
+    <lastBuildDate>Thu, 03 May 2018 18:03:37 +0800</lastBuildDate>
     <generator>Jekyll v3.5.1</generator>
     
       <item>
@@ -95,13 +95,13 @@ type Node struct{
 
 &lt;ul&gt;
   &lt;li&gt;
-    &lt;p&gt;&lt;strong&gt;中序遍历􏱴􏱿􏲸􏲹􏰁（in-order􏰂􏰃􏰟􏰜􏰀）：&lt;/strong&gt;左子树（L）–&amp;gt;根节点􏰨􏰋􏰗（D）–&amp;gt;右树（R） 􏰤􏰀􏰃 1-&amp;gt;2-&amp;gt;3-&amp;gt;4-&amp;gt;5-&amp;gt;6-&amp;gt;7-&amp;gt;8-&amp;gt;9-&amp;gt;10- &amp;gt;11 （LDR）&lt;/p&gt;
+    &lt;p&gt;&lt;strong&gt;中序遍历􏱴􏱿􏲸􏲹􏰁(in-order􏰂􏰃􏰟􏰜􏰀)：&lt;/strong&gt;左子树（L）–&amp;gt;根节点􏰨􏰋􏰗(D)–&amp;gt;右树(R􏰤)􏰀􏰃 1-&amp;gt;2-&amp;gt;3-&amp;gt;4-&amp;gt;5-&amp;gt;6-&amp;gt;7-&amp;gt;8-&amp;gt;9-&amp;gt;10- &amp;gt;11 （LDR）&lt;/p&gt;
   &lt;/li&gt;
   &lt;li&gt;
-    &lt;p&gt;&lt;strong&gt;先序遍历（pre-order）：&lt;/strong&gt;根节点􏰂􏰃􏰨􏰋􏰗（D）–&amp;gt;􏰟􏰜􏰀左子树（L）–&amp;gt;􏰤􏰜􏰀􏰃右树（R） 8-&amp;gt;4-&amp;gt;2-&amp;gt;1-&amp;gt;3-&amp;gt;6-&amp;gt;5-&amp;gt;7 &amp;gt;10-&amp;gt;9- &amp;gt;11。（DLR）&lt;/p&gt;
+    &lt;p&gt;&lt;strong&gt;先序遍历（pre-order）：&lt;/strong&gt;根节点􏰂􏰃􏰨􏰋􏰗(D)–&amp;gt;􏰟􏰜􏰀左子树(L)–&amp;gt;􏰤􏰜􏰀􏰃右树(R) 8-&amp;gt;4-&amp;gt;2-&amp;gt;1-&amp;gt;3-&amp;gt;6-&amp;gt;5-&amp;gt;7 &amp;gt;10-&amp;gt;9- &amp;gt;11（DLR）&lt;/p&gt;
   &lt;/li&gt;
   &lt;li&gt;
-    &lt;p&gt;&lt;strong&gt;后序遍历（pre-order）：&lt;/strong&gt;左子树􏰂􏰃􏰨􏰋􏰗（L)–&amp;gt;􏰟􏰜􏰀右子树（R）–&amp;gt;􏰤􏰜􏰀􏰃根节点（D） 8-&amp;gt;4-&amp;gt;2-&amp;gt;1-&amp;gt;3-&amp;gt;6-&amp;gt;5-&amp;gt;7 &amp;gt;10-&amp;gt;9- &amp;gt;11 （LRD）&lt;/p&gt;
+    &lt;p&gt;&lt;strong&gt;后序遍历（pre-order）：&lt;/strong&gt;左子树􏰂􏰃􏰨􏰋􏰗(L)–&amp;gt;􏰟􏰜􏰀右子树(R)–&amp;gt;根节点（D） 8-&amp;gt;4-&amp;gt;2-&amp;gt;1-&amp;gt;3-&amp;gt;6-&amp;gt;5-&amp;gt;7 &amp;gt;10-&amp;gt;9- &amp;gt;11 （LRD）&lt;/p&gt;
   &lt;/li&gt;
 &lt;/ul&gt;
 
@@ -436,16 +436,16 @@ func stringify(node *Node, level int) {
 	}
 	format := &quot;&quot;
 	for i := 0; i &amp;lt; level; i++ {
-		format += &quot;\t&quot; // 􏰨􏰊􏰖􏰗􏰈􏰥􏰦􏳜􏱆􏳝􏳞􏰯􏰦根据节点的深度决定缩进长度
+		format += &quot;\t&quot; //根据节点的深度决定缩进长度
 
 	}
 	format += &quot;----[ &quot;
 	level++
-	//  先递归打印左子树􏱈􏱉􏱊􏱋􏱌􏰟􏰜􏰀 
+	//先递归打印左子树􏱈􏱉􏱊􏱋􏱌􏰟􏰜􏰀 
 	stringify(node.left, level)
-	// 􏱋􏱌􏰠打印值
+	//打印值
 	fmt.Printf(format+&quot;%d\n&quot;, node.key) 
-	/// 􏱍􏱉􏱊􏱋􏱌􏰤再递归打印右子树
+	//再递归打印右子树
 	 stringify(node.right, level)
 }
 
@@ -453,7 +453,7 @@ func stringify(node *Node, level int) {
 &lt;/div&gt;
 
 &lt;h2 id=&quot;总结&quot;&gt;总结&lt;/h2&gt;
-&lt;p&gt;􏱎􏰣􏰒􏰓􏰝􏰞􏰀􏰈􏱃􏱄􏰍􏱏􏱐􏱑􏱒􏱅􏱉􏱊􏰼􏱓􏰍􏱔􏱕􏱖􏱗􏱘􏱙􏰄􏱆􏱚􏰆􏱛􏱜􏱝􏱉􏱊􏰈􏱞􏱟􏱠􏱡􏰍 &lt;strong&gt;对于二叉树的操作，增删查都与递归相关，所以实现的时候一定要分析清楚递归的终止条件，在正确的条件下return，避开死循环。&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;对于二叉树的操作，增删查都与递归相关，所以实现的时候一定要分析清楚递归的终止条件，在正确的条件下return，避开死循环。&lt;/strong&gt;&lt;/p&gt;
 
 </description>
         <pubDate>Thu, 03 May 2018 00:00:00 +0800</pubDate>
@@ -461,6 +461,232 @@ func stringify(node *Node, level int) {
         <guid isPermaLink="true">http://localhost:4000/2018/05/03/go%E8%AF%AD%E8%A8%80%E5%AE%9E%E7%8E%B0%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91/</guid>
         
         <category>二叉树</category>
+        
+        
+      </item>
+    
+      <item>
+        <title>Go语言简单实现比特币挖矿原理</title>
+        <description>&lt;h3 id=&quot;区块链基本概念&quot;&gt;区块链基本概念&lt;/h3&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;区块链&lt;/code&gt;本质上是一个对等网络（peer-to-peer）的&lt;code class=&quot;highlighter-rouge&quot;&gt;分布式账本数据库&lt;/code&gt;，
+比特币的底层就采用了区块链的技术架构。区块链本身其实是一串链接的数据区块，每相邻区块之间相互连接，其链接指针是采用&lt;code class=&quot;highlighter-rouge&quot;&gt;密码学哈希算法&lt;/code&gt;对区块头进行处理所产生的区块头哈希值。每一个区块数据块中记录了一组采用哈希算法组成的树状交易状态信息，这样保证了&lt;code class=&quot;highlighter-rouge&quot;&gt;每个区块内的交易数据不可篡改，区块链里链接的区块也不可篡改&lt;/code&gt;。&lt;/p&gt;
+
+&lt;p&gt;比特币的交易记录会保存在数据区块中，比特币系统中大约每10分钟会产生一个区块，每个数据区块一般包含区块头（Header）和区块体（Body）两部分，如图所示。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://p7rz9r9fd.bkt.clouddn.com/4-27-1-1.jpg&quot; alt=&quot;1-1.jpg&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;区块头封装了当前的版本号（Version）、前一区块地址（Prev-Block）、时间戳（Timestamp）、随机数（Nonce）、当前 区块的目标哈希值（Bits）、Merkle数的根值（Merkle-root）等信息。&lt;/p&gt;
+
+&lt;h4 id=&quot;区块头分析&quot;&gt;区块头分析&lt;/h4&gt;
+&lt;p&gt;前80个字节是区块头&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;hash&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;000000000003ba27aa200b1cecaad478d2b00432346c3f1f3986da1afd33e506&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;ver&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;prev_block&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;000000000002d01c1fccc21636b607dfd930d31d01c3a62104612a1719011250&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;mrkl_root&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;f3e94742aca4b5ef85488dc37c06c3282295ffec960994b2c0d5ac2a25a95766&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;time&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1293623863&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;bits&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;453281356&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;nonce&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;274148111&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;字节&lt;/th&gt;
+      &lt;th&gt;字段&lt;/th&gt;
+      &lt;th&gt;说明&lt;/th&gt;
+      &lt;th&gt; &lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt;4&lt;/td&gt;
+      &lt;td&gt;版本&lt;/td&gt;
+      &lt;td&gt;区块版本号，表示区块遵守的验证规则&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt;32&lt;/td&gt;
+      &lt;td&gt;父区块头哈希值&lt;/td&gt;
+      &lt;td&gt;前一区块的哈希值，使用SHA(SHA256(父区块头))计算&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt;32&lt;/td&gt;
+      &lt;td&gt;Merkle根&lt;/td&gt;
+      &lt;td&gt;该区块中交易的Merkle树根的哈希值，&lt;br /&gt;同样采用SHA(SHA256(父区块头))计算&amp;lt;/br&amp;gt;&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt;4&lt;/td&gt;
+      &lt;td&gt;时间戳&lt;/td&gt;
+      &lt;td&gt;该区块产生的近似时间，精确到秒的UNIX时间戳，&lt;br /&gt;必须严格大于前11个区块时间的中值&amp;lt;/br&amp;gt;，&lt;br /&gt;同时全节点也会拒绝那些超出自己2个小时时间戳的区块&amp;lt;/br&amp;gt;&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt;4&lt;/td&gt;
+      &lt;td&gt;难度目标&lt;/td&gt;
+      &lt;td&gt;该区块工作量算法的难度目标，已经使用特定算法编码&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt;4&lt;/td&gt;
+      &lt;td&gt;Nonce&lt;/td&gt;
+      &lt;td&gt;为了找到满足难度目标所设定的随机数，&lt;br /&gt;为了解决32位随机数在算力飞升的情况下不够用的问题，&amp;lt;/br&amp;gt;规定时间戳和coinbase交易信息均可更改，以此扩展nonce的位数&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h3 id=&quot;挖矿&quot;&gt;挖矿&lt;/h3&gt;
+&lt;p&gt;区块在挖矿过程中产生。所谓的挖矿实际上是&lt;code class=&quot;highlighter-rouge&quot;&gt;穷举随机数的算法&lt;/code&gt;，把上个区块的哈希值加上十分钟内的全部交易单打包，再加上一个算计数，算出一个256位的字符串哈希值，输入的随机数Nonce 使哈希值满足一定的条件就获得这个区块的交易记账权。新产生的区块需要&lt;code class=&quot;highlighter-rouge&quot;&gt;快速的广播出去&lt;/code&gt;，以便其他的节点对其进行验证，以防止造假。当记账成功的时候，即获得区块奖励，也就是挖到了比特币。&lt;/p&gt;
+
+&lt;h3 id=&quot;获得比特币&quot;&gt;获得比特币&lt;/h3&gt;
+&lt;p&gt;随着随机数（Nonce）的不断变化，就会产生不同的哈希值，当产生的&lt;code class=&quot;highlighter-rouge&quot;&gt;哈希值左面的连续位数的0值个数大于等于当前区块难度值的时候&lt;/code&gt;，即碰撞成功，找到随机数，获得记账权，获得比特币。如下图：
+&lt;img src=&quot;http://p7rz9r9fd.bkt.clouddn.com/4-27-1-2.png&quot; alt=&quot;1-2.png&quot; /&gt;
+这个难度为4，碰撞出的随机数是87471.随着难度的不断提高，碰撞出随机数的概率就越低。目前比特币矿机最大的算力为蚂蚁大陆的S9矿机（14TH/s）。我就有两台哦，不过现在每天的产量只有0.0009个BTC，少的可怜。。。&lt;/p&gt;
+
+&lt;h3 id=&quot;代码实现&quot;&gt;代码实现&lt;/h3&gt;
+
+&lt;p&gt;&lt;strong&gt;定义block结构体&lt;/strong&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
+type block struct {
+
+	ver       int   //版本号
+	prev_block string  //父区块的哈希值
+	mekl_root  string   //该区块merkle树的哈希值
+	time       string   //时间戳
+	bits       int      // 难度
+
+}
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;获取哈希值&lt;/strong&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
+func getHashValueStr(nonce int,blc block) string {
+
+//拼接区块版本号，时间戳，父区块，merkle树，随机数为hv字符串
+	hv := strconv.Itoa(blc.ver) + blc.time + blc.prev_block+
+		blc.mekl_root + strconv.Itoa(nonce)
+
+	first := sha256.New()
+
+	first.Write([]byte(hv))
+
+// first.Sum(nil)返回值为[]byte 类型的数组，
+ 而哈希值由每位字符16进制字符组成，所以应用fmt.Springtf
+ 函数将数组转化为单个字节为16进制拼接而成的哈希字符串
+
+	return fmt.Sprintf(&quot;%x&quot;,first.Sum(nil))
+
+}
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;检验随机数生产的哈希函数是否符合条件&lt;/strong&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
+
+func mining(hashStr string, diff int) bool {
+
+	var i int
+
+	for i = 0; i &amp;lt; len(hashStr); i++ {
+
+      //如果i位数 的值不为0，不满足条件，跳出循环
+		if hashStr[i] != '0' {
+			break
+		}
+	}
+	//判断i的值是否大于当前的难度，大于碰撞成功，否则失败
+	return i &amp;gt;= diff
+
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;获取随机数&lt;/strong&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
+func getNonce(blc block)int  {
+
+	nonce := 0
+	
+	//改变nonce的值，如果返回false，nonce++
+	
+	for !mining(getHashValueStr(nonce,blc), blc.bits) {
+
+		fmt.Println(getHashValueStr(nonce,blc))
+		nonce ++
+
+	}
+	fmt.Println(getHashValueStr(nonce,blc))
+	fmt.Println(&quot;出块成功！&quot;)
+
+	return nonce
+
+
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;主函数&lt;/strong&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
+func main() {
+
+	prev_block := &quot;000000000003ba27aa200b1cecaad478d2b00432346c3f1f3986da1afd33e506&quot;
+
+	mrkl_root := &quot;000000000002d01c1fccc21636b607dfd930d31d01c3a62104612a1719011250&quot;
+
+	time := &quot;1293623863&quot;
+
+	bits := 4
+
+	block := block{1, prev_block, mrkl_root, time, bits}
+
+	nc := getNonce(block)
+
+	fmt.Println(nc)
+
+}
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;运行结果&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://p7rz9r9fd.bkt.clouddn.com/4-27-1-3.png&quot; alt=&quot;1-3&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;总结&quot;&gt;总结&lt;/h2&gt;
+&lt;p&gt;代码只是简单的实现了比特币的挖矿原理，实际上可能比这处理的更细致，考虑的更全面一些。
+至于挖矿的事情，兵法有云“兵贵神速”，17年比特币大涨，那时候难度还不是很高，去云南四川那边投资矿厂的人都赚的盆满钵满，我就认识了一位17年初挖矿的矿工，最高峰拥有20000台S9，一年赚了将近10亿，投资成本据说是几十万。当然这些也都需要一些眼光，勇气，我只是在现在看过去罢了，至于那个时候谁都不知道比特币能涨这么猛。包括现在我之所以还会继续购置矿机，是因为我同样认为目前比特币还远远未到达它应有的价值，产量虽然少，但是挖出的币我是不会卖的，5年以后，10年以后再看，那可能同样现在看过去的感觉。当然这些不是重点，也不构成投资建议。重点看代码，看代码！😂&lt;/p&gt;
+
+&lt;hr /&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/shuailaotou/go-&quot;&gt;github源代码&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;据说找工作github的Star很重要，哈哈哈。喜欢就star一下吧！👻👻👻&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;作者原创，转载请注明出处，如有错误描述，请评论纠正，谢谢大家！🐳🐳🐳&lt;/p&gt;
+&lt;/blockquote&gt;
+
+</description>
+        <pubDate>Thu, 03 May 2018 00:00:00 +0800</pubDate>
+        <link>http://localhost:4000/2018/05/03/Go%E8%AF%AD%E8%A8%80%E7%AE%80%E5%8D%95%E5%AE%9E%E7%8E%B0%E6%AF%94%E7%89%B9%E5%B8%81%E6%8C%96%E7%9F%BF%E5%8E%9F%E7%90%86/</link>
+        <guid isPermaLink="true">http://localhost:4000/2018/05/03/Go%E8%AF%AD%E8%A8%80%E7%AE%80%E5%8D%95%E5%AE%9E%E7%8E%B0%E6%AF%94%E7%89%B9%E5%B8%81%E6%8C%96%E7%9F%BF%E5%8E%9F%E7%90%86/</guid>
+        
+        <category>挖矿</category>
         
         
       </item>
@@ -1099,232 +1325,6 @@ func main() {
         <pubDate>Fri, 27 Apr 2018 00:00:00 +0800</pubDate>
         <link>http://localhost:4000/2018/04/27/golang-interview/</link>
         <guid isPermaLink="true">http://localhost:4000/2018/04/27/golang-interview/</guid>
-        
-        <category>笔试题</category>
-        
-        
-      </item>
-    
-      <item>
-        <title>Golang经典笔试题及答案（上篇）</title>
-        <description>&lt;h3 id=&quot;区块链基本概念&quot;&gt;区块链基本概念&lt;/h3&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;区块链&lt;/code&gt;本质上是一个对等网络（peer-to-peer）的&lt;code class=&quot;highlighter-rouge&quot;&gt;分布式账本数据库&lt;/code&gt;，
-比特币的底层就采用了区块链的技术架构。区块链本身其实是一串链接的数据区块，每相邻区块之间相互连接，其链接指针是采用&lt;code class=&quot;highlighter-rouge&quot;&gt;密码学哈希算法&lt;/code&gt;对区块头进行处理所产生的区块头哈希值。每一个区块数据块中记录了一组采用哈希算法组成的树状交易状态信息，这样保证了&lt;code class=&quot;highlighter-rouge&quot;&gt;每个区块内的交易数据不可篡改，区块链里链接的区块也不可篡改&lt;/code&gt;。&lt;/p&gt;
-
-&lt;p&gt;比特币的交易记录会保存在数据区块中，比特币系统中大约每10分钟会产生一个区块，每个数据区块一般包含区块头（Header）和区块体（Body）两部分，如图所示。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;http://p7rz9r9fd.bkt.clouddn.com/4-27-1-1.jpg&quot; alt=&quot;1-1.jpg&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;区块头封装了当前的版本号（Version）、前一区块地址（Prev-Block）、时间戳（Timestamp）、随机数（Nonce）、当前 区块的目标哈希值（Bits）、Merkle数的根值（Merkle-root）等信息。&lt;/p&gt;
-
-&lt;h4 id=&quot;区块头分析&quot;&gt;区块头分析&lt;/h4&gt;
-&lt;p&gt;前80个字节是区块头&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;hash&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;000000000003ba27aa200b1cecaad478d2b00432346c3f1f3986da1afd33e506&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;ver&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;prev_block&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;000000000002d01c1fccc21636b607dfd930d31d01c3a62104612a1719011250&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;mrkl_root&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;f3e94742aca4b5ef85488dc37c06c3282295ffec960994b2c0d5ac2a25a95766&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;time&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1293623863&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;bits&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;453281356&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;nonce&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;274148111&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;table&gt;
-  &lt;thead&gt;
-    &lt;tr&gt;
-      &lt;th&gt;字节&lt;/th&gt;
-      &lt;th&gt;字段&lt;/th&gt;
-      &lt;th&gt;说明&lt;/th&gt;
-      &lt;th&gt; &lt;/th&gt;
-    &lt;/tr&gt;
-  &lt;/thead&gt;
-  &lt;tbody&gt;
-    &lt;tr&gt;
-      &lt;td&gt; &lt;/td&gt;
-      &lt;td&gt;4&lt;/td&gt;
-      &lt;td&gt;版本&lt;/td&gt;
-      &lt;td&gt;区块版本号，表示区块遵守的验证规则&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt; &lt;/td&gt;
-      &lt;td&gt;32&lt;/td&gt;
-      &lt;td&gt;父区块头哈希值&lt;/td&gt;
-      &lt;td&gt;前一区块的哈希值，使用SHA(SHA256(父区块头))计算&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt; &lt;/td&gt;
-      &lt;td&gt;32&lt;/td&gt;
-      &lt;td&gt;Merkle根&lt;/td&gt;
-      &lt;td&gt;该区块中交易的Merkle树根的哈希值，&lt;br /&gt;同样采用SHA(SHA256(父区块头))计算&amp;lt;/br&amp;gt;&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt; &lt;/td&gt;
-      &lt;td&gt;4&lt;/td&gt;
-      &lt;td&gt;时间戳&lt;/td&gt;
-      &lt;td&gt;该区块产生的近似时间，精确到秒的UNIX时间戳，&lt;br /&gt;必须严格大于前11个区块时间的中值&amp;lt;/br&amp;gt;，&lt;br /&gt;同时全节点也会拒绝那些超出自己2个小时时间戳的区块&amp;lt;/br&amp;gt;&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt; &lt;/td&gt;
-      &lt;td&gt;4&lt;/td&gt;
-      &lt;td&gt;难度目标&lt;/td&gt;
-      &lt;td&gt;该区块工作量算法的难度目标，已经使用特定算法编码&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt; &lt;/td&gt;
-      &lt;td&gt;4&lt;/td&gt;
-      &lt;td&gt;Nonce&lt;/td&gt;
-      &lt;td&gt;为了找到满足难度目标所设定的随机数，&lt;br /&gt;为了解决32位随机数在算力飞升的情况下不够用的问题，&amp;lt;/br&amp;gt;规定时间戳和coinbase交易信息均可更改，以此扩展nonce的位数&lt;/td&gt;
-    &lt;/tr&gt;
-  &lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;h3 id=&quot;挖矿&quot;&gt;挖矿&lt;/h3&gt;
-&lt;p&gt;区块在挖矿过程中产生。所谓的挖矿实际上是&lt;code class=&quot;highlighter-rouge&quot;&gt;穷举随机数的算法&lt;/code&gt;，把上个区块的哈希值加上十分钟内的全部交易单打包，再加上一个算计数，算出一个256位的字符串哈希值，输入的随机数Nonce 使哈希值满足一定的条件就获得这个区块的交易记账权。新产生的区块需要&lt;code class=&quot;highlighter-rouge&quot;&gt;快速的广播出去&lt;/code&gt;，以便其他的节点对其进行验证，以防止造假。当记账成功的时候，即获得区块奖励，也就是挖到了比特币。&lt;/p&gt;
-
-&lt;h3 id=&quot;获得比特币&quot;&gt;获得比特币&lt;/h3&gt;
-&lt;p&gt;随着随机数（Nonce）的不断变化，就会产生不同的哈希值，当产生的&lt;code class=&quot;highlighter-rouge&quot;&gt;哈希值左面的连续位数的0值个数大于等于当前区块难度值的时候&lt;/code&gt;，即碰撞成功，找到随机数，获得记账权，获得比特币。如下图：
-&lt;img src=&quot;http://p7rz9r9fd.bkt.clouddn.com/4-27-1-2.png&quot; alt=&quot;1-2.png&quot; /&gt;
-这个难度为4，碰撞出的随机数是87471.随着难度的不断提高，碰撞出随机数的概率就越低。目前比特币矿机最大的算力为蚂蚁大陆的S9矿机（14TH/s）。我就有两台哦，不过现在每天的产量只有0.0009个BTC，少的可怜。。。&lt;/p&gt;
-
-&lt;h3 id=&quot;代码实现&quot;&gt;代码实现&lt;/h3&gt;
-
-&lt;p&gt;&lt;strong&gt;定义block结构体&lt;/strong&gt;&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
-type block struct {
-
-	ver       int   //版本号
-	prev_block string  //父区块的哈希值
-	mekl_root  string   //该区块merkle树的哈希值
-	time       string   //时间戳
-	bits       int      // 难度
-
-}
-
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;&lt;strong&gt;获取哈希值&lt;/strong&gt;&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
-func getHashValueStr(nonce int,blc block) string {
-
-//拼接区块版本号，时间戳，父区块，merkle树，随机数为hv字符串
-	hv := strconv.Itoa(blc.ver) + blc.time + blc.prev_block+
-		blc.mekl_root + strconv.Itoa(nonce)
-
-	first := sha256.New()
-
-	first.Write([]byte(hv))
-
-// first.Sum(nil)返回值为[]byte 类型的数组，
- 而哈希值由每位字符16进制字符组成，所以应用fmt.Springtf
- 函数将数组转化为单个字节为16进制拼接而成的哈希字符串
-
-	return fmt.Sprintf(&quot;%x&quot;,first.Sum(nil))
-
-}
-
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;&lt;strong&gt;检验随机数生产的哈希函数是否符合条件&lt;/strong&gt;&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
-
-func mining(hashStr string, diff int) bool {
-
-	var i int
-
-	for i = 0; i &amp;lt; len(hashStr); i++ {
-
-      //如果i位数 的值不为0，不满足条件，跳出循环
-		if hashStr[i] != '0' {
-			break
-		}
-	}
-	//判断i的值是否大于当前的难度，大于碰撞成功，否则失败
-	return i &amp;gt;= diff
-
-}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;&lt;strong&gt;获取随机数&lt;/strong&gt;&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
-func getNonce(blc block)int  {
-
-	nonce := 0
-	
-	//改变nonce的值，如果返回false，nonce++
-	
-	for !mining(getHashValueStr(nonce,blc), blc.bits) {
-
-		fmt.Println(getHashValueStr(nonce,blc))
-		nonce ++
-
-	}
-	fmt.Println(getHashValueStr(nonce,blc))
-	fmt.Println(&quot;出块成功！&quot;)
-
-	return nonce
-
-
-}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;&lt;strong&gt;主函数&lt;/strong&gt;&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
-func main() {
-
-	prev_block := &quot;000000000003ba27aa200b1cecaad478d2b00432346c3f1f3986da1afd33e506&quot;
-
-	mrkl_root := &quot;000000000002d01c1fccc21636b607dfd930d31d01c3a62104612a1719011250&quot;
-
-	time := &quot;1293623863&quot;
-
-	bits := 4
-
-	block := block{1, prev_block, mrkl_root, time, bits}
-
-	nc := getNonce(block)
-
-	fmt.Println(nc)
-
-}
-
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;&lt;strong&gt;运行结果&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;http://p7rz9r9fd.bkt.clouddn.com/4-27-1-3.png&quot; alt=&quot;1-3&quot; /&gt;&lt;/p&gt;
-
-&lt;h2 id=&quot;总结&quot;&gt;总结&lt;/h2&gt;
-&lt;p&gt;代码只是简单的实现了比特币的挖矿原理，实际上可能比这处理的更细致，考虑的更全面一些。
-至于挖矿的事情，兵法有云“兵贵神速”，17年比特币大涨，那时候难度还不是很高，去云南四川那边投资矿厂的人都赚的盆满钵满，我就认识了一位17年初挖矿的矿工，最高峰拥有20000台S9，一年赚了将近10亿，投资成本据说是几十万。当然这些也都需要一些眼光，勇气，我只是在现在看过去罢了，至于那个时候谁都不知道比特币能涨这么猛。包括现在我之所以还会继续购置矿机，是因为我同样认为目前比特币还远远未到达它应有的价值，产量虽然少，但是挖出的币我是不会卖的，5年以后，10年以后再看，那可能同样现在看过去的感觉。当然这些不是重点，也不构成投资建议。重点看代码，看代码！😂&lt;/p&gt;
-
-&lt;hr /&gt;
-&lt;p&gt;&lt;a href=&quot;https://github.com/shuailaotou/go-&quot;&gt;github源代码&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;据说找工作github的Star很重要，哈哈哈。喜欢就star一下吧！👻👻👻&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;作者原创，转载请注明出处，如有错误描述，请评论纠正，谢谢大家！🐳🐳🐳&lt;/p&gt;
-&lt;/blockquote&gt;
-
-</description>
-        <pubDate>Tue, 24 Apr 2018 00:00:00 +0800</pubDate>
-        <link>http://localhost:4000/2018/04/24/Go%E8%AF%AD%E8%A8%80%E7%AE%80%E5%8D%95%E5%AE%9E%E7%8E%B0%E6%AF%94%E7%89%B9%E5%B8%81%E6%8C%96%E7%9F%BF%E5%8E%9F%E7%90%86/</link>
-        <guid isPermaLink="true">http://localhost:4000/2018/04/24/Go%E8%AF%AD%E8%A8%80%E7%AE%80%E5%8D%95%E5%AE%9E%E7%8E%B0%E6%AF%94%E7%89%B9%E5%B8%81%E6%8C%96%E7%9F%BF%E5%8E%9F%E7%90%86/</guid>
         
         <category>笔试题</category>
         
