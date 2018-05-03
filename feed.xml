@@ -5,8 +5,8 @@
     <description>张帅，江湖人称帅哥，区块链技术全能技术人才。</description>
     <link>http://localhost:4000/</link>
     <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Thu, 03 May 2018 17:17:17 +0800</pubDate>
-    <lastBuildDate>Thu, 03 May 2018 17:17:17 +0800</lastBuildDate>
+    <pubDate>Thu, 03 May 2018 17:36:59 +0800</pubDate>
+    <lastBuildDate>Thu, 03 May 2018 17:36:59 +0800</lastBuildDate>
     <generator>Jekyll v3.5.1</generator>
     
       <item>
@@ -158,7 +158,7 @@ func insertNode(node, newNode *Node) {
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 
-&lt;p&gt;** Search **&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Search&lt;/strong&gt;&lt;/p&gt;
 
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;//检查key的元素是否存在
 func (tree *ItemBinarySearchTree) Search(key int) bool {
@@ -194,7 +194,7 @@ func search(node *Node, key int) bool {
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 
-&lt;p&gt;** Remove **&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Remove&lt;/strong&gt;&lt;/p&gt;
 &lt;h5 id=&quot;删除节点的流程&quot;&gt;删除节点的流程&lt;/h5&gt;
 
 &lt;p&gt;先递归查找，再删除节点。但是在删除时需要根据节点拥有子节点的数量，分如下3中情况：
@@ -416,7 +416,7 @@ func inOrderTraverse(node *Node, printFunc func(Item)) {
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 
-&lt;p&gt;&lt;strong&gt;&lt;em&gt;String&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;String&lt;/strong&gt;&lt;/p&gt;
 
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
 //后序遍历打印树的结构
@@ -453,7 +453,7 @@ func stringify(node *Node, level int) {
 &lt;/div&gt;
 
 &lt;h2 id=&quot;总结&quot;&gt;总结&lt;/h2&gt;
-&lt;p&gt;􏱎􏰣􏰒􏰓􏰝􏰞􏰀􏰈􏱃􏱄􏰍􏱏􏱐􏱑􏱒􏱅􏱉􏱊􏰼􏱓􏰍􏱔􏱕􏱖􏱗􏱘􏱙􏰄􏱆􏱚􏰆􏱛􏱜􏱝􏱉􏱊􏰈􏱞􏱟􏱠􏱡􏰍 对于二叉树的操作，增删查都与递归相关，所以实现的时候一定要分析清楚递归的终止条件，在正确的条件下return，避开死循环。&lt;/p&gt;
+&lt;p&gt;􏱎􏰣􏰒􏰓􏰝􏰞􏰀􏰈􏱃􏱄􏰍􏱏􏱐􏱑􏱒􏱅􏱉􏱊􏰼􏱓􏰍􏱔􏱕􏱖􏱗􏱘􏱙􏰄􏱆􏱚􏰆􏱛􏱜􏱝􏱉􏱊􏰈􏱞􏱟􏱠􏱡􏰍 &lt;strong&gt;对于二叉树的操作，增删查都与递归相关，所以实现的时候一定要分析清楚递归的终止条件，在正确的条件下return，避开死循环。&lt;/strong&gt;&lt;/p&gt;
 
 </description>
         <pubDate>Thu, 03 May 2018 00:00:00 +0800</pubDate>
