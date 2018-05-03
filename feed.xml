@@ -5,17 +5,17 @@
     <description>张帅，江湖人称帅哥，区块链技术全能技术人才。</description>
     <link>http://localhost:4000/</link>
     <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Thu, 03 May 2018 16:05:20 +0800</pubDate>
-    <lastBuildDate>Thu, 03 May 2018 16:05:20 +0800</lastBuildDate>
+    <pubDate>Thu, 03 May 2018 17:17:17 +0800</pubDate>
+    <lastBuildDate>Thu, 03 May 2018 17:17:17 +0800</lastBuildDate>
     <generator>Jekyll v3.5.1</generator>
     
       <item>
-        <title>go</title>
+        <title>go语言实现二叉搜索树</title>
         <description>&lt;blockquote&gt;
   &lt;p&gt;整理：张帅 博客 : zhangshuai.ren&lt;/p&gt;
 &lt;/blockquote&gt;
 
-&lt;p&gt;##基本概念介绍&lt;/p&gt;
+&lt;h2 id=&quot;基本概念介绍&quot;&gt;基本概念介绍&lt;/h2&gt;
 
 &lt;ul&gt;
   &lt;li&gt;
@@ -46,10 +46,10 @@
 
 &lt;p&gt;&lt;img src=&quot;http://p7rz9r9fd.bkt.clouddn.com/1-1.png&quot; alt=&quot;1-1&quot; /&gt;&lt;/p&gt;
 
-&lt;p&gt;###应用
-文件系统和数据库系统一般都采用树（特别是B树）的数据结构数据，主要为排序和检索的效率。二叉树是一种最基本最典型的排序树，对于学习和研究树的特性，但是本身很少在实际中进行应用。就像冒泡排序一样，二叉树因为效率问题并不实用。&lt;/p&gt;
+&lt;h3 id=&quot;应用&quot;&gt;应用&lt;/h3&gt;
+&lt;p&gt;文件系统和数据库系统一般都采用树（特别是B树）的数据结构数据，主要为排序和检索的效率。二叉树是一种最基本最典型的排序树，对于学习和研究树的特性，但是本身很少在实际中进行应用。就像冒泡排序一样，二叉树因为效率问题并不实用。&lt;/p&gt;
 
-&lt;p&gt;###二叉树的常用操作&lt;/p&gt;
+&lt;h3 id=&quot;二叉树的常用操作&quot;&gt;二叉树的常用操作&lt;/h3&gt;
 
 &lt;ul&gt;
   &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt; Insert（v） //向二叉树的合适位置插入节点&lt;/code&gt;&lt;/li&gt;
@@ -88,8 +88,8 @@ type Node struct{
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 
-&lt;p&gt;###插入操作与遍历
-插入操作需要使用到递归，插入操作需要从上到下的查找新节点在树中合适的位置，新节点的值小于任意节点，则向左子树继续寻找，同理向右子树寻找，直到树叶节点再插入。&lt;/p&gt;
+&lt;h3 id=&quot;插入操作与遍历&quot;&gt;插入操作与遍历&lt;/h3&gt;
+&lt;p&gt;插入操作需要使用到递归，插入操作需要从上到下的查找新节点在树中合适的位置，新节点的值小于任意节点，则向左子树继续寻找，同理向右子树寻找，直到树叶节点再插入。&lt;/p&gt;
 
 &lt;p&gt;遍历操作有三种方式：&lt;/p&gt;
 
@@ -113,8 +113,8 @@ type Node struct{
 
 &lt;p&gt;&lt;img src=&quot;http://p7rz9r9fd.bkt.clouddn.com/1-3.png&quot; alt=&quot;1-3&quot; /&gt;&lt;/p&gt;
 
-&lt;p&gt;###代码实现
-&lt;strong&gt;Insert&lt;/strong&gt;&lt;/p&gt;
+&lt;h3 id=&quot;代码实现&quot;&gt;代码实现&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;Insert&lt;/strong&gt;&lt;/p&gt;
 
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;//向二叉树合适的位置插入节点
 func (tree *ItemBinarySearchTree) Insert(key int, value Item) {
@@ -158,7 +158,7 @@ func insertNode(node, newNode *Node) {
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 
-&lt;p&gt;&lt;strong&gt;Search&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;** Search **&lt;/p&gt;
 
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;//检查key的元素是否存在
 func (tree *ItemBinarySearchTree) Search(key int) bool {
@@ -194,12 +194,12 @@ func search(node *Node, key int) bool {
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 
-&lt;p&gt;&lt;strong&gt;Remove&lt;/strong&gt;
-#####删除节点的流程&lt;/p&gt;
+&lt;p&gt;** Remove **&lt;/p&gt;
+&lt;h5 id=&quot;删除节点的流程&quot;&gt;删除节点的流程&lt;/h5&gt;
 
 &lt;p&gt;先递归查找，再删除节点。但是在删除时需要根据节点拥有子节点的数量，分如下3中情况：
-&lt;img src=&quot;http://p7rz9r9fd.bkt.clouddn.com/1-4.png&quot; alt=&quot;&quot; /&gt;
-####代码实现&lt;/p&gt;
+&lt;img src=&quot;http://p7rz9r9fd.bkt.clouddn.com/1-4.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+&lt;h4 id=&quot;代码实现-1&quot;&gt;代码实现&lt;/h4&gt;
 
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
 func (tree *ItemBinarySearchTree) remove(key int) {
@@ -452,13 +452,13 @@ func stringify(node *Node, level int) {
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 
-&lt;p&gt;##总结
-􏱎􏰣􏰒􏰓􏰝􏰞􏰀􏰈􏱃􏱄􏰍􏱏􏱐􏱑􏱒􏱅􏱉􏱊􏰼􏱓􏰍􏱔􏱕􏱖􏱗􏱘􏱙􏰄􏱆􏱚􏰆􏱛􏱜􏱝􏱉􏱊􏰈􏱞􏱟􏱠􏱡􏰍 对于二叉树的操作，增删查都与递归相关，所以实现的时候一定要分析清楚递归的终止条件，在正确的条件下return，避开死循环。&lt;/p&gt;
+&lt;h2 id=&quot;总结&quot;&gt;总结&lt;/h2&gt;
+&lt;p&gt;􏱎􏰣􏰒􏰓􏰝􏰞􏰀􏰈􏱃􏱄􏰍􏱏􏱐􏱑􏱒􏱅􏱉􏱊􏰼􏱓􏰍􏱔􏱕􏱖􏱗􏱘􏱙􏰄􏱆􏱚􏰆􏱛􏱜􏱝􏱉􏱊􏰈􏱞􏱟􏱠􏱡􏰍 对于二叉树的操作，增删查都与递归相关，所以实现的时候一定要分析清楚递归的终止条件，在正确的条件下return，避开死循环。&lt;/p&gt;
 
 </description>
         <pubDate>Thu, 03 May 2018 00:00:00 +0800</pubDate>
-        <link>http://localhost:4000/2018/05/03/go/</link>
-        <guid isPermaLink="true">http://localhost:4000/2018/05/03/go/</guid>
+        <link>http://localhost:4000/2018/05/03/go%E8%AF%AD%E8%A8%80%E5%AE%9E%E7%8E%B0%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91/</link>
+        <guid isPermaLink="true">http://localhost:4000/2018/05/03/go%E8%AF%AD%E8%A8%80%E5%AE%9E%E7%8E%B0%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91/</guid>
         
         <category>二叉树</category>
         
