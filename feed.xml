@@ -5,18 +5,18 @@
     <description>张帅，江湖人称帅哥，区块链技术全能技术人才。</description>
     <link>http://localhost:4000/</link>
     <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Tue, 08 May 2018 22:26:08 +0800</pubDate>
-    <lastBuildDate>Tue, 08 May 2018 22:26:08 +0800</lastBuildDate>
+    <pubDate>Tue, 08 May 2018 22:30:58 +0800</pubDate>
+    <lastBuildDate>Tue, 08 May 2018 22:30:58 +0800</lastBuildDate>
     <generator>Jekyll v3.5.1</generator>
     
       <item>
         <title>2018-05-08-如何创建一个React项目以及如何安装第三方的库</title>
         <description>&lt;h2 id=&quot;创建react项目&quot;&gt;创建react项目&lt;/h2&gt;
 
-&lt;h4 id=&quot;1首先安装npm&quot;&gt;1.首先安装npm&lt;/h4&gt;
+&lt;h3 id=&quot;1首先安装npm&quot;&gt;1.首先安装npm&lt;/h3&gt;
 &lt;p&gt;我的Mac是使用brew安装的
 &lt;img src=&quot;http://p7rz9r9fd.bkt.clouddn.com/05-08-01.png&quot; alt=&quot;05-08-01.png&quot; /&gt;&lt;/p&gt;
-&lt;h4 id=&quot;2使用npm命令创建app&quot;&gt;2.使用npm命令创建app&lt;/h4&gt;
+&lt;h3 id=&quot;2使用npm命令创建app&quot;&gt;2.使用npm命令创建app&lt;/h3&gt;
 &lt;p&gt;&lt;strong&gt;1.首先创建项目文件目录&lt;/strong&gt;&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;http://p7rz9r9fd.bkt.clouddn.com/05-08-02.png&quot; alt=&quot;05-08-02.png&quot; /&gt;&lt;/p&gt;
@@ -27,30 +27,30 @@
 
 &lt;p&gt;&lt;em&gt;注意创建的文件夹的名字不能大写&lt;/em&gt;&lt;/p&gt;
 
-&lt;h4 id=&quot;3使用atom打开下载好的文件-atom-&quot;&gt;3.使用atom打开下载好的文件 &lt;code class=&quot;highlighter-rouge&quot;&gt;atom ./&lt;/code&gt;&lt;/h4&gt;
+&lt;h3 id=&quot;3使用atom打开下载好的文件-atom-&quot;&gt;3.使用atom打开下载好的文件 &lt;code class=&quot;highlighter-rouge&quot;&gt;atom ./&lt;/code&gt;&lt;/h3&gt;
 
 &lt;p&gt;&lt;img src=&quot;http://p7rz9r9fd.bkt.clouddn.com//react05-08-04.png&quot; alt=&quot;05-08-04.png&quot; /&gt;&lt;/p&gt;
 
-&lt;h4 id=&quot;4打开之后将选中的文件删除&quot;&gt;4.打开之后将选中的文件删除&lt;/h4&gt;
+&lt;h3 id=&quot;4打开之后将选中的文件删除&quot;&gt;4.打开之后将选中的文件删除&lt;/h3&gt;
 &lt;p&gt;&lt;img src=&quot;http://p7rz9r9fd.bkt.clouddn.com/05-08-05.png&quot; alt=&quot;05-08-05.png&quot; /&gt;&lt;/p&gt;
 
-&lt;h4 id=&quot;5将indexjs中选中的代码删除&quot;&gt;5.将index.js中选中的代码删除&lt;/h4&gt;
+&lt;h3 id=&quot;5将indexjs中选中的代码删除&quot;&gt;5.将index.js中选中的代码删除&lt;/h3&gt;
 &lt;p&gt;&lt;img src=&quot;http://p7rz9r9fd.bkt.clouddn.com/05-08-06.png&quot; alt=&quot;05-08-06.png&quot; /&gt;&lt;/p&gt;
 
-&lt;h4 id=&quot;6将indexjs中选中的代码改成&quot;&gt;6.将index.js中选中的代码改成&lt;/h4&gt;
+&lt;h3 id=&quot;6将indexjs中选中的代码改成&quot;&gt;6.将index.js中选中的代码改成&lt;/h3&gt;
 &lt;p&gt;&lt;img src=&quot;http://p7rz9r9fd.bkt.clouddn.com/05-08-07.png&quot; alt=&quot;05-08-07.png&quot; /&gt;&lt;/p&gt;
 &lt;h3 id=&quot;7使用代码npm-start启动reactapp&quot;&gt;7.使用代码&lt;code class=&quot;highlighter-rouge&quot;&gt;npm start&lt;/code&gt;启动reactapp&lt;/h3&gt;
 &lt;p&gt;&lt;img src=&quot;http://p7rz9r9fd.bkt.clouddn.com/05-08-08.png&quot; alt=&quot;05-08-08.png&quot; /&gt;&lt;/p&gt;
 
-&lt;h4 id=&quot;8运行结果&quot;&gt;8.运行结果&lt;/h4&gt;
+&lt;h3 id=&quot;8运行结果&quot;&gt;8.运行结果&lt;/h3&gt;
 &lt;p&gt;&lt;img src=&quot;http://p7rz9r9fd.bkt.clouddn.com/05-08-09.png&quot; alt=&quot;05-08-09.png&quot; /&gt;&lt;/p&gt;
 
 &lt;h2 id=&quot;删除安装第三方包&quot;&gt;删除安装第三方包&lt;/h2&gt;
 
-&lt;h4 id=&quot;1使用代码npm-uninstall-react-删除react包&quot;&gt;1.使用代码&lt;code class=&quot;highlighter-rouge&quot;&gt;npm uninstall react&lt;/code&gt; 删除react包&lt;/h4&gt;
+&lt;h3 id=&quot;1使用代码npm-uninstall-react-删除react包&quot;&gt;1.使用代码&lt;code class=&quot;highlighter-rouge&quot;&gt;npm uninstall react&lt;/code&gt; 删除react包&lt;/h3&gt;
 &lt;p&gt;&lt;img src=&quot;http://p7rz9r9fd.bkt.clouddn.com//react05-08-10.png&quot; alt=&quot;05-08-10.png&quot; /&gt;&lt;/p&gt;
 
-&lt;h4 id=&quot;1同理使用代码npm-install-nebulas-安装nebulas包&quot;&gt;1.同理使用代码&lt;code class=&quot;highlighter-rouge&quot;&gt;npm install nebulas&lt;/code&gt; 安装nebulas包&lt;/h4&gt;
+&lt;h3 id=&quot;1同理使用代码npm-install-nebulas-安装nebulas包&quot;&gt;1.同理使用代码&lt;code class=&quot;highlighter-rouge&quot;&gt;npm install nebulas&lt;/code&gt; 安装nebulas包&lt;/h3&gt;
 &lt;p&gt;&lt;img src=&quot;http://p7rz9r9fd.bkt.clouddn.com/05-08-11.png&quot; alt=&quot;05-08-11.png&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;安装好之后可以在node_modules中找到nebulas的包&lt;code class=&quot;highlighter-rouge&quot;&gt;nebulas为星云链的包，星云链为区块链的公链，准备在上面开发dapp，有奖励哦👻&lt;/code&gt;&lt;/p&gt;
