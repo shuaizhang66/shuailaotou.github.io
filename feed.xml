@@ -5,9 +5,73 @@
     <description>张帅，江湖人称帅哥，区块链技术全能技术人才。</description>
     <link>http://localhost:4000/</link>
     <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Thu, 03 May 2018 18:03:37 +0800</pubDate>
-    <lastBuildDate>Thu, 03 May 2018 18:03:37 +0800</lastBuildDate>
+    <pubDate>Tue, 08 May 2018 22:18:54 +0800</pubDate>
+    <lastBuildDate>Tue, 08 May 2018 22:18:54 +0800</lastBuildDate>
     <generator>Jekyll v3.5.1</generator>
+    
+      <item>
+        <title>2018-05-08-如何创建一个React项目以及如何安装第三方的库</title>
+        <description>&lt;p&gt;##创建react项目
+####1.首先安装npm
+我的Mac是使用brew安装的
+&lt;img src=&quot;http://p7rz9r9fd.bkt.clouddn.com/05-08-01.png&quot; alt=&quot;05-08-01.png&quot; /&gt;
+####2.使用npm命令创建app
+&lt;strong&gt;1.首先创建项目文件目录&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://p7rz9r9fd.bkt.clouddn.com/05-08-02.png&quot; alt=&quot;05-08-02.png&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;2.然后在上面创建的文件下执行&lt;code class=&quot;highlighter-rouge&quot;&gt;create-react-app  reactdemo&lt;/code&gt;代码&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://p7rz9r9fd.bkt.clouddn.com/05-08-03.png&quot; alt=&quot;05-08-03.png&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;注意创建的文件夹的名字不能大写&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;####3.使用atom打开下载好的文件 &lt;code class=&quot;highlighter-rouge&quot;&gt;atom ./&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://p7rz9r9fd.bkt.clouddn.com//react05-08-04.png&quot; alt=&quot;05-08-04.png&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;####4.打开之后将选中的文件删除
+&lt;img src=&quot;http://p7rz9r9fd.bkt.clouddn.com/05-08-05.png&quot; alt=&quot;05-08-05.png&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;####5.将index.js中选中的代码删除
+&lt;img src=&quot;http://p7rz9r9fd.bkt.clouddn.com/05-08-06.png&quot; alt=&quot;05-08-06.png&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;####6.将index.js中选中的代码改成
+&lt;img src=&quot;http://p7rz9r9fd.bkt.clouddn.com/05-08-07.png&quot; alt=&quot;05-08-07.png&quot; /&gt;
+###7.使用代码&lt;code class=&quot;highlighter-rouge&quot;&gt;npm start&lt;/code&gt;启动reactapp
+&lt;img src=&quot;http://p7rz9r9fd.bkt.clouddn.com/05-08-08.png&quot; alt=&quot;05-08-08.png&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;####8.运行结果
+&lt;img src=&quot;http://p7rz9r9fd.bkt.clouddn.com/05-08-09.png&quot; alt=&quot;05-08-09.png&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;##删除安装第三方包&lt;/p&gt;
+
+&lt;p&gt;####1.使用代码&lt;code class=&quot;highlighter-rouge&quot;&gt;npm uninstall react&lt;/code&gt; 删除react包
+&lt;img src=&quot;http://p7rz9r9fd.bkt.clouddn.com//react05-08-10.png&quot; alt=&quot;05-08-10.png&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;####1.同理使用代码&lt;code class=&quot;highlighter-rouge&quot;&gt;npm install nebulas&lt;/code&gt; 安装nebulas包
+&lt;img src=&quot;http://p7rz9r9fd.bkt.clouddn.com/05-08-11.png&quot; alt=&quot;05-08-11.png&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;安装好之后可以在node_modules中找到nebulas的包&lt;code class=&quot;highlighter-rouge&quot;&gt;nebulas为星云链的包，星云链为区块链的公链，准备在上面开发dapp，有奖励哦👻&lt;/code&gt;&lt;/p&gt;
+
+&lt;blockquote&gt;
+
+  &lt;p&gt;据说找工作github的Star很重要，哈哈哈。喜欢就star一下吧！👻👻👻&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;作者原创，转载请注明出处，如有错误描述，请评论纠正，谢谢大家！🐳🐳🐳&lt;/p&gt;
+&lt;/blockquote&gt;
+
+</description>
+        <pubDate>Thu, 03 May 2018 00:00:00 +0800</pubDate>
+        <link>http://localhost:4000/2018/05/03/%E5%A6%82%E4%BD%95%E5%88%9B%E5%BB%BA%E4%B8%80%E4%B8%AAReact%E9%A1%B9%E7%9B%AE%E4%BB%A5%E5%8F%8A%E5%A6%82%E4%BD%95%E5%AE%89%E8%A3%85%E7%AC%AC%E4%B8%89%E6%96%B9%E7%9A%84%E5%BA%93/</link>
+        <guid isPermaLink="true">http://localhost:4000/2018/05/03/%E5%A6%82%E4%BD%95%E5%88%9B%E5%BB%BA%E4%B8%80%E4%B8%AAReact%E9%A1%B9%E7%9B%AE%E4%BB%A5%E5%8F%8A%E5%A6%82%E4%BD%95%E5%AE%89%E8%A3%85%E7%AC%AC%E4%B8%89%E6%96%B9%E7%9A%84%E5%BA%93/</guid>
+        
+        <category>react项目</category>
+        
+        
+      </item>
     
       <item>
         <title>go语言实现二叉搜索树</title>
