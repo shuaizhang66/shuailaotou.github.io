@@ -5,8 +5,8 @@
     <description>张帅，江湖人称帅哥，区块链技术全能技术人才。</description>
     <link>http://localhost:4000/</link>
     <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Tue, 08 May 2018 22:35:08 +0800</pubDate>
-    <lastBuildDate>Tue, 08 May 2018 22:35:08 +0800</lastBuildDate>
+    <pubDate>Tue, 08 May 2018 22:40:16 +0800</pubDate>
+    <lastBuildDate>Tue, 08 May 2018 22:40:16 +0800</lastBuildDate>
     <generator>Jekyll v3.5.1</generator>
     
       <item>
@@ -27,7 +27,7 @@
 
 &lt;p&gt;&lt;em&gt;注意创建的文件夹的名字不能大写&lt;/em&gt;&lt;/p&gt;
 
-&lt;h3 id=&quot;3使用atom打开下载好的文件-atom-&quot;&gt;3.使用atom打开下载好的文件 &lt;code class=&quot;highlighter-rouge&quot;&gt;atom ./&lt;/code&gt;&lt;/h3&gt;
+&lt;h3 id=&quot;3使用atom打开下载好的文件-atom-&quot;&gt;3.使用atom打开下载好的文件 atom ./&lt;/h3&gt;
 
 &lt;p&gt;&lt;img src=&quot;http://p7rz9r9fd.bkt.clouddn.com//react05-08-04.png&quot; alt=&quot;05-08-04.png&quot; /&gt;&lt;/p&gt;
 
@@ -39,7 +39,7 @@
 
 &lt;h3 id=&quot;6将indexjs中选中的代码改成&quot;&gt;6.将index.js中选中的代码改成&lt;/h3&gt;
 &lt;p&gt;&lt;img src=&quot;http://p7rz9r9fd.bkt.clouddn.com/05-08-07.png&quot; alt=&quot;05-08-07.png&quot; /&gt;&lt;/p&gt;
-&lt;h3 id=&quot;7使用代码npm-start启动reactapp&quot;&gt;7.使用代码&lt;code class=&quot;highlighter-rouge&quot;&gt;npm start&lt;/code&gt;启动reactapp&lt;/h3&gt;
+&lt;h3 id=&quot;7使用代码npm-start启动reactapp&quot;&gt;7.使用代码npm start启动reactapp&lt;/h3&gt;
 &lt;p&gt;&lt;img src=&quot;http://p7rz9r9fd.bkt.clouddn.com/05-08-08.png&quot; alt=&quot;05-08-08.png&quot; /&gt;&lt;/p&gt;
 
 &lt;h3 id=&quot;8运行结果&quot;&gt;8.运行结果&lt;/h3&gt;
@@ -47,10 +47,10 @@
 
 &lt;h2 id=&quot;删除安装第三方包&quot;&gt;删除安装第三方包&lt;/h2&gt;
 
-&lt;h3 id=&quot;1使用代码npm-uninstall-react-删除react包&quot;&gt;1.使用代码&lt;code class=&quot;highlighter-rouge&quot;&gt;npm uninstall react&lt;/code&gt; 删除react包&lt;/h3&gt;
+&lt;h3 id=&quot;1使用代码npm-uninstall-react删除react包&quot;&gt;1.使用代码npm uninstall react删除react包&lt;/h3&gt;
 &lt;p&gt;&lt;img src=&quot;http://p7rz9r9fd.bkt.clouddn.com//react05-08-10.png&quot; alt=&quot;05-08-10.png&quot; /&gt;&lt;/p&gt;
 
-&lt;h3 id=&quot;1同理使用代码npm-install-nebulas-安装nebulas包&quot;&gt;1.同理使用代码&lt;code class=&quot;highlighter-rouge&quot;&gt;npm install nebulas&lt;/code&gt; 安装nebulas包&lt;/h3&gt;
+&lt;h3 id=&quot;1同理使用代码npm-install-nebulas安装nebulas包&quot;&gt;1.同理使用代码npm install nebulas安装nebulas包&lt;/h3&gt;
 &lt;p&gt;&lt;img src=&quot;http://p7rz9r9fd.bkt.clouddn.com/05-08-11.png&quot; alt=&quot;05-08-11.png&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;安装好之后可以在node_modules中找到nebulas的包&lt;code class=&quot;highlighter-rouge&quot;&gt;nebulas为星云链的包，星云链为区块链的公链，准备在上面开发dapp，有奖励哦👻&lt;/code&gt;&lt;/p&gt;
