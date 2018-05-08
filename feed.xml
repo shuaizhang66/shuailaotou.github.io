@@ -5,12 +5,12 @@
     <description>张帅，江湖人称帅哥，区块链技术全能技术人才。</description>
     <link>http://localhost:4000/</link>
     <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Tue, 08 May 2018 22:30:58 +0800</pubDate>
-    <lastBuildDate>Tue, 08 May 2018 22:30:58 +0800</lastBuildDate>
+    <pubDate>Tue, 08 May 2018 22:35:08 +0800</pubDate>
+    <lastBuildDate>Tue, 08 May 2018 22:35:08 +0800</lastBuildDate>
     <generator>Jekyll v3.5.1</generator>
     
       <item>
-        <title>2018-05-08-如何创建一个React项目以及如何安装第三方的库</title>
+        <title>如何创建一个React项目以及如何安装第三方的库</title>
         <description>&lt;h2 id=&quot;创建react项目&quot;&gt;创建react项目&lt;/h2&gt;
 
 &lt;h3 id=&quot;1首先安装npm&quot;&gt;1.首先安装npm&lt;/h3&gt;
@@ -55,10 +55,7 @@
 
 &lt;p&gt;安装好之后可以在node_modules中找到nebulas的包&lt;code class=&quot;highlighter-rouge&quot;&gt;nebulas为星云链的包，星云链为区块链的公链，准备在上面开发dapp，有奖励哦👻&lt;/code&gt;&lt;/p&gt;
 
-&lt;blockquote&gt;
-
-  &lt;p&gt;据说找工作github的Star很重要，哈哈哈。喜欢就star一下吧！👻👻👻&lt;/p&gt;
-&lt;/blockquote&gt;
+&lt;p&gt;据说找工作github的Star很重要，哈哈哈。喜欢就star一下吧！👻👻👻&lt;/p&gt;
 
 &lt;blockquote&gt;
   &lt;p&gt;作者原创，转载请注明出处，如有错误描述，请评论纠正，谢谢大家！🐳🐳🐳&lt;/p&gt;
