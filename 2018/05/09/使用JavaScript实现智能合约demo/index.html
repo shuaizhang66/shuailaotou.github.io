@@ -6,21 +6,21 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
-  <title>如何创建一个React项目以及如何安装第三方的库</title>
-  <meta name="description" content="2018-05-08-如何创建一个React项目以及如何安装第三方的库">
+  <title>使用JavaScript实现智能合约demo</title>
+  <meta name="description" content="使用JavaScript实现智能合约demo">
   <meta name="author" content="张帅">
 
-  <meta name="keywords" content="react"
+  <meta name="keywords" content="智能合约"
   />
 
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="如何创建一个React项目以及如何安装第三方的库">
-  <meta name="twitter:description" content="2018-05-08-如何创建一个React项目以及如何安装第三方的库">
+  <meta name="twitter:title" content="使用JavaScript实现智能合约demo">
+  <meta name="twitter:description" content="使用JavaScript实现智能合约demo">
 
   <meta property="og:type" content="article">
-  <meta property="og:title" content="如何创建一个React项目以及如何安装第三方的库">
-  <meta property="og:description" content="2018-05-08-如何创建一个React项目以及如何安装第三方的库">
-  <meta property="og:site_name" content="reacte"
+  <meta property="og:title" content="使用JavaScript实现智能合约demo">
+  <meta property="og:description" content="使用JavaScript实现智能合约demo">
+  <meta property="og:site_name" content="智能合约e"
   />
 
 
@@ -31,7 +31,7 @@
   <link rel="stylesheet" href=" /css/main.css ">
   <link href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
 
-  <link rel="canonical" href="http://localhost:4000/2018/05/03/%E5%A6%82%E4%BD%95%E5%88%9B%E5%BB%BA%E4%B8%80%E4%B8%AAReact%E9%A1%B9%E7%9B%AE%E4%BB%A5%E5%8F%8A%E5%A6%82%E4%BD%95%E5%AE%89%E8%A3%85%E7%AC%AC%E4%B8%89%E6%96%B9%E7%9A%84%E5%BA%93/">
+  <link rel="canonical" href="http://localhost:4000/2018/05/09/%E4%BD%BF%E7%94%A8JavaScript%E5%AE%9E%E7%8E%B0%E6%99%BA%E8%83%BD%E5%90%88%E7%BA%A6demo/">
   <link rel="alternate" type="application/rss+xml" title="张帅区块链博客" href="http://localhost:4000 /feed.xml
     ">
 
@@ -195,10 +195,10 @@
     <div class="content-wrapper__inner">
       <article class="post-container post-container--single" itemscope itemtype="http://schema.org/BlogPosting">
   <header class="post-header">
-    <h1 class="post-title">如何创建一个React项目以及如何安装第三方的库</h1>
+    <h1 class="post-title">使用JavaScript实现智能合约demo</h1>
     <div class="post-meta">
       <img src="/images/calendar.png" width="20px"/>
-      <time datetime="2018-05-03 00:00:00 +0800" itemprop="datePublished" class="post-meta__date date">2018-05-03</time>
+      <time datetime="2018-05-09 00:00:00 +0800" itemprop="datePublished" class="post-meta__date date">2018-05-09</time>
 
       <span id="busuanzi_container_page_pv"> | 阅读：<span id="busuanzi_value_page_pv"></span>次</span>
     </p>
@@ -206,55 +206,83 @@
   </header>
 
   <section class="post">
-    <h2 id="创建react项目">创建react项目</h2>
-
-<h3 id="1首先安装npm">1.首先安装npm</h3>
-<p>我的Mac是使用brew安装的
-<img src="http://p7rz9r9fd.bkt.clouddn.com/05-08-01.png" alt="05-08-01.png" /></p>
-<h3 id="2使用npm命令创建app">2.使用npm命令创建app</h3>
-<p><strong>1.首先创建项目文件目录</strong></p>
-
-<p><img src="http://p7rz9r9fd.bkt.clouddn.com/05-08-02.png" alt="05-08-02.png" /></p>
-
-<p><strong>2.然后在上面创建的文件下执行<code class="highlighter-rouge">create-react-app  reactdemo</code>代码</strong></p>
-
-<p><img src="http://p7rz9r9fd.bkt.clouddn.com/05-08-03.png" alt="05-08-03.png" /></p>
-
-<p><em>注意创建的文件夹的名字不能大写</em></p>
-
-<h3 id="3使用atom打开下载好的文件-atom-">3.使用atom打开下载好的文件 atom ./</h3>
-
-<p><img src="http://p7rz9r9fd.bkt.clouddn.com//react05-08-04.png" alt="05-08-04.png" /></p>
-
-<h3 id="4打开之后将选中的文件删除">4.打开之后将选中的文件删除</h3>
-<p><img src="http://p7rz9r9fd.bkt.clouddn.com/05-08-05.png" alt="05-08-05.png" /></p>
-
-<h3 id="5将indexjs中选中的代码删除">5.将index.js中选中的代码删除</h3>
-<p><img src="http://p7rz9r9fd.bkt.clouddn.com/05-08-06.png" alt="05-08-06.png" /></p>
-
-<h3 id="6将indexjs中选中的代码改成">6.将index.js中选中的代码改成</h3>
-<p><img src="http://p7rz9r9fd.bkt.clouddn.com/05-08-07.png" alt="05-08-07.png" /></p>
-<h3 id="7使用代码npm-start启动reactapp">7.使用代码npm start启动reactapp</h3>
-<p><img src="http://p7rz9r9fd.bkt.clouddn.com/05-08-08.png" alt="05-08-08.png" /></p>
-
-<h3 id="8运行结果">8.运行结果</h3>
-<p><img src="http://p7rz9r9fd.bkt.clouddn.com/05-08-09.png" alt="05-08-09.png" /></p>
-
-<h2 id="删除安装第三方包">删除安装第三方包</h2>
-
-<h3 id="1使用代码npm-uninstall-react删除react包">1.使用代码npm uninstall react删除react包</h3>
-<p><img src="http://p7rz9r9fd.bkt.clouddn.com//react05-08-10.png" alt="05-08-10.png" /></p>
-
-<h3 id="1同理使用代码npm-install-nebulas安装nebulas包">1.同理使用代码npm install nebulas安装nebulas包</h3>
-<p><img src="http://p7rz9r9fd.bkt.clouddn.com/05-08-11.png" alt="05-08-11.png" /></p>
-
-<p>安装好之后可以在node_modules中找到nebulas的包<code class="highlighter-rouge">nebulas为星云链的包，星云链为区块链的公链，准备在上面开发dapp，有奖励哦👻</code></p>
-
-<p>据说找工作github的Star很重要，哈哈哈。喜欢就star一下吧！👻👻👻</p>
-
-<blockquote>
-  <p>作者原创，转载请注明出处，如有错误描述，请评论纠正，谢谢大家！🐳🐳🐳</p>
-</blockquote>
+    <p><code class="highlighter-rouge">"use strict"
+//声明一个类，有三个属性，相当于MVC中的Model
+ var DictionItem = function(text){
+   if(text){
+     //将字符串转换成Json字符串
+   var obj = Json.para(text);
+    this.key = obj.key;
+    this.value = obj.value;
+    this.author = obj.author;
+   }else{
+    this.key = "";
+    this.value = "";
+    this.author = "";
+   }
+ } ,
+//相当于MVC中的C方法，内部的方法实现将对象转化成Json字符串
+DictionItem.prototype = {
+  toString:function(){
+    return JSON.stringify(this)
+  }
+}
+ //创建了一个类，类名字是superDiction,
+ //部署一个合约会创建一个superDiction对象，通过合约地址可以找到改对象
+ //合约地址可以理解成，在区块链上存储改对象的空间地址
+ //每次部署合约都会产生一个新的合约对象，并且对应一个新的合约地址
+ var superDiction:function(){
+   //定义了一个superDiction对象的属性，属性类型为字典，对应的名字是repo
+   LocalContractStorage.defineMapProperty(this,"repo",{
+     //相当于get方法，get读取数据的时候，会讲Json字符串转换成DictionItem对象
+   parse:function(text){
+   return new DictionItem(text);
+   }
+   //相当于set方法，put或者set方法的时候，会讲对象转换成Json对象，并且写到链上
+   stringify:function(o){
+    return  Json.stringify(o)
+   }
+   });
+ },
+ superDiction.prototype ={
+  init:function(){
+  }
+  save:function:(key,value){
+    //去掉空格
+  var key = key.trim();
+  var value = key.trim();
+  if(key == ""||value =="")
+  {
+     throw new ERROR("不能为空");
+  }
+  if(key.length&gt;64||key.value&gt;64)
+   throw new ERROR("长度超标");
+  }
+  //自动获取当前登陆钱包的地址
+  var from = Blockchain.transction.from
+  //根据当前的key值，或者value
+   var dicItem = this.repo.get(key);
+   //如果value存在，抛出异常
+   if(dicItem){
+   throw new ERROR("value 已经存在");
+   }
+   //如果没有，则创建新的DictionItem对象存储
+  var dicItem = new DictionItem();
+  dicItem.key = key;
+  dicItem.value = value;
+  dicItem.author = from;
+  this.repo.put(key,dicItem);
+ },
+ //查询
+   get: function (key) {
+        key = key.trim();
+        if ( key === "" ) {
+            throw new Error("empty key")
+        }
+        return this.repo.get(key);
+    }
+}
+module.exports = SuperDictionary;</code></p>
 
 
   </section>
@@ -325,7 +353,7 @@
        <ul class="pager">
         
         <li class="previous">
-            <a href="/2018/05/03/go%E8%AF%AD%E8%A8%80%E5%AE%9E%E7%8E%B0%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91/" data-toggle="tooltip" data-placement="top" title="go语言实现二叉搜索树">上一篇：  <span>go语言实现二叉搜索树</span>
+            <a href="/2018/05/08/%E5%A6%82%E4%BD%95%E5%88%9B%E5%BB%BA%E4%B8%80%E4%B8%AAReact%E9%A1%B9%E7%9B%AE%E4%BB%A5%E5%8F%8A%E5%A6%82%E4%BD%95%E5%AE%89%E8%A3%85%E7%AC%AC%E4%B8%89%E6%96%B9%E7%9A%84%E5%BA%93/" data-toggle="tooltip" data-placement="top" title="如何创建一个React项目以及如何安装第三方的库">上一篇：  <span>如何创建一个React项目以及如何安装第三方的库</span>
             </a>
         </li>
         
@@ -335,7 +363,7 @@
 
 <section class="post-comments">
   <!--PC和WAP自适应版-->
-<div id="SOHUCS" sid=如何创建一个React项目以及如何安装第三方的库 ></div>
+<div id="SOHUCS" sid=使用JavaScript实现智能合约demo ></div>
 <script type="text/javascript">
 (function(){
 var appid = 'cytfSz8yx';

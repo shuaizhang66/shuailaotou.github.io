@@ -5,9 +5,99 @@
     <description>张帅，江湖人称帅哥，区块链技术全能技术人才。</description>
     <link>http://localhost:4000/</link>
     <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Tue, 08 May 2018 22:40:16 +0800</pubDate>
-    <lastBuildDate>Tue, 08 May 2018 22:40:16 +0800</lastBuildDate>
+    <pubDate>Wed, 09 May 2018 08:39:08 +0800</pubDate>
+    <lastBuildDate>Wed, 09 May 2018 08:39:08 +0800</lastBuildDate>
     <generator>Jekyll v3.5.1</generator>
+    
+      <item>
+        <title>使用JavaScript实现智能合约demo</title>
+        <description>&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&quot;use strict&quot;
+//声明一个类，有三个属性，相当于MVC中的Model
+ var DictionItem = function(text){
+   if(text){
+     //将字符串转换成Json字符串
+   var obj = Json.para(text);
+    this.key = obj.key;
+    this.value = obj.value;
+    this.author = obj.author;
+   }else{
+    this.key = &quot;&quot;;
+    this.value = &quot;&quot;;
+    this.author = &quot;&quot;;
+   }
+ } ,
+//相当于MVC中的C方法，内部的方法实现将对象转化成Json字符串
+DictionItem.prototype = {
+  toString:function(){
+    return JSON.stringify(this)
+  }
+}
+ //创建了一个类，类名字是superDiction,
+ //部署一个合约会创建一个superDiction对象，通过合约地址可以找到改对象
+ //合约地址可以理解成，在区块链上存储改对象的空间地址
+ //每次部署合约都会产生一个新的合约对象，并且对应一个新的合约地址
+ var superDiction:function(){
+   //定义了一个superDiction对象的属性，属性类型为字典，对应的名字是repo
+   LocalContractStorage.defineMapProperty(this,&quot;repo&quot;,{
+     //相当于get方法，get读取数据的时候，会讲Json字符串转换成DictionItem对象
+   parse:function(text){
+   return new DictionItem(text);
+   }
+   //相当于set方法，put或者set方法的时候，会讲对象转换成Json对象，并且写到链上
+   stringify:function(o){
+    return  Json.stringify(o)
+   }
+   });
+ },
+ superDiction.prototype ={
+  init:function(){
+  }
+  save:function:(key,value){
+    //去掉空格
+  var key = key.trim();
+  var value = key.trim();
+  if(key == &quot;&quot;||value ==&quot;&quot;)
+  {
+     throw new ERROR(&quot;不能为空&quot;);
+  }
+  if(key.length&amp;gt;64||key.value&amp;gt;64)
+   throw new ERROR(&quot;长度超标&quot;);
+  }
+  //自动获取当前登陆钱包的地址
+  var from = Blockchain.transction.from
+  //根据当前的key值，或者value
+   var dicItem = this.repo.get(key);
+   //如果value存在，抛出异常
+   if(dicItem){
+   throw new ERROR(&quot;value 已经存在&quot;);
+   }
+   //如果没有，则创建新的DictionItem对象存储
+  var dicItem = new DictionItem();
+  dicItem.key = key;
+  dicItem.value = value;
+  dicItem.author = from;
+  this.repo.put(key,dicItem);
+ },
+ //查询
+   get: function (key) {
+        key = key.trim();
+        if ( key === &quot;&quot; ) {
+            throw new Error(&quot;empty key&quot;)
+        }
+        return this.repo.get(key);
+    }
+}
+module.exports = SuperDictionary;&lt;/code&gt;&lt;/p&gt;
+
+</description>
+        <pubDate>Wed, 09 May 2018 00:00:00 +0800</pubDate>
+        <link>http://localhost:4000/2018/05/09/%E4%BD%BF%E7%94%A8JavaScript%E5%AE%9E%E7%8E%B0%E6%99%BA%E8%83%BD%E5%90%88%E7%BA%A6demo/</link>
+        <guid isPermaLink="true">http://localhost:4000/2018/05/09/%E4%BD%BF%E7%94%A8JavaScript%E5%AE%9E%E7%8E%B0%E6%99%BA%E8%83%BD%E5%90%88%E7%BA%A6demo/</guid>
+        
+        <category>demo,JavaScript,智能合约</category>
+        
+        
+      </item>
     
       <item>
         <title>如何创建一个React项目以及如何安装第三方的库</title>
@@ -62,9 +152,9 @@
 &lt;/blockquote&gt;
 
 </description>
-        <pubDate>Thu, 03 May 2018 00:00:00 +0800</pubDate>
-        <link>http://localhost:4000/2018/05/03/%E5%A6%82%E4%BD%95%E5%88%9B%E5%BB%BA%E4%B8%80%E4%B8%AAReact%E9%A1%B9%E7%9B%AE%E4%BB%A5%E5%8F%8A%E5%A6%82%E4%BD%95%E5%AE%89%E8%A3%85%E7%AC%AC%E4%B8%89%E6%96%B9%E7%9A%84%E5%BA%93/</link>
-        <guid isPermaLink="true">http://localhost:4000/2018/05/03/%E5%A6%82%E4%BD%95%E5%88%9B%E5%BB%BA%E4%B8%80%E4%B8%AAReact%E9%A1%B9%E7%9B%AE%E4%BB%A5%E5%8F%8A%E5%A6%82%E4%BD%95%E5%AE%89%E8%A3%85%E7%AC%AC%E4%B8%89%E6%96%B9%E7%9A%84%E5%BA%93/</guid>
+        <pubDate>Tue, 08 May 2018 00:00:00 +0800</pubDate>
+        <link>http://localhost:4000/2018/05/08/%E5%A6%82%E4%BD%95%E5%88%9B%E5%BB%BA%E4%B8%80%E4%B8%AAReact%E9%A1%B9%E7%9B%AE%E4%BB%A5%E5%8F%8A%E5%A6%82%E4%BD%95%E5%AE%89%E8%A3%85%E7%AC%AC%E4%B8%89%E6%96%B9%E7%9A%84%E5%BA%93/</link>
+        <guid isPermaLink="true">http://localhost:4000/2018/05/08/%E5%A6%82%E4%BD%95%E5%88%9B%E5%BB%BA%E4%B8%80%E4%B8%AAReact%E9%A1%B9%E7%9B%AE%E4%BB%A5%E5%8F%8A%E5%A6%82%E4%BD%95%E5%AE%89%E8%A3%85%E7%AC%AC%E4%B8%89%E6%96%B9%E7%9A%84%E5%BA%93/</guid>
         
         <category>react项目</category>
         
