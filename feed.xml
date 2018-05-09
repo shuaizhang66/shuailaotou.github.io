@@ -5,13 +5,13 @@
     <description>张帅，江湖人称帅哥，区块链技术全能技术人才。</description>
     <link>http://localhost:4000/</link>
     <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Wed, 09 May 2018 17:37:52 +0800</pubDate>
-    <lastBuildDate>Wed, 09 May 2018 17:37:52 +0800</lastBuildDate>
+    <pubDate>Wed, 09 May 2018 17:42:10 +0800</pubDate>
+    <lastBuildDate>Wed, 09 May 2018 17:42:10 +0800</lastBuildDate>
     <generator>Jekyll v3.5.1</generator>
     
       <item>
         <title>使用JavaScript实现智能合约demo</title>
-        <description>&lt;p&gt;```“use strict”
+        <description>&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&quot;use strict&quot;
  //声明一个类，有三个属性，相当于MVC中的Model
 var DictionItem = function(text){
    if(text){
@@ -21,26 +21,24 @@ var DictionItem = function(text){
     this.value = obj.value;
     this.author = obj.author;
    }else{
-    this.key = “”;
-    this.value = “”;
-    this.author = “”;
+    this.key = &quot;&quot;;
+    this.value = &quot;&quot;;
+    this.author = &quot;&quot;;
    }
- } ,&lt;/p&gt;
-
-&lt;p&gt;//相当于MVC中的C方法，内部的方法实现将对象转化成Json字符串
+ } ,
+ //相当于MVC中的C方法，内部的方法实现将对象转化成Json字符串
 DictionItem.prototype = {
   toString:function(){
     return JSON.stringify(this)
   }
-}&lt;/p&gt;
+}&lt;/code&gt;&lt;/p&gt;
 
-&lt;p&gt;//创建了一个类，类名字是superDiction,
- //部署一个合约会创建一个superDiction对象，通过合约地址可以找到改对象
+&lt;pre&gt;&lt;code class=&quot;language-//创建了一个类，类名字是superDiction,&quot;&gt; //部署一个合约会创建一个superDiction对象，通过合约地址可以找到改对象
  //合约地址可以理解成，在区块链上存储改对象的空间地址
  //每次部署合约都会产生一个新的合约对象，并且对应一个新的合约地址
  var superDiction:function(){
    //定义了一个superDiction对象的属性，属性类型为字典，对应的名字是repo
-   LocalContractStorage.defineMapProperty(this,”repo”,{
+LocalContractStorage.defineMapProperty(this,&quot;repo&quot;,{
      //相当于get方法，get读取数据的时候，会讲Json字符串转换成DictionItem对象
    parse:function(text){
    return new DictionItem(text);
@@ -58,12 +56,12 @@ DictionItem.prototype = {
     //去掉空格
   var key = key.trim();
   var value = key.trim();
-  if(key == “”||value ==””)
+  if(key == &quot;&quot;||value ==&quot;&quot;)
   {
-     throw new ERROR(“不能为空”);
+     throw new ERROR(&quot;不能为空&quot;);
   }
   if(key.length&amp;gt;64||key.value&amp;gt;64)
-   throw new ERROR(“长度超标”);
+   throw new ERROR(&quot;长度超标&quot;);
   }
   //自动获取当前登陆钱包的地址
   var from = Blockchain.transction.from
@@ -71,7 +69,7 @@ DictionItem.prototype = {
    var dicItem = this.repo.get(key);
    //如果value存在，抛出异常
    if(dicItem){
-   throw new ERROR(“value 已经存在”);
+   throw new ERROR(&quot;value 已经存在&quot;);
    }
    //如果没有，则创建新的DictionItem对象存储
   var dicItem = new DictionItem();
@@ -83,14 +81,14 @@ DictionItem.prototype = {
  //查询
    get: function (key) {
         key = key.trim();
-        if ( key === “” ) {
-            throw new Error(“empty key”)
+        if ( key === &quot;&quot; ) {
+            throw new Error(&quot;empty key&quot;)
         }
         return this.repo.get(key);
     }
 } 
  module.exports = SuperDictionary;
-```&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;hr /&gt;
 &lt;p&gt;&lt;a href=&quot;https://github.com/shuailaotou/contract&quot;&gt;github源代码&lt;/a&gt;&lt;/p&gt;
