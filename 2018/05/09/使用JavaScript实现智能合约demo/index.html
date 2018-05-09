@@ -10,7 +10,7 @@
   <meta name="description" content="使用JavaScript实现智能合约demo">
   <meta name="author" content="张帅">
 
-  <meta name="keywords" content="智能合约"
+  <meta name="keywords" content="demo"
   />
 
   <meta name="twitter:card" content="summary">
@@ -20,7 +20,7 @@
   <meta property="og:type" content="article">
   <meta property="og:title" content="使用JavaScript实现智能合约demo">
   <meta property="og:description" content="使用JavaScript实现智能合约demo">
-  <meta property="og:site_name" content="智能合约e"
+  <meta property="og:site_name" content="demoe"
   />
 
 
@@ -206,9 +206,10 @@
   </header>
 
   <section class="post">
-    <p><code class="highlighter-rouge">"use strict"
-//声明一个类，有三个属性，相当于MVC中的Model
- var DictionItem = function(text){
+    <p>“use strict”</p>
+
+<p><code class="highlighter-rouge"> //声明一个类，有三个属性，相当于MVC中的Model
+var DictionItem = function(text){
    if(text){
      //将字符串转换成Json字符串
    var obj = Json.para(text);
@@ -220,14 +221,16 @@
     this.value = "";
     this.author = "";
    }
- } ,
-//相当于MVC中的C方法，内部的方法实现将对象转化成Json字符串
+ } , </code></p>
+
+<p><code class="highlighter-rouge"> //相当于MVC中的C方法，内部的方法实现将对象转化成Json字符串
 DictionItem.prototype = {
   toString:function(){
     return JSON.stringify(this)
   }
-}
- //创建了一个类，类名字是superDiction,
+} </code></p>
+
+<p><code class="highlighter-rouge"> //创建了一个类，类名字是superDiction,
  //部署一个合约会创建一个superDiction对象，通过合约地址可以找到改对象
  //合约地址可以理解成，在区块链上存储改对象的空间地址
  //每次部署合约都会产生一个新的合约对象，并且对应一个新的合约地址
@@ -243,8 +246,9 @@ DictionItem.prototype = {
     return  Json.stringify(o)
    }
    });
- },
- superDiction.prototype ={
+ }, </code></p>
+
+<p><code class="highlighter-rouge"> superDiction.prototype ={
   init:function(){
   }
   save:function:(key,value){
@@ -281,8 +285,18 @@ DictionItem.prototype = {
         }
         return this.repo.get(key);
     }
-}
-module.exports = SuperDictionary;</code></p>
+} </code></p>
+
+<p><code class="highlighter-rouge"> module.exports = SuperDictionary; </code></p>
+
+<hr />
+<p><a href="https://github.com/shuailaotou/go-">github源代码</a></p>
+
+<p>喜欢就star一下吧！👻👻👻</p>
+
+<blockquote>
+  <p>作者原创，转载请注明出处，如有错误描述，请评论纠正，谢谢大家！🐳🐳🐳</p>
+</blockquote>
 
 
   </section>
