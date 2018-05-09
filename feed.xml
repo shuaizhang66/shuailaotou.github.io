@@ -5,15 +5,14 @@
     <description>张帅，江湖人称帅哥，区块链技术全能技术人才。</description>
     <link>http://localhost:4000/</link>
     <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Wed, 09 May 2018 08:53:05 +0800</pubDate>
-    <lastBuildDate>Wed, 09 May 2018 08:53:05 +0800</lastBuildDate>
+    <pubDate>Wed, 09 May 2018 08:59:55 +0800</pubDate>
+    <lastBuildDate>Wed, 09 May 2018 08:59:55 +0800</lastBuildDate>
     <generator>Jekyll v3.5.1</generator>
     
       <item>
         <title>使用JavaScript实现智能合约demo</title>
-        <description>&lt;p&gt;“use strict”&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt; //声明一个类，有三个属性，相当于MVC中的Model
+        <description>&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&quot;use strict&quot;
+ //声明一个类，有三个属性，相当于MVC中的Model
 var DictionItem = function(text){
    if(text){
      //将字符串转换成Json字符串
@@ -26,16 +25,15 @@ var DictionItem = function(text){
     this.value = &quot;&quot;;
     this.author = &quot;&quot;;
    }
- } , &lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt; //相当于MVC中的C方法，内部的方法实现将对象转化成Json字符串
+ } , 
+ 
+ //相当于MVC中的C方法，内部的方法实现将对象转化成Json字符串
 DictionItem.prototype = {
   toString:function(){
     return JSON.stringify(this)
   }
-} &lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt; //创建了一个类，类名字是superDiction,
+} 
+//创建了一个类，类名字是superDiction,
  //部署一个合约会创建一个superDiction对象，通过合约地址可以找到改对象
  //合约地址可以理解成，在区块链上存储改对象的空间地址
  //每次部署合约都会产生一个新的合约对象，并且对应一个新的合约地址
@@ -51,9 +49,8 @@ DictionItem.prototype = {
     return  Json.stringify(o)
    }
    });
- }, &lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt; superDiction.prototype ={
+ }, 
+  superDiction.prototype ={
   init:function(){
   }
   save:function:(key,value){
@@ -90,9 +87,11 @@ DictionItem.prototype = {
         }
         return this.repo.get(key);
     }
-} &lt;/code&gt;&lt;/p&gt;
+} 
 
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt; module.exports = SuperDictionary; &lt;/code&gt;&lt;/p&gt;
+ module.exports = SuperDictionary; 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 &lt;hr /&gt;
 &lt;p&gt;&lt;a href=&quot;https://github.com/shuailaotou/go-&quot;&gt;github源代码&lt;/a&gt;&lt;/p&gt;
