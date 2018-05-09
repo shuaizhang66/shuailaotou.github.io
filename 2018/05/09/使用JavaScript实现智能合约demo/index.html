@@ -206,7 +206,7 @@
   </header>
 
   <section class="post">
-    <div class="highlighter-rouge"><pre class="highlight"><code>"use strict"
+    <p>```“use strict”
  //声明一个类，有三个属性，相当于MVC中的Model
 var DictionItem = function(text){
    if(text){
@@ -216,25 +216,26 @@ var DictionItem = function(text){
     this.value = obj.value;
     this.author = obj.author;
    }else{
-    this.key = "";
-    this.value = "";
-    this.author = "";
+    this.key = “”;
+    this.value = “”;
+    this.author = “”;
    }
- } , 
- 
- //相当于MVC中的C方法，内部的方法实现将对象转化成Json字符串
+ } ,</p>
+
+<p>//相当于MVC中的C方法，内部的方法实现将对象转化成Json字符串
 DictionItem.prototype = {
   toString:function(){
     return JSON.stringify(this)
   }
-} 
-//创建了一个类，类名字是superDiction,
+}</p>
+
+<p>//创建了一个类，类名字是superDiction,
  //部署一个合约会创建一个superDiction对象，通过合约地址可以找到改对象
  //合约地址可以理解成，在区块链上存储改对象的空间地址
  //每次部署合约都会产生一个新的合约对象，并且对应一个新的合约地址
  var superDiction:function(){
    //定义了一个superDiction对象的属性，属性类型为字典，对应的名字是repo
-   LocalContractStorage.defineMapProperty(this,"repo",{
+   LocalContractStorage.defineMapProperty(this,”repo”,{
      //相当于get方法，get读取数据的时候，会讲Json字符串转换成DictionItem对象
    parse:function(text){
    return new DictionItem(text);
@@ -252,12 +253,12 @@ DictionItem.prototype = {
     //去掉空格
   var key = key.trim();
   var value = key.trim();
-  if(key == ""||value =="")
+  if(key == “”||value ==””)
   {
-     throw new ERROR("不能为空");
+     throw new ERROR(“不能为空”);
   }
   if(key.length&gt;64||key.value&gt;64)
-   throw new ERROR("长度超标");
+   throw new ERROR(“长度超标”);
   }
   //自动获取当前登陆钱包的地址
   var from = Blockchain.transction.from
@@ -265,7 +266,7 @@ DictionItem.prototype = {
    var dicItem = this.repo.get(key);
    //如果value存在，抛出异常
    if(dicItem){
-   throw new ERROR("value 已经存在");
+   throw new ERROR(“value 已经存在”);
    }
    //如果没有，则创建新的DictionItem对象存储
   var dicItem = new DictionItem();
@@ -277,19 +278,17 @@ DictionItem.prototype = {
  //查询
    get: function (key) {
         key = key.trim();
-        if ( key === "" ) {
-            throw new Error("empty key")
+        if ( key === “” ) {
+            throw new Error(“empty key”)
         }
         return this.repo.get(key);
     }
 } 
-
- module.exports = SuperDictionary; 
-</code></pre>
-</div>
+ module.exports = SuperDictionary;
+```</p>
 
 <hr />
-<p><a href="https://github.com/shuailaotou/go-">github源代码</a></p>
+<p><a href="https://github.com/shuailaotou/contract">github源代码</a></p>
 
 <p>喜欢就star一下吧！👻👻👻</p>
 
