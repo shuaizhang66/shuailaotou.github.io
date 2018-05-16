@@ -5,8 +5,8 @@
     <description>张帅，江湖人称帅哥，区块链技术全能技术人才。</description>
     <link>http://localhost:4000/</link>
     <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Wed, 16 May 2018 09:02:31 +0800</pubDate>
-    <lastBuildDate>Wed, 16 May 2018 09:02:31 +0800</lastBuildDate>
+    <pubDate>Wed, 16 May 2018 12:15:40 +0800</pubDate>
+    <lastBuildDate>Wed, 16 May 2018 12:15:40 +0800</lastBuildDate>
     <generator>Jekyll v3.5.1</generator>
     
       <item>
@@ -18,21 +18,32 @@
 &lt;h3 id=&quot;分类&quot;&gt;分类&lt;/h3&gt;
 &lt;p&gt;链表有很多种类型：&lt;strong&gt;单向链表&lt;/strong&gt;，&lt;strong&gt;双向链表&lt;/strong&gt;，&lt;strong&gt;循环链表&lt;/strong&gt;。&lt;/p&gt;
 
-&lt;p&gt;&lt;strong&gt;单向链表&lt;/strong&gt;
-它包含两个域，一个&lt;code class=&quot;highlighter-rouge&quot;&gt;信息域&lt;/code&gt;和一个&lt;code class=&quot;highlighter-rouge&quot;&gt;指针域&lt;/code&gt;。这个链接指向列表中的下一个节点，而最后一个节点则指向一个空值。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;单向链表&lt;/strong&gt;&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;http://p7rz9r9fd.bkt.clouddn.com/05-15-01.png&quot; alt=&quot;05-15-01.png&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;它包含两个域，一个&lt;code class=&quot;highlighter-rouge&quot;&gt;信息域&lt;/code&gt;和一个&lt;code class=&quot;highlighter-rouge&quot;&gt;指针域&lt;/code&gt;。这个链接指向列表中的下一个节点，而最后一个节点则指向一个空值。
+&lt;br /&gt;
+&lt;img src=&quot;http://p7rz9r9fd.bkt.clouddn.com/05-15-01.png&quot; alt=&quot;05-15-01.png&quot; /&gt;
+&lt;br /&gt;&lt;/p&gt;
 
 &lt;p&gt;&lt;strong&gt;双向链表&lt;/strong&gt;&lt;/p&gt;
 
 &lt;p&gt;一种更复杂的链表是&lt;code class=&quot;highlighter-rouge&quot;&gt;“双向链表”&lt;/code&gt;或&lt;code class=&quot;highlighter-rouge&quot;&gt;“双面链表”&lt;/code&gt;。每个节点有两个连接：一个指向前一个节点，（当此“连接”为第一个“连接”时，指向空值或者空列表）；而另一个指向下一个节点，（当此“连接”为最后一个“连接”时，指向空值或者空列表）&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;http://p7rz9r9fd.bkt.clouddn.com/05-15-02.png&quot; alt=&quot;05-15-02.png&quot; /&gt;
-&lt;strong&gt;循环链表&lt;/strong&gt;
-在一个 循环链表中, 首节点和末节点被连接在一起。这种方式在单向和双向链表中皆可实现。要转换一个循环链表，你开始于任意一个节点然后沿着列表的任一方向直到返回开始的节点。再来看另一种方法，循环链表可以被视为“无头无尾”。这种列表很利于节约数据存储缓存， 假定你在一个列表中有一个对象并且希望所有其他对象迭代在一个非特殊的排列下。&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;
+&lt;img src=&quot;http://p7rz9r9fd.bkt.clouddn.com/05-15-02.png&quot; alt=&quot;05-15-02.png&quot; /&gt;&lt;/p&gt;
 
-&lt;p&gt;指向整个列表的指针可以被称作访问指针。
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;循环链表&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;在一个 循环链表中, 首节点和末节点被连接在一起。这种方式在单向和双向链表中皆可实现。要转换一个循环链表，你开始于任意一个节点然后沿着列表的任一方向直到返回开始的节点。再来看另一种方法，循环链表可以被视为“无头无尾”。这种列表很利于节约数据存储缓存， 假定你在一个列表中有一个对象并且希望所有其他对象迭代在一个非特殊的排列下。&lt;/p&gt;
+
+&lt;p&gt;指向整个列表的指针可以被称作访问指针。&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;
 &lt;img src=&quot;http://p7rz9r9fd.bkt.clouddn.com/05-15-03.png&quot; alt=&quot;05-15-03.png&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
 
 &lt;h3 id=&quot;代码实现&quot;&gt;代码实现&lt;/h3&gt;
 
@@ -195,7 +206,9 @@ return nil
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 
-&lt;p&gt;&lt;em&gt;Go语言中是自动垃圾回收机制，断开链接的那个节点，在程序运行结束时自动销毁&lt;/em&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;&lt;em&gt;Go语言中是自动垃圾回收机制，断开链接的那个节点，在程序运行结束时自动销毁&lt;/em&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
 
 &lt;p&gt;&lt;strong&gt;修改指定节点内容&lt;/strong&gt;&lt;/p&gt;
 
@@ -215,7 +228,7 @@ if index == 0{
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 
-&lt;p&gt;##总结&lt;/p&gt;
+&lt;h2 id=&quot;总结&quot;&gt;总结&lt;/h2&gt;
 
 &lt;p&gt;本文只是实现了简单的单向链表的基本操作，下一章将讲述一下链表的实际应用之一，Map的实现原理即行&lt;code class=&quot;highlighter-rouge&quot;&gt;Hash散列原理&lt;/code&gt;。&lt;/p&gt;
 
@@ -487,13 +500,13 @@ type Node struct{
 
 &lt;ul&gt;
   &lt;li&gt;
-    &lt;p&gt;&lt;strong&gt;中序遍历􏱴􏱿􏲸􏲹􏰁(in-order􏰂􏰃􏰟􏰜􏰀)：&lt;/strong&gt;左子树（L）–&amp;gt;根节点􏰨􏰋􏰗(D)–&amp;gt;右树(R􏰤)􏰀􏰃 1-&amp;gt;2-&amp;gt;3-&amp;gt;4-&amp;gt;5-&amp;gt;6-&amp;gt;7-&amp;gt;8-&amp;gt;9-&amp;gt;10- &amp;gt;11 （LDR）&lt;/p&gt;
+    &lt;p&gt;&lt;strong&gt;中序遍历(in-order)：&lt;/strong&gt;左子树（L）–&amp;gt;根节点(D)–&amp;gt;右树(R)1-&amp;gt;2-&amp;gt;3-&amp;gt;4-&amp;gt;5-&amp;gt;6-&amp;gt;7-&amp;gt;8-&amp;gt;9-&amp;gt;10- &amp;gt;11 （LDR）&lt;/p&gt;
   &lt;/li&gt;
   &lt;li&gt;
-    &lt;p&gt;&lt;strong&gt;先序遍历（pre-order）：&lt;/strong&gt;根节点􏰂􏰃􏰨􏰋􏰗(D)–&amp;gt;􏰟􏰜􏰀左子树(L)–&amp;gt;􏰤􏰜􏰀􏰃右树(R) 8-&amp;gt;4-&amp;gt;2-&amp;gt;1-&amp;gt;3-&amp;gt;6-&amp;gt;5-&amp;gt;7 &amp;gt;10-&amp;gt;9- &amp;gt;11（DLR）&lt;/p&gt;
+    &lt;p&gt;&lt;strong&gt;先序遍历（pre-order）：&lt;/strong&gt;根节点(D)–&amp;gt;左子树(L)–&amp;gt;右树(R) 8-&amp;gt;4-&amp;gt;2-&amp;gt;1-&amp;gt;3-&amp;gt;6-&amp;gt;5-&amp;gt;7 &amp;gt;10-&amp;gt;9- &amp;gt;11（DLR）&lt;/p&gt;
   &lt;/li&gt;
   &lt;li&gt;
-    &lt;p&gt;&lt;strong&gt;后序遍历（pre-order）：&lt;/strong&gt;左子树􏰂􏰃􏰨􏰋􏰗(L)–&amp;gt;􏰟􏰜􏰀右子树(R)–&amp;gt;根节点（D） 8-&amp;gt;4-&amp;gt;2-&amp;gt;1-&amp;gt;3-&amp;gt;6-&amp;gt;5-&amp;gt;7 &amp;gt;10-&amp;gt;9- &amp;gt;11 （LRD）&lt;/p&gt;
+    &lt;p&gt;&lt;strong&gt;后序遍历（pre-order）：&lt;/strong&gt;左子树(L)–&amp;gt;右子树(R)–&amp;gt;根节点（D） 1-&amp;gt;3-&amp;gt;2-&amp;gt;5-&amp;gt;7-&amp;gt;6-&amp;gt;4-&amp;gt;9&amp;gt;11-&amp;gt;10- &amp;gt;8 （LRD）&lt;/p&gt;
   &lt;/li&gt;
 &lt;/ul&gt;
 
