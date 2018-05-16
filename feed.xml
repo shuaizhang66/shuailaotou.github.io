@@ -5,8 +5,8 @@
     <description>张帅，江湖人称帅哥，区块链技术全能技术人才。</description>
     <link>http://localhost:4000/</link>
     <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Wed, 16 May 2018 13:03:18 +0800</pubDate>
-    <lastBuildDate>Wed, 16 May 2018 13:03:18 +0800</lastBuildDate>
+    <pubDate>Wed, 16 May 2018 13:10:15 +0800</pubDate>
+    <lastBuildDate>Wed, 16 May 2018 13:10:15 +0800</lastBuildDate>
     <generator>Jekyll v3.5.1</generator>
     
       <item>
@@ -23,9 +23,15 @@
 &lt;p&gt;它包含两个域，一个&lt;code class=&quot;highlighter-rouge&quot;&gt;信息域&lt;/code&gt;和一个&lt;code class=&quot;highlighter-rouge&quot;&gt;指针域&lt;/code&gt;。这个链接指向列表中的下一个节点，而最后一个节点则指向一个空值。&lt;/p&gt;
 
 &lt;p&gt;&lt;br /&gt;
-&lt;br /&gt;
-&lt;img src=&quot;http://p7rz9r9fd.bkt.clouddn.com/05-15-01.png&quot; alt=&quot;05-15-01.png-w140&quot; /&gt;
-&lt;br /&gt;
+&lt;br /&gt;&lt;/p&gt;
+
+&lt;center&gt;
+&lt;img src=&quot;http://p7rz9r9fd.bkt.clouddn.com/05-15-01.png&quot; width=&quot;25%&quot; height=&quot;25%&quot; /&gt;
+$ $
+图1
+&lt;/center&gt;
+
+&lt;p&gt;&lt;br /&gt;
 &lt;br /&gt;&lt;/p&gt;
 
 &lt;p&gt;&lt;strong&gt;双向链表&lt;/strong&gt;&lt;/p&gt;
@@ -33,9 +39,13 @@
 &lt;p&gt;一种更复杂的链表是&lt;code class=&quot;highlighter-rouge&quot;&gt;“双向链表”&lt;/code&gt;或&lt;code class=&quot;highlighter-rouge&quot;&gt;“双面链表”&lt;/code&gt;。每个节点有两个连接：一个指向前一个节点，（当此“连接”为第一个“连接”时，指向空值或者空列表）；而另一个指向下一个节点，（当此“连接”为最后一个“连接”时，指向空值或者空列表）&lt;/p&gt;
 
 &lt;p&gt;&lt;br /&gt;
-&lt;br /&gt;
-&lt;img src=&quot;http://p7rz9r9fd.bkt.clouddn.com/05-15-02.png&quot; alt=&quot;05-15-02.png-w140&quot; /&gt;&lt;/p&gt;
+&lt;br /&gt;&lt;/p&gt;
 
+&lt;center&gt;
+&lt;img src=&quot;http://p7rz9r9fd.bkt.clouddn.com/05-15-02.png&quot; width=&quot;25%&quot; height=&quot;25%&quot; /&gt;
+$ $
+图2
+&lt;/center&gt;
 &lt;p&gt;&lt;br /&gt;
 &lt;br /&gt;&lt;/p&gt;
 
@@ -46,8 +56,13 @@
 &lt;p&gt;指向整个列表的指针可以被称作访问指针。&lt;/p&gt;
 
 &lt;p&gt;&lt;br /&gt;
-&lt;br /&gt;
-&lt;img src=&quot;http://p7rz9r9fd.bkt.clouddn.com/05-15-03.png&quot; alt=&quot;05-15-03.png-w140&quot; /&gt;&lt;/p&gt;
+&lt;br /&gt;&lt;/p&gt;
+
+&lt;center&gt;
+&lt;img src=&quot;http://p7rz9r9fd.bkt.clouddn.com/05-15-03.png&quot; width=&quot;25%&quot; height=&quot;25%&quot; /&gt;
+$ $
+图3
+&lt;/center&gt;
 
 &lt;p&gt;&lt;br /&gt;
 &lt;br /&gt;&lt;/p&gt;
