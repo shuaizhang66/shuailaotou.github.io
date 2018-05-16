@@ -5,9 +5,257 @@
     <description>张帅，江湖人称帅哥，区块链技术全能技术人才。</description>
     <link>http://localhost:4000/</link>
     <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Wed, 16 May 2018 13:15:23 +0800</pubDate>
-    <lastBuildDate>Wed, 16 May 2018 13:15:23 +0800</lastBuildDate>
+    <pubDate>Wed, 16 May 2018 20:36:24 +0800</pubDate>
+    <lastBuildDate>Wed, 16 May 2018 20:36:24 +0800</lastBuildDate>
     <generator>Jekyll v3.5.1</generator>
+    
+      <item>
+        <title>散列算法实现Go语言Map函数</title>
+        <description>&lt;h3 id=&quot;概述&quot;&gt;概述&lt;/h3&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Hash&lt;/code&gt;一般翻译做“散列”，也有直接音译为哈希的，就是把任意长度的输入（又叫做预映射），通过散列算法，变换成固定长度的输出，该输出就是散列值，这种转化是一种压缩映射，也就是散列值的空间通常远小于输入值的空间，不同的输入可能会散列成相同的输出，二不可能从散列值来唯一的确定输入值。简单的说就是&lt;code class=&quot;highlighter-rouge&quot;&gt;一种将任意长度的消息压缩到某一固定长度的消息摘要函数。&lt;/code&gt;
+&lt;br /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;哈希算法&quot;&gt;哈希算法&lt;/h3&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Hash&lt;/code&gt;主要用于信息安全领域中的加密算法，它把一些长度不同的信息转化成杂乱的128位的编码，这些编码值叫做HASH值，也可以说，hash就是找到一种数据内容和数据存放地址之间的映射关系。具体哈希算法可以参考&lt;a href=&quot;https://www.jianshu.com/p/bf1d7eee28d0&quot;&gt;哈希算法总结&lt;/a&gt;这篇文章。
+&lt;br /&gt;
+散列表是一种用于以常熟平均时间执行插入、删除、查找的算法。&lt;/p&gt;
+
+&lt;h3 id=&quot;散列函数&quot;&gt;散列函数&lt;/h3&gt;
+&lt;p&gt;散列表每个关键字被影射到0～ArrSize这个范围内（本文选取的数组长度为16的数组，取的关键字为&lt;code class=&quot;highlighter-rouge&quot;&gt;1103515245&lt;/code&gt;），这个映射叫做散列函数。&lt;strong&gt;上面的两个函数取值保证了，关键字被影射到0-15下标数组的概率一样。&lt;/strong&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;map实现原理&quot;&gt;Map实现原理&lt;/h3&gt;
+&lt;p&gt;创建一个容量为16的链表数组，依据上面散列函数的原理，将Key值等概率的转换成0-16之间的下标值。然后根据下标值，将key和value插入到对应的下标数组中的链表上。
+原理如下图：&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;
+&lt;br /&gt;&lt;/p&gt;
+
+&lt;center&gt;
+&lt;img src=&quot;http://p7rz9r9fd.bkt.clouddn.com/05-16-01.png&quot; width=&quot;70%&quot; height=&quot;60%&quot; /&gt;
+&lt;/center&gt;
+
+&lt;p&gt;&lt;br /&gt;
+&lt;br /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;代码实现&quot;&gt;代码实现&lt;/h3&gt;
+
+&lt;p&gt;&lt;strong&gt;结构体作为数据域的类型&lt;/strong&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
+type DM struct {
+	K string
+	V string
+}
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;声明全局变量，保存头结点&lt;/strong&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;var head *Node
+var curr *Node
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;声明节点类型&lt;/strong&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;type Node struct {
+	//数据域
+	Data DM
+	//地址域
+	NextNode *Node
+}
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;创建头结点&lt;/strong&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;func CreateHeadNode(k string, v string) *Node {
+	var node *Node = new(Node)
+	//设置数据域结构体中的键值对
+	node.Data.K = k
+	node.Data.V = v
+	//设置地址域
+	node.NextNode = nil
+	//保存头结点
+	head = node
+	curr = node
+
+	return node
+
+}
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;在指定的节点(curr)后边添加新节点&lt;/strong&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;func AddNode(k string, v string, curr *Node) *Node {
+	var newNode *Node = new(Node)
+	//设置新节点中的数据域
+	newNode.Data.K = k
+	newNode.Data.V = v
+
+	//设置地址域
+	newNode.NextNode = nil
+	//挂接节点
+	curr.NextNode = newNode
+	curr = newNode
+	//返回值
+	return newNode
+}
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;在指定的节点后边遍历链表&lt;/strong&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;func ShowNodes(n *Node) {
+	var node = n
+	for {
+		if node.NextNode == nil {
+			fmt.Print(node.Data)
+			break
+		} else {
+			fmt.Println(node.Data)
+			node = node.NextNode
+		}
+	}
+
+}
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;计算节点的个数&lt;/strong&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
+func NodeCnt() int {
+	var cnt int = 1
+	var node = head
+	for {
+		if node.NextNode == nil {
+			break
+		} else {
+			node = node.NextNode
+			cnt = cnt + 1
+		}
+
+	}
+	return cnt
+}
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;声明全局数组&lt;/strong&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;var bultArr [16]*Node
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;给数组初始化&lt;/strong&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;func CreateBulet() {
+
+	var arr = [16]*Node{}
+	for i := 0; i &amp;lt; 16; i++ {
+	 // 为数组中每个元素都创建头节点
+		arr[i] = CreateHeadNode(&quot;头节点&quot;, &quot;头结点&quot;)
+
+	}
+	bultArr = arr
+
+}
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;将key转换成数组下标的散列算法&lt;/strong&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;func HashCode(key string) int {
+	var index int = 0
+	index = int(key[0])
+	for k := 0; k &amp;lt; len(key); k++ {
+		index *= (1103515245 + int(key[k]))
+	}
+	index &amp;gt;&amp;gt;= 27
+	index &amp;amp;= 16 - 1
+
+	return index
+}
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;&lt;strong&gt;此方法为固定的方法，科学家算的🤫🤭，即上面的散列函数&lt;/strong&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;strong&gt;向数组中添加键值对&lt;/strong&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;func AddKeyValue(k string, v string) {
+
+	//计算建所对应的木桶下标
+	var pos = HashCode(k)
+	//获得木桶数组
+
+	var head *Node = bultArr[pos]
+	//向指定下标的头节点添加节点
+	AddNode(k, v, head)
+
+}
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;获取数据&lt;/strong&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;func GetValueByKey(k string) string {
+	var pos = HashCode(k)
+	var head *Node = bultArr[pos]
+	//通过头节点遍历链表
+	
+	//查找对应下标下的链表，判断在key与节点中的key一直时打印
+	for {
+		if head.Data.K == k {
+			fmt.Println(head.Data.V)
+			break
+		} else {
+			head = head.NextNode
+			if head.NextNode == nil {
+
+			}
+		}
+	}
+
+	return &quot;&quot;
+}
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;h2 id=&quot;总结&quot;&gt;总结&lt;/h2&gt;
+&lt;p&gt;哈希散列算法的数值指定数组长度也可以是32，64，但是对应的数字就不是1103515245了，有其他的数，感兴趣的可以去查询一下。&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;喜欢就star一下吧！👻👻👻&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;作者原创，转载请注明出处，如有错误描述，请评论纠正，谢谢大家！🐳🐳🐳&lt;/p&gt;
+&lt;/blockquote&gt;
+
+</description>
+        <pubDate>Wed, 16 May 2018 00:00:00 +0800</pubDate>
+        <link>http://localhost:4000/2018/05/16/%E6%95%A3%E5%88%97%E7%AE%97%E6%B3%95%E5%AE%9E%E7%8E%B0Go%E8%AF%AD%E8%A8%80Map%E5%87%BD%E6%95%B0/</link>
+        <guid isPermaLink="true">http://localhost:4000/2018/05/16/%E6%95%A3%E5%88%97%E7%AE%97%E6%B3%95%E5%AE%9E%E7%8E%B0Go%E8%AF%AD%E8%A8%80Map%E5%87%BD%E6%95%B0/</guid>
+        
+        <category>散列算法，Map函数</category>
+        
+        
+      </item>
     
       <item>
         <title>GO语言实现链表的增删改查</title>
