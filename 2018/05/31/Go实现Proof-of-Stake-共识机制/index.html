@@ -1,0 +1,895 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <title>Go实现Proof of Stake 共识机制</title>
+  <meta name="description" content="Go实现Proof of Stake 共识机制">
+  <meta name="author" content="张帅">
+
+  <meta name="keywords" content="go"
+  />
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Go实现Proof of Stake 共识机制">
+  <meta name="twitter:description" content="Go实现Proof of Stake 共识机制">
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Go实现Proof of Stake 共识机制">
+  <meta property="og:description" content="Go实现Proof of Stake 共识机制">
+  <meta property="og:site_name" content="goe"
+  />
+
+
+  <link rel="icon" type="image/png" href="/images/favicon.png" />
+  <link href="/images/favicon.png" rel="shortcut icon" type="image/png">
+
+
+  <link rel="stylesheet" href=" /css/main.css ">
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+
+  <link rel="canonical" href="http://localhost:4000/2018/05/31/Go%E5%AE%9E%E7%8E%B0Proof-of-Stake-%E5%85%B1%E8%AF%86%E6%9C%BA%E5%88%B6/">
+  <link rel="alternate" type="application/rss+xml" title="张帅区块链博客" href="http://localhost:4000 /feed.xml
+    ">
+
+  <meta name="google-site-verification" content="1-1ZlHoRvM0T2FqPbW2S-qLgYXN6rsn52kErlMPd_gw" />
+
+  <!-- 站点统计 -->
+  <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+  </script>
+  
+  <!-- 百度统计 -->
+  
+  <script>
+    var _hmt = _hmt || [];
+    (function () {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?284358d8c366877824099c0d40d52cc3";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+  
+
+  <!-- google 统计 -->
+  
+
+  <script>
+    (function () {
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+      } else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+      }
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+</head>
+
+
+<body>
+
+  <span class="mobile btn-mobile-menu">        
+      <div class="nav_container">
+         <nav class="nav-menu-item" style = "float:right">
+            <i class="nav-menu-item">
+              <a href="/#blog" title="" class="blog-button">  博客主页
+              </a>
+            </i>
+            
+                <i class="nav-menu-item">
+
+                  <a href="/archive" title="archive" class="btn-mobile-menu__icon">
+                      所有文章
+                  </a>
+                </i>
+            
+                <i class="nav-menu-item">
+
+                  <a href="/tags" title="tags" class="btn-mobile-menu__icon">
+                      分类
+                  </a>
+                </i>
+            
+                <i class="nav-menu-item">
+
+                  <a href="/about" title="about" class="btn-mobile-menu__icon">
+                      关于我
+                  </a>
+                </i>
+            
+          </nav>
+          
+      </div>
+    </span> <header class="panel-cover panel-cover--collapsed" style="background-image: url('/images/background-cover.jpg')">
+  <div class="panel-main">
+    <div class="panel-main__inner panel-inverted">
+      <div class="panel-main__content">
+        <!-- 头像效果-start -->
+        <div class="ih-item circle effect right_to_left">
+          <a href="/#blog" title="前往 张帅区块链博客 的主页" class="blog-button">
+            <div class="img"><img src="/images/avatar.jpg" alt="img"></div>
+            <div class="info">
+              <div class="info-back">
+                <h2 style="font-size: 14px">
+                   终身学习者 
+                </h2>´
+                <p style="font-size: 6px">
+                   小红科技|CTO 
+                </p>
+              </div>
+            </div>
+          </a>
+        </div>
+        <!-- 头像效果-end -->
+        <h1 class="panel-cover__title panel-title"><a href="/#blog" title="link to homepage for 张帅区块链博客" class="blog-button">张帅区块链博客</a></h1>
+        <hr class="panel-cover__divider" />
+        <p class="panel-cover__description">张帅，江湖人称帅哥，区块链技术全能技术人才。</p>
+        <hr class="panel-cover__divider panel-cover__divider--secondary" /> 
+
+
+        <div class="navigation-wrapper">
+          <div>
+            <nav class="cover-navigation cover-navigation--primary">
+              <ul class="navigation">
+                <li class="navigation__item"><a href="/#blog" title="" class="blog-button">博客主页</a></li>
+                
+                <li class="navigation__item"><a href="/archive" title="archive">所有文章</a></li>
+                
+                <li class="navigation__item"><a href="/tags" title="tags">分类</a></li>
+                
+                <li class="navigation__item"><a href="/about" title="about">关于我</a></li>
+                
+              </ul>
+            </nav>
+          </div>
+        </div>
+
+        <div style="display:flex;justify-content:center;-webkit-justify-content:center">
+          <div style="display:flex;flex-direction:column;align-items:center;-webkit-flex-direction:column;-webkit-align-items:center;margin-right:10px">
+            <img src="/images/zhishixingqiu.png" style="width:120px;height:120px;margin-top:30px;margin-bottom:10px" />
+            <span class="panel-cover__subtitle panel-subtitle" style="font-size: 12px">知识星球</span>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;-webkit-flex-direction:column;-webkit-align-items:center;margin-left:10px">
+            <img src="/images/lianhu.jpg" style="width:120px;height:120px;margin-top:30px;margin-bottom:10px" />
+            <span class="panel-cover__subtitle panel-subtitle" style="font-size: 12px">个人公众号</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  
+  <div class="panel-cover--overlay cover-clear"></div>
+  
+
+  </div>
+</header>
+
+
+  <div class="content-wrapper">
+    <div class="content-wrapper__inner">
+      <article class="post-container post-container--single" itemscope itemtype="http://schema.org/BlogPosting">
+  <header class="post-header">
+    <h1 class="post-title">Go实现Proof of Stake 共识机制</h1>
+    <div class="post-meta">
+      <img src="/images/calendar.png" width="20px"/>
+      <time datetime="2018-05-31 00:00:00 +0800" itemprop="datePublished" class="post-meta__date date">2018-05-31</time>
+
+      <span id="busuanzi_container_page_pv"> | 阅读：<span id="busuanzi_value_page_pv"></span>次</span>
+    </p>
+    </div>
+  </header>
+
+  <section class="post">
+    <h2 id="什么是-proof-of-stake">什么是 Proof of Stake</h2>
+
+<p>在PoW中，节点之间通过hash的计算力来竞赛以获取下一个区块的记账权，而在PoS中，块是已经铸造好的，铸造的过程是基于每个节点(Node)愿意作为抵押的令牌(Token)数量。如果验证者愿意提供更多的令牌作为抵押品，他们就有更大的机会记账下一个区块并获得奖励。</p>
+
+<h2 id="实现-proof-of-stake-主要功能点">实现 Proof of Stake 主要功能点</h2>
+
+<ul>
+  <li>我们将有一个中心化的TCP服务节点，其他节点可以连接该服务器</li>
+  <li>最新的区块链状态将定期广播到每个节点</li>
+  <li>每个节点都能提议建立新的区块</li>
+  <li>基于每个节点的令牌数量，其中一个节点将随机地(以令牌数作为加权值)作为获胜者，并且将该区块添加到区块链中</li>
+</ul>
+
+<h2 id="实现-proof-of-stake">实现 Proof of Stake</h2>
+
+<h3 id="设置-tcp-服务器的端口">设置 TCP 服务器的端口</h3>
+
+<p>新建 <code class="highlighter-rouge">.env</code>，添加如下内容 <code class="highlighter-rouge">PORT=9000</code></p>
+
+<h3 id="安装依赖软件">安装依赖软件</h3>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ go get github.com/davecgh/go-spew/spew
+
+$ go get github.com/joho/godotenv
+</code></pre>
+</div>
+
+<ul>
+  <li>
+    <p><code class="highlighter-rouge">spew</code> 在控制台中格式化输出相应的结果。</p>
+  </li>
+  <li>
+    <p><code class="highlighter-rouge">godotenv</code> 可以从我们项目的根目录的 <code class="highlighter-rouge">.env</code> 文件中读取数据。</p>
+  </li>
+</ul>
+
+<h3 id="引入相应的包">引入相应的包</h3>
+
+<p>新建 <code class="highlighter-rouge">main.go</code>，引入相应的包</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>package main
+
+import (
+	"bufio"
+	"crypto/sha256"
+	"encoding/hex"
+	"encoding/json"
+	"fmt"
+	"io"
+	"log"
+	"math/rand"
+	"net"
+	"os"
+	"strconv"
+	"sync"
+	"time"
+
+	"github.com/davecgh/go-spew/spew"
+	"github.com/joho/godotenv"
+)
+</code></pre>
+</div>
+
+<h3 id="全局变量">全局变量</h3>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>// Block represents each 'item' in the blockchain
+type Block struct {
+	Index     int
+	Timestamp string
+	BPM       int
+	Hash      string
+	PrevHash  string
+	Validator string
+}
+
+// Blockchain is a series of validated Blocks
+var Blockchain []Block
+var tempBlocks []Block
+
+// candidateBlocks handles incoming blocks for validation
+var candidateBlocks = make(chan Block)
+
+// announcements broadcasts winning validator to all nodes
+var announcements = make(chan string)
+
+var mutex = &amp;sync.Mutex{}
+
+// validators keeps track of open validators and balances
+var validators = make(map[string]int)
+</code></pre>
+</div>
+
+<ul>
+  <li><code class="highlighter-rouge">Block</code> 是每个区块的内容</li>
+  <li><code class="highlighter-rouge">Blockchain</code> 是我们的官方区块链，它只是一串经过验证的区块集合。每个区块中的 <code class="highlighter-rouge">PrevHash</code> 与前面块的 <code class="highlighter-rouge">Hash</code> 相比较，以确保我们的链是正确的。 <code class="highlighter-rouge">tempBlocks</code> 是临时存储单元，在区块被选出来并添加到 <code class="highlighter-rouge">BlockChain</code> 之前，临时存储在这里</li>
+  <li><code class="highlighter-rouge">candidateBlocks</code> 是 <code class="highlighter-rouge">Block</code> 的通道，任何一个节点在提出一个新块时都将它发送到这个通道</li>
+  <li><code class="highlighter-rouge">announcements</code> 也是一个通道，我们的主Go TCP服务器将向所有节点广播最新的区块链</li>
+  <li><code class="highlighter-rouge">mutex</code>是一个标准变量，允许我们控制读/写和防止数据竞争</li>
+  <li><code class="highlighter-rouge">validators</code> 是节点的存储map，同时也会保存每个节点持有的令牌数</li>
+</ul>
+
+<h3 id="生成区块">生成区块</h3>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>func generateBlock(oldBlock Block, BPM int, address string) (Block, error) {
+
+	var newBlock Block
+
+	t := time.Now()
+
+	newBlock.Index = oldBlock.Index + 1
+	newBlock.Timestamp = t.String()
+	newBlock.BPM = BPM
+	newBlock.PrevHash = oldBlock.Hash
+	newBlock.Hash = calculateBlockHash(newBlock)
+	newBlock.Validator = address
+
+	return newBlock, nil
+}
+</code></pre>
+</div>
+
+<p><code class="highlighter-rouge">generateBlock</code> 是用来创建新块的。
+<code class="highlighter-rouge">newBlock.PrevHash</code> 存储的是上一个区块的 <code class="highlighter-rouge">Hash</code>
+<code class="highlighter-rouge">newBlock.Hash</code> 是通过 <code class="highlighter-rouge">calculateBlockHash(newBlock)</code> 生成的 Hash 。
+<code class="highlighter-rouge">newBlock.Validator</code> 存储的是获取记账权的节点地址</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>// SHA256 hasing
+// calculateHash is a simple SHA256 hashing function
+func calculateHash(s string) string {
+	h := sha256.New()
+	h.Write([]byte(s))
+	hashed := h.Sum(nil)
+	return hex.EncodeToString(hashed)
+}
+
+//calculateBlockHash returns the hash of all block information
+func calculateBlockHash(block Block) string {
+	record := string(block.Index) + block.Timestamp + string(block.BPM) + block.PrevHash
+	return calculateHash(record)
+}
+</code></pre>
+</div>
+
+<p><code class="highlighter-rouge">calculateHash</code> 函数会接受一个 <code class="highlighter-rouge">string</code> ，并且返回一个<code class="highlighter-rouge">SHA256 hash</code> 。</p>
+
+<p><code class="highlighter-rouge">calculateBlockHash</code> 是对一个 <code class="highlighter-rouge">block</code> 进行 <code class="highlighter-rouge">hash</code>，将一个 <code class="highlighter-rouge">block</code> 的所有字段连接到一起后，再调用 <code class="highlighter-rouge">calculateHash</code> 将字符串转为 <code class="highlighter-rouge">SHA256 hash</code> 。</p>
+
+<h3 id="验证区块">验证区块</h3>
+
+<p>我们通过检查 <code class="highlighter-rouge">Index</code> 来确保它们按预期递增。我们也检查以确保我们 <code class="highlighter-rouge">PrevHash</code> 的确与 <code class="highlighter-rouge">Hash</code> 前一个区块相同。最后，我们希望通过在当前块上 <code class="highlighter-rouge">calculateBlockHash</code> 再次运行该函数来检查当前块的散列。</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>// isBlockValid makes sure block is valid by checking index
+// and comparing the hash of the previous block
+func isBlockValid(newBlock, oldBlock Block) bool {
+	if oldBlock.Index+1 != newBlock.Index {
+		return false
+	}
+
+	if oldBlock.Hash != newBlock.PrevHash {
+		return false
+	}
+
+	if calculateBlockHash(newBlock) != newBlock.Hash {
+		return false
+	}
+
+	return true
+}
+</code></pre>
+</div>
+
+<h3 id="验证者">验证者</h3>
+
+<p>当一个验证者连接到我们的TCP服务，我们需要提供一些函数达到以下目标：</p>
+
+<ul>
+  <li>输入令牌的余额（之前提到过，我们不做钱包等逻辑)</li>
+  <li>接收区块链的最新广播</li>
+  <li>接收验证者赢得区块的广播信息</li>
+  <li>将自身节点添加到全局的验证者列表中（validators)</li>
+  <li>输入Block的BPM数据- BPM是每个验证者的人体脉搏值</li>
+  <li>提议创建一个新的区块</li>
+</ul>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>func handleConn(conn net.Conn) {
+	defer conn.Close()
+
+	go func() {
+		for {
+			msg := &lt;-announcements
+			io.WriteString(conn, msg)
+		}
+	}()
+	// 验证者地址
+	var address string
+
+	// 验证者输入他所拥有的 tokens，tokens 的值越大，越容易获得新区块的记账权
+	io.WriteString(conn, "Enter token balance:")
+	scanBalance := bufio.NewScanner(conn)
+	for scanBalance.Scan() {
+		// 获取输入的数据，并将输入的值转为 int
+		balance, err := strconv.Atoi(scanBalance.Text())
+		if err != nil {
+			log.Printf("%v not a number: %v", scanBalance.Text(), err)
+			return
+		}
+		t := time.Now()
+		// 生成验证者的地址
+		address = calculateHash(t.String())
+		// 将验证者的地址和token 存储到 validators
+		validators[address] = balance
+		fmt.Println(validators)
+		break
+	}
+
+	io.WriteString(conn, "\nEnter a new BPM:")
+
+	scanBPM := bufio.NewScanner(conn)
+
+	go func() {
+		for {
+			// take in BPM from stdin and add it to blockchain after conducting necessary validation
+			for scanBPM.Scan() {
+				bpm, err := strconv.Atoi(scanBPM.Text())
+				// 如果验证者试图提议一个被污染（例如伪造）的block，例如包含一个不是整数的BPM，那么程序会抛出一个错误，我们会立即从我们的验证器列表validators中删除该验证者，他们将不再有资格参与到新块的铸造过程同时丢失相应的抵押令牌。
+				if err != nil {
+					log.Printf("%v not a number: %v", scanBPM.Text(), err)
+					delete(validators, address)
+					conn.Close()
+				}
+
+				mutex.Lock()
+				oldLastIndex := Blockchain[len(Blockchain)-1]
+				mutex.Unlock()
+
+				// 创建新的区块，然后将其发送到 candidateBlocks 通道
+				newBlock, err := generateBlock(oldLastIndex, bpm, address)
+				if err != nil {
+					log.Println(err)
+					continue
+				}
+				if isBlockValid(newBlock, oldLastIndex) {
+					candidateBlocks &lt;- newBlock
+				}
+				io.WriteString(conn, "\nEnter a new BPM:")
+			}
+		}
+	}()
+
+	// 循环会周期性的打印出最新的区块链信息
+	for {
+		time.Sleep(time.Minute)
+		mutex.Lock()
+		output, err := json.Marshal(Blockchain)
+		mutex.Unlock()
+		if err != nil {
+			log.Fatal(err)
+		}
+		io.WriteString(conn, string(output)+"\n")
+	}
+
+}
+
+</code></pre>
+</div>
+
+<ul>
+  <li>
+    <p><code class="highlighter-rouge">io.WriteString(conn, "Enter token balance:")</code>允许验证者输入他持有的令牌数量，然后，该验证者被分配一个 <code class="highlighter-rouge">SHA256</code>地址，随后该验证者地址和验证者的令牌数被添加到验证者列表<code class="highlighter-rouge">validators</code> 中。</p>
+  </li>
+  <li>
+    <p>接着我们输入BPM，验证者的脉搏值，并创建一个单独的Go协程来处理这块儿逻辑</p>
+  </li>
+  <li>
+    <p><code class="highlighter-rouge">delete(validators, address)</code> 如果验证者试图提议一个被污染（例如伪造）的 <code class="highlighter-rouge">block</code>，例如包含一个不是整数的BPM，那么程序会抛出一个错误，我们会立即从我们的验证器列表 <code class="highlighter-rouge">validators</code> 中删除该验证者，他们将不再有资格参与到新块的铸造过程同时丢失相应的抵押令牌。</p>
+  </li>
+  <li>
+    <p>正是因为这种抵押令牌的机制，使得PoS协议是一种更加可靠的机制。如果一个人试图伪造和破坏，那么他将被抓住，并且失去所有抵押和未来的权益，因此对于恶意者来说，是非常大的威慑。</p>
+  </li>
+  <li>
+    <p>接着，我们用 <code class="highlighter-rouge">generateBlock</code> 函数创建一个新的 <code class="highlighter-rouge">block</code>，然后将其发送到 <code class="highlighter-rouge">candidateBlocks</code> 通道进行进一步处理。将<code class="highlighter-rouge">Block</code> 发送到通道使用的语法: <code class="highlighter-rouge">candidateBlocks &lt;- newBlock</code></p>
+  </li>
+  <li>
+    <p>最后会循环打印出最新的区块链，这样每个验证者都能获知最新的状态。</p>
+  </li>
+</ul>
+
+<h3 id="选择获取记账权的节点">选择获取记账权的节点</h3>
+
+<p>下面是PoS的主要逻辑。我们需要编写代码以实现获胜验证者的选择;他们所持有的令牌数量越高，他们就越有可能被选为胜利者。</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>// pickWinner creates a lottery pool of validators and chooses the validator who gets to forge a block to the blockchain
+// by random selecting from the pool, weighted by amount of tokens staked
+func pickWinner() {
+	time.Sleep(30 * time.Second)
+	mutex.Lock()
+	temp := tempBlocks
+	mutex.Unlock()
+
+	lotteryPool := []string{}
+	if len(temp) &gt; 0 {
+
+		// slightly modified traditional proof of stake algorithm
+		// from all validators who submitted a block, weight them by the number of staked tokens
+		// in traditional proof of stake, validators can participate without submitting a block to be forged
+	OUTER:
+		for _, block := range temp {
+			// if already in lottery pool, skip
+			for _, node := range lotteryPool {
+				if block.Validator == node {
+					continue OUTER
+				}
+			}
+
+			// lock list of validators to prevent data race
+			mutex.Lock()
+			setValidators := validators
+			mutex.Unlock()
+
+			// 获取验证者的tokens
+			k, ok := setValidators[block.Validator]
+			if ok {
+				// 向 lotteryPool 追加 k 条数据，k 代表的是当前验证者的tokens
+				for i := 0; i &lt; k; i++ {
+					lotteryPool = append(lotteryPool, block.Validator)
+				}
+			}
+		}
+
+		// 通过随机获得获胜节点的地址
+		s := rand.NewSource(time.Now().Unix())
+		r := rand.New(s)
+		lotteryWinner := lotteryPool[r.Intn(len(lotteryPool))]
+
+		// 把获胜者的区块添加到整条区块链上，然后通知所有节点关于胜利者的消息
+		for _, block := range temp {
+			if block.Validator == lotteryWinner {
+				mutex.Lock()
+				Blockchain = append(Blockchain, block)
+				mutex.Unlock()
+				for _ = range validators {
+					announcements &lt;- "\nwinning validator: " + lotteryWinner + "\n"
+				}
+				break
+			}
+		}
+	}
+
+	mutex.Lock()
+	tempBlocks = []Block{}
+	mutex.Unlock()
+}
+</code></pre>
+</div>
+
+<ul>
+  <li>
+    <p>每隔30秒，我们选出一个胜利者，这样对于每个验证者来说，都有时间提议新的区块，参与到竞争中来。接着创建一个<code class="highlighter-rouge">lotteryPool</code>，它会持有所有验证者的地址，这些验证者都有机会成为一个胜利者。然后，对于提议块的暂存区域，我们会通过<code class="highlighter-rouge">if len(temp) &gt; 0</code>来判断是否已经有了被提议的区块。</p>
+  </li>
+  <li>
+    <p>在<code class="highlighter-rouge">OUTER FOR</code>循环中，要检查暂存区域是否和 <code class="highlighter-rouge">lotteryPool</code> 中存在同样的验证者，如果存在，则跳过。</p>
+  </li>
+  <li>
+    <p>在以 <code class="highlighter-rouge">k, ok := setValidators[block.Validator]</code>开始的代码块中，我们确保了从<code class="highlighter-rouge">temp</code>中取出来的验证者都是合法的，即这些验证者在验证者列表<code class="highlighter-rouge">validators</code>已存在。若合法，则把该验证者加入到<code class="highlighter-rouge">lotteryPool</code>中。</p>
+  </li>
+  <li>
+    <p>那么我们怎么根据这些验证者持有的令牌数来给予他们合适的随机权重呢？</p>
+
+    <ul>
+      <li>
+        <p>首先，用验证者的令牌填充<code class="highlighter-rouge">lotteryPool</code>数组，例如一个验证者有100个令牌，那么在<code class="highlighter-rouge">lotteryPool</code>中就将有100个元素填充；如果有1个令牌，那么将仅填充1个元素。</p>
+      </li>
+      <li>
+        <p>然后，从<code class="highlighter-rouge">lotteryPool</code>中随机选择一个元素，元素所属的验证者即是胜利者，把胜利验证者的地址赋值给lotteryWinner。这里能够看出来，如果验证者持有的令牌越多，那么他在数组中的元素也越多，他获胜的概率就越大；同时，持有令牌很少的验证者，也是有概率获胜的。</p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p>接着我们把获胜者的区块添加到整条区块链上，然后通知所有节点关于胜利者的消息：<code class="highlighter-rouge">announcements &lt;- "\nwinning validator: " + lotteryWinner + "\n" </code>。</p>
+  </li>
+  <li>
+    <p>最后，清空tempBlocks，以便下次提议的进行。</p>
+  </li>
+</ul>
+
+<h3 id="主函数">主函数</h3>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>func main() {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// 创建初始区块
+	t := time.Now()
+	genesisBlock := Block{}
+	genesisBlock = Block{0, t.String(), 0, calculateBlockHash(genesisBlock), "", ""}
+	spew.Dump(genesisBlock)
+	Blockchain = append(Blockchain, genesisBlock)
+
+	httpPort := os.Getenv("PORT")
+
+	// 启动 TCP 服务
+	server, err := net.Listen("tcp", ":"+httpPort)
+	if err != nil {
+		log.Fatal(err)
+	}
+	log.Println("HTTP Server Listening on port :", httpPort)
+	defer server.Close()
+
+	// 启动了一个Go routine 从 candidateBlocks 通道中获取提议的区块，然后填充到临时缓冲区 tempBlocks 中
+	go func() {
+		for candidate := range candidateBlocks {
+			mutex.Lock()
+			tempBlocks = append(tempBlocks, candidate)
+			mutex.Unlock()
+		}
+	}()
+
+	// 启动了一个Go routine 完成 pickWinner 函数
+	go func() {
+		for {
+			pickWinner()
+		}
+	}()
+
+	// 接收验证者节点的连接
+	for {
+		conn, err := server.Accept()
+		if err != nil {
+			log.Fatal(err)
+		}
+		go handleConn(conn)
+	}
+}
+</code></pre>
+</div>
+
+<ul>
+  <li><code class="highlighter-rouge">godotenv.Load()</code> 会解析 <code class="highlighter-rouge">.env</code> 文件并将相应的Key/Value对都放到环境变量中，通过 <code class="highlighter-rouge">os.Getenv</code> 获取</li>
+  <li>然后创建一个创世区块genesisBlock，形成了区块链。</li>
+  <li>接着启动了Tcp服务，等待所有验证者的连接。</li>
+  <li>启动了一个Go协程从 <code class="highlighter-rouge">candidateBlocks</code> 通道中获取提议的区块，然后填充到临时缓冲区 <code class="highlighter-rouge">tempBlocks</code> 中，最后启动了另外一个Go协程来完成 <code class="highlighter-rouge">pickWinner</code> 函数。</li>
+  <li>最后的for循环，用来接收验证者节点的连接。</li>
+</ul>
+
+<h2 id="运行">运行</h2>
+
+<p><code class="highlighter-rouge">go run main.go</code> 启动您的Go程序和TCP服务器，并会打印出初始区块的信息。</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ go run main.go
+(main.Block) {
+ Index: (int) 0,
+ Timestamp: (string) (len=50) "2018-05-08 16:45:27.14287 +0800 CST m=+0.000956793",
+ BPM: (int) 0,
+ Hash: (string) (len=64) "96a296d224f285c67bee93c30f8a309157f0daa35dc5b87e410b78630a09cfc7",
+ PrevHash: (string) "",
+ Validator: (string) ""
+}
+2018/05/08 16:45:27 HTTP Server Listening on port : 9000
+</code></pre>
+</div>
+
+<p>打开新的终端，运行 <code class="highlighter-rouge">nc localhost 9000</code>，
+输入 <code class="highlighter-rouge">tokens</code> , 然后输入 <code class="highlighter-rouge">BPM</code></p>
+
+<p><img src="http://olgjbx93m.bkt.clouddn.com/WX20180508-165429.png" alt="" /></p>
+
+<p>可以打开多个终端，输入不同的 <code class="highlighter-rouge">tokens</code> ,来检验 PoS 算法</p>
+
+<p><img src="http://olgjbx93m.bkt.clouddn.com/WX20180508-165704.png" alt="" /></p>
+
+<hr />
+<p><a href="https://github.com/shuailaotou/booksofTN/blob/master/分布式系统原理介绍.pdf">github源代码</a></p>
+
+<p>喜欢就star一下吧！👻👻👻</p>
+
+<blockquote>
+  <p>如有错误描述，请评论纠正，谢谢大家！🐳🐳🐳</p>
+</blockquote>
+
+
+  </section>
+  <h2 style="color:red"><strong>版权声明：博客中的文章版权归博主所有，未经授权，禁止转载，转载请注明出处，合作请联系：zs649704832(微信)</strong></h2>
+</article>
+
+<section>
+
+            <div class="content-play">
+              <p><a href="javascript:void(0)" onclick="dashangToggle()" class="dashang" title="打赏，支持一下">打赏一个呗</a></p>
+              <div class="hide_box-play"></div>
+              <div class="shang_box-play">
+                <a class="shang_close-play" href="javascript:void(0)" onclick="dashangToggle()" title="关闭"><img src="/images/payimg/close.jpg" alt="取消" /></a>
+                <div class="shang_tit-play">
+                  <p>感谢您的支持，我会继续努力的!</p>
+                </div>
+                <div class="shang_payimg">
+                    <img src="/images/payimg/alipayimg.jpg" alt="扫码支持" title="扫一扫" />
+                </div>
+              <div class="shang_payimg">    
+                    <img src="/images/payimg/weipayimg.jpg" alt="扫码支持" title="扫一扫" />
+                </div>
+                <div class="pay_explain">扫码打赏，你说多少就多少</div>
+                <div class="shang_payselect">
+                  <div class="pay_item checked" data-id="alipay">
+                    <span class="pay_logo"><img src="/images/payimg/alipay.jpg" alt="支付宝" /></span>
+                  </div>
+                  <div class="pay_item" data-id="weipay">
+                    <span class="pay_logo"><img src="/images/payimg/wechat.jpg" alt="微信" /></span>
+                  </div>
+                </div>
+                <div class="shang_info-play">
+                  <p>打开<span id="shang_pay_txt">支付宝</span>扫一扫，即可进行扫码打赏哦</p>
+                </div>
+              </div>
+            </div>
+            <script type="text/javascript">
+            function dashangToggle(){
+              $(".hide_box-play").fadeToggle();
+              $(".shang_box-play").fadeToggle();
+            }
+            </script>
+
+            <div style="text-align:center;margin:50px 0; font:normal 14px/24px 'MicroSoft YaHei';"></div>
+
+            <style type="text/css">
+              .content-play{width:80%;margin-top: 20px;margin-bottom: 10px;height:40px;}
+              .hide_box-play{z-index:999;filter:alpha(opacity=50);background:#666;opacity: 0.5;-moz-opacity: 0.5;left:0;top:0;height:99%;width:100%;position:fixed;display:none;}
+              .shang_box-play{width:540px;height:540px;padding:10px;background-color:#fff;border-radius:10px;position:fixed;z-index:1000;left:50%;top:50%;margin-left:-280px;margin-top:-280px;border:1px dotted #dedede;display:none;}
+              .shang_box-play img{border:none;border-width:0;}
+              .dashang{display:block;width:100px;margin:5px auto;height:25px;line-height:25px;padding:10px;background-color:#E74851;color:#fff;text-align:center;text-decoration:none;border-radius:10px;font-weight:bold;font-size:16px;transition: all 0.3s;}
+              .dashang:hover{opacity:0.8;padding:15px;font-size:18px;}
+              .shang_close-play{float:right;display:inline-block;
+                margin-right: 10px;margin-top: 20px;
+              }
+              .shang_logo{display:block;text-align:center;margin:20px auto;}
+              .shang_tit-play{width: 100%;height: 75px;text-align: center;line-height: 66px;color: #a3a3a3;font-size: 16px;background: url('/images/payimg/cy-reward-title-bg.jpg');font-family: 'Microsoft YaHei';margin-top: 7px;margin-right:2px;}
+              .shang_tit-play p{color:#a3a3a3;text-align:center;font-size:16px;}
+              .shang_payimg{width:140px;padding:10px;padding-left: 80px; /*border:6px solid #EA5F00;**/margin:0 auto;border-radius:3px;height:140px;display:inline-block;}
+              .shang_payimg img{display:inline-block;margin-right:10px;float:left;text-align:center;width:140px;height:140px; }
+              .pay_explain{text-align:center;margin:10px auto;font-size:12px;color:#545454;}
+              .shang_payselect{text-align:center;margin:0 auto;margin-top:40px;cursor:pointer;height:60px;width:500px;margin-left:110px;}
+              .shang_payselect .pay_item{display:inline-block;margin-right:140px;float:left;}
+              .shang_info-play{clear:both;}
+              .shang_info-play p,.shang_info-play a{color:#C3C3C3;text-align:center;font-size:12px;text-decoration:none;line-height:2em;}
+            </style>
+
+       <ul class="pager">
+        
+        <li class="previous">
+            <a href="/2018/05/23/%E4%BD%BF%E7%94%A8Go%E5%AE%9E%E7%8E%B0ProofofWork%E5%85%B1%E8%AF%86%E6%9C%BA%E5%88%B6/" data-toggle="tooltip" data-placement="top" title="使用Go实现Proof-of-Work 共识机制">上一篇：  <span>使用Go实现Proof-of-Work 共识机制</span>
+            </a>
+        </li>
+        
+        
+        <li class="next">
+            <a href="/2018/05/31/%E4%BB%A5%E5%A4%AA%E5%9D%8A%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90+-+%E4%B8%8B%E8%BD%BD-%E7%BC%96%E8%AF%91+go-ethereum+-%E6%90%AD%E5%BB%BA%E7%A7%81%E6%9C%89%E9%93%BE/" data-toggle="tooltip" data-placement="top" title="以太坊源码解析 - 下载、编译 go-ethereum ，搭建私有链">下一篇：  <span>以太坊源码解析 - 下载、编译 go-ethereum ，搭建私有链</span>
+            </a>
+        </li>
+        
+    </ul>
+</section>
+
+<section class="post-comments">
+  <!--PC和WAP自适应版-->
+<div id="SOHUCS" sid=Go实现Proof of Stake 共识机制 ></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cytCUCkTk'; 
+var conf = 'prod_15e14289becf46918413c73cdc14c4dc';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="http://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("http://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+</section>
+
+ <section class="footer">
+  <footer>
+    <div class="footer_div">
+      <nav class="cover-navigation navigation--social">
+        <ul class="navigation">
+
+          
+          <!-- Weibo -->
+          <li class="navigation__item_social">
+            <a href="http://weibo.com/u/3127147977" title="@u/3127147977 的微博" target="_blank">
+              <i class='social fa fa-weibo fa-2x'></i>
+              <span class="label">Weibo</span>
+            </a>
+          </li>
+           
+          <!-- Github -->
+          <li class="navigation__item_social">
+            <a href="https://github.com/shuailaotou" title="@shuailaotou 的 Github" target="_blank">
+              <i class='social fa fa-github fa-2x'></i>
+              <span class="label">Github</span>
+            </a>
+          </li>
+            
+
+          <!-- RSS -->
+          <li class="navigation__item_social">
+            <a href="/feed.xml" rel="author" title="RSS" target="_blank">
+              <i class='social fa fa-rss fa-2x'></i>
+              <span class="label">RSS</span>
+            </a>
+          </li>
+
+          
+          <!-- Email -->
+          <li class="navigation__item_social">
+            <a href="mailto:handsomeoldman66@gmail.com" title="Contact me">
+              <i class='social fa fa-envelope fa-2x'></i>
+              <span class="label">Email</span>
+            </a>
+          </li>
+          
+
+        </ul>
+      </nav>
+
+    </div>
+
+    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+      <thead>
+        <tr id="bar_head">
+          <th colspan="11">友情链接</th>
+        </tr>
+      </thead>
+
+      <tr align="center" valign="middle">
+          <td><a href="http://www.kongyixueyuan.com">区块链技术视频网站</a></td>
+
+          <td><a href="https://www.ethereum.org">以太坊官网</a></td>
+
+          <td><a href="https://solidity.readthedocs.io/en/develop/">Solidity</a></td>
+
+          <td><a href="http://truffleframework.com/">Truffle FrameWork</a></td>
+
+          <td><a href="http://embark.readthedocs.io">Embark FrameWork</a></td>
+
+      </tr>
+      <tr align="center" valign="middle">
+
+          <td><a href="https://www.ibm.com/developerworks/community/groups/service/html/communityview?communityUuid=3302cc3b-074e-44da-90b1-5055f1dc0d9c&amp;lang=zh">IBM开源技术微讲堂</a></td>
+
+          <td><a href="https://www.bitcoin.com/">Bitcoin.com</a></td>
+
+          <td><a href="https://github.com/bitshares/bitshares1-core">bitshares1-core</a></td>
+
+          <td><a href="https://ipfs.io">ipfs官网</a></td>
+
+          <td><a href="http://ipfser.org">ipfs中文网</a></td>
+
+      </tr>
+    </table>
+
+    <div class="footer_div">
+      <p class="copyright text-muted">
+        Copyright &copy; 2018 张帅区块链博客 京ICP备15065741号. 区块链开发_Golang QQ群：312197108
+      </p>
+      <div align="right">
+        <link rel="stylesheet" href="http://cdn.bootcss.com/font-awesome/4.3.0/css/font-awesome.min.css">
+        <!-- 访问统计 -->
+        <span id="busuanzi_container_site_pv">
+            本站总访问量
+            <span id="busuanzi_value_site_pv"></span>次
+        </span>
+
+      </div>
+      <div>
+  </footer>
+</section>
+
+    </div>
+  </div>
+
+  <script type="text/javascript" src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+<script type="text/javascript" src="/js/main.js"></script>
+
+<script type="text/javascript" src="/js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+
+  <script>
+    (function () {
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+      } else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+      }
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+</body>
+
+</html>

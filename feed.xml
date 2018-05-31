@@ -5,8 +5,8 @@
     <description>张帅，江湖人称帅哥，区块链技术全能技术人才。</description>
     <link>http://localhost:4000/</link>
     <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Thu, 31 May 2018 12:10:10 +0800</pubDate>
-    <lastBuildDate>Thu, 31 May 2018 12:10:10 +0800</lastBuildDate>
+    <pubDate>Thu, 31 May 2018 16:55:45 +0800</pubDate>
+    <lastBuildDate>Thu, 31 May 2018 16:55:45 +0800</lastBuildDate>
     <generator>Jekyll v3.5.1</generator>
     
       <item>
@@ -487,6 +487,499 @@ INFO [05-29|22:37:32] Submitted transaction                    fullhash=0x493e8a
         <guid isPermaLink="true">http://localhost:4000/2018/05/31/%E4%BB%A5%E5%A4%AA%E5%9D%8A%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90+-+%E4%B8%8B%E8%BD%BD-%E7%BC%96%E8%AF%91+go-ethereum+-%E6%90%AD%E5%BB%BA%E7%A7%81%E6%9C%89%E9%93%BE/</guid>
         
         <category>以太坊，私链</category>
+        
+        
+      </item>
+    
+      <item>
+        <title>Go实现Proof of Stake 共识机制</title>
+        <description>&lt;h2 id=&quot;什么是-proof-of-stake&quot;&gt;什么是 Proof of Stake&lt;/h2&gt;
+
+&lt;p&gt;在PoW中，节点之间通过hash的计算力来竞赛以获取下一个区块的记账权，而在PoS中，块是已经铸造好的，铸造的过程是基于每个节点(Node)愿意作为抵押的令牌(Token)数量。如果验证者愿意提供更多的令牌作为抵押品，他们就有更大的机会记账下一个区块并获得奖励。&lt;/p&gt;
+
+&lt;h2 id=&quot;实现-proof-of-stake-主要功能点&quot;&gt;实现 Proof of Stake 主要功能点&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;我们将有一个中心化的TCP服务节点，其他节点可以连接该服务器&lt;/li&gt;
+  &lt;li&gt;最新的区块链状态将定期广播到每个节点&lt;/li&gt;
+  &lt;li&gt;每个节点都能提议建立新的区块&lt;/li&gt;
+  &lt;li&gt;基于每个节点的令牌数量，其中一个节点将随机地(以令牌数作为加权值)作为获胜者，并且将该区块添加到区块链中&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;实现-proof-of-stake&quot;&gt;实现 Proof of Stake&lt;/h2&gt;
+
+&lt;h3 id=&quot;设置-tcp-服务器的端口&quot;&gt;设置 TCP 服务器的端口&lt;/h3&gt;
+
+&lt;p&gt;新建 &lt;code class=&quot;highlighter-rouge&quot;&gt;.env&lt;/code&gt;，添加如下内容 &lt;code class=&quot;highlighter-rouge&quot;&gt;PORT=9000&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;安装依赖软件&quot;&gt;安装依赖软件&lt;/h3&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ go get github.com/davecgh/go-spew/spew
+
+$ go get github.com/joho/godotenv
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;spew&lt;/code&gt; 在控制台中格式化输出相应的结果。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;godotenv&lt;/code&gt; 可以从我们项目的根目录的 &lt;code class=&quot;highlighter-rouge&quot;&gt;.env&lt;/code&gt; 文件中读取数据。&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;引入相应的包&quot;&gt;引入相应的包&lt;/h3&gt;
+
+&lt;p&gt;新建 &lt;code class=&quot;highlighter-rouge&quot;&gt;main.go&lt;/code&gt;，引入相应的包&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;package main
+
+import (
+	&quot;bufio&quot;
+	&quot;crypto/sha256&quot;
+	&quot;encoding/hex&quot;
+	&quot;encoding/json&quot;
+	&quot;fmt&quot;
+	&quot;io&quot;
+	&quot;log&quot;
+	&quot;math/rand&quot;
+	&quot;net&quot;
+	&quot;os&quot;
+	&quot;strconv&quot;
+	&quot;sync&quot;
+	&quot;time&quot;
+
+	&quot;github.com/davecgh/go-spew/spew&quot;
+	&quot;github.com/joho/godotenv&quot;
+)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;全局变量&quot;&gt;全局变量&lt;/h3&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;// Block represents each 'item' in the blockchain
+type Block struct {
+	Index     int
+	Timestamp string
+	BPM       int
+	Hash      string
+	PrevHash  string
+	Validator string
+}
+
+// Blockchain is a series of validated Blocks
+var Blockchain []Block
+var tempBlocks []Block
+
+// candidateBlocks handles incoming blocks for validation
+var candidateBlocks = make(chan Block)
+
+// announcements broadcasts winning validator to all nodes
+var announcements = make(chan string)
+
+var mutex = &amp;amp;sync.Mutex{}
+
+// validators keeps track of open validators and balances
+var validators = make(map[string]int)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Block&lt;/code&gt; 是每个区块的内容&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Blockchain&lt;/code&gt; 是我们的官方区块链，它只是一串经过验证的区块集合。每个区块中的 &lt;code class=&quot;highlighter-rouge&quot;&gt;PrevHash&lt;/code&gt; 与前面块的 &lt;code class=&quot;highlighter-rouge&quot;&gt;Hash&lt;/code&gt; 相比较，以确保我们的链是正确的。 &lt;code class=&quot;highlighter-rouge&quot;&gt;tempBlocks&lt;/code&gt; 是临时存储单元，在区块被选出来并添加到 &lt;code class=&quot;highlighter-rouge&quot;&gt;BlockChain&lt;/code&gt; 之前，临时存储在这里&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;candidateBlocks&lt;/code&gt; 是 &lt;code class=&quot;highlighter-rouge&quot;&gt;Block&lt;/code&gt; 的通道，任何一个节点在提出一个新块时都将它发送到这个通道&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;announcements&lt;/code&gt; 也是一个通道，我们的主Go TCP服务器将向所有节点广播最新的区块链&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;mutex&lt;/code&gt;是一个标准变量，允许我们控制读/写和防止数据竞争&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;validators&lt;/code&gt; 是节点的存储map，同时也会保存每个节点持有的令牌数&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;生成区块&quot;&gt;生成区块&lt;/h3&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;func generateBlock(oldBlock Block, BPM int, address string) (Block, error) {
+
+	var newBlock Block
+
+	t := time.Now()
+
+	newBlock.Index = oldBlock.Index + 1
+	newBlock.Timestamp = t.String()
+	newBlock.BPM = BPM
+	newBlock.PrevHash = oldBlock.Hash
+	newBlock.Hash = calculateBlockHash(newBlock)
+	newBlock.Validator = address
+
+	return newBlock, nil
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;generateBlock&lt;/code&gt; 是用来创建新块的。
+&lt;code class=&quot;highlighter-rouge&quot;&gt;newBlock.PrevHash&lt;/code&gt; 存储的是上一个区块的 &lt;code class=&quot;highlighter-rouge&quot;&gt;Hash&lt;/code&gt;
+&lt;code class=&quot;highlighter-rouge&quot;&gt;newBlock.Hash&lt;/code&gt; 是通过 &lt;code class=&quot;highlighter-rouge&quot;&gt;calculateBlockHash(newBlock)&lt;/code&gt; 生成的 Hash 。
+&lt;code class=&quot;highlighter-rouge&quot;&gt;newBlock.Validator&lt;/code&gt; 存储的是获取记账权的节点地址&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;// SHA256 hasing
+// calculateHash is a simple SHA256 hashing function
+func calculateHash(s string) string {
+	h := sha256.New()
+	h.Write([]byte(s))
+	hashed := h.Sum(nil)
+	return hex.EncodeToString(hashed)
+}
+
+//calculateBlockHash returns the hash of all block information
+func calculateBlockHash(block Block) string {
+	record := string(block.Index) + block.Timestamp + string(block.BPM) + block.PrevHash
+	return calculateHash(record)
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;calculateHash&lt;/code&gt; 函数会接受一个 &lt;code class=&quot;highlighter-rouge&quot;&gt;string&lt;/code&gt; ，并且返回一个&lt;code class=&quot;highlighter-rouge&quot;&gt;SHA256 hash&lt;/code&gt; 。&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;calculateBlockHash&lt;/code&gt; 是对一个 &lt;code class=&quot;highlighter-rouge&quot;&gt;block&lt;/code&gt; 进行 &lt;code class=&quot;highlighter-rouge&quot;&gt;hash&lt;/code&gt;，将一个 &lt;code class=&quot;highlighter-rouge&quot;&gt;block&lt;/code&gt; 的所有字段连接到一起后，再调用 &lt;code class=&quot;highlighter-rouge&quot;&gt;calculateHash&lt;/code&gt; 将字符串转为 &lt;code class=&quot;highlighter-rouge&quot;&gt;SHA256 hash&lt;/code&gt; 。&lt;/p&gt;
+
+&lt;h3 id=&quot;验证区块&quot;&gt;验证区块&lt;/h3&gt;
+
+&lt;p&gt;我们通过检查 &lt;code class=&quot;highlighter-rouge&quot;&gt;Index&lt;/code&gt; 来确保它们按预期递增。我们也检查以确保我们 &lt;code class=&quot;highlighter-rouge&quot;&gt;PrevHash&lt;/code&gt; 的确与 &lt;code class=&quot;highlighter-rouge&quot;&gt;Hash&lt;/code&gt; 前一个区块相同。最后，我们希望通过在当前块上 &lt;code class=&quot;highlighter-rouge&quot;&gt;calculateBlockHash&lt;/code&gt; 再次运行该函数来检查当前块的散列。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;// isBlockValid makes sure block is valid by checking index
+// and comparing the hash of the previous block
+func isBlockValid(newBlock, oldBlock Block) bool {
+	if oldBlock.Index+1 != newBlock.Index {
+		return false
+	}
+
+	if oldBlock.Hash != newBlock.PrevHash {
+		return false
+	}
+
+	if calculateBlockHash(newBlock) != newBlock.Hash {
+		return false
+	}
+
+	return true
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;验证者&quot;&gt;验证者&lt;/h3&gt;
+
+&lt;p&gt;当一个验证者连接到我们的TCP服务，我们需要提供一些函数达到以下目标：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;输入令牌的余额（之前提到过，我们不做钱包等逻辑)&lt;/li&gt;
+  &lt;li&gt;接收区块链的最新广播&lt;/li&gt;
+  &lt;li&gt;接收验证者赢得区块的广播信息&lt;/li&gt;
+  &lt;li&gt;将自身节点添加到全局的验证者列表中（validators)&lt;/li&gt;
+  &lt;li&gt;输入Block的BPM数据- BPM是每个验证者的人体脉搏值&lt;/li&gt;
+  &lt;li&gt;提议创建一个新的区块&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;func handleConn(conn net.Conn) {
+	defer conn.Close()
+
+	go func() {
+		for {
+			msg := &amp;lt;-announcements
+			io.WriteString(conn, msg)
+		}
+	}()
+	// 验证者地址
+	var address string
+
+	// 验证者输入他所拥有的 tokens，tokens 的值越大，越容易获得新区块的记账权
+	io.WriteString(conn, &quot;Enter token balance:&quot;)
+	scanBalance := bufio.NewScanner(conn)
+	for scanBalance.Scan() {
+		// 获取输入的数据，并将输入的值转为 int
+		balance, err := strconv.Atoi(scanBalance.Text())
+		if err != nil {
+			log.Printf(&quot;%v not a number: %v&quot;, scanBalance.Text(), err)
+			return
+		}
+		t := time.Now()
+		// 生成验证者的地址
+		address = calculateHash(t.String())
+		// 将验证者的地址和token 存储到 validators
+		validators[address] = balance
+		fmt.Println(validators)
+		break
+	}
+
+	io.WriteString(conn, &quot;\nEnter a new BPM:&quot;)
+
+	scanBPM := bufio.NewScanner(conn)
+
+	go func() {
+		for {
+			// take in BPM from stdin and add it to blockchain after conducting necessary validation
+			for scanBPM.Scan() {
+				bpm, err := strconv.Atoi(scanBPM.Text())
+				// 如果验证者试图提议一个被污染（例如伪造）的block，例如包含一个不是整数的BPM，那么程序会抛出一个错误，我们会立即从我们的验证器列表validators中删除该验证者，他们将不再有资格参与到新块的铸造过程同时丢失相应的抵押令牌。
+				if err != nil {
+					log.Printf(&quot;%v not a number: %v&quot;, scanBPM.Text(), err)
+					delete(validators, address)
+					conn.Close()
+				}
+
+				mutex.Lock()
+				oldLastIndex := Blockchain[len(Blockchain)-1]
+				mutex.Unlock()
+
+				// 创建新的区块，然后将其发送到 candidateBlocks 通道
+				newBlock, err := generateBlock(oldLastIndex, bpm, address)
+				if err != nil {
+					log.Println(err)
+					continue
+				}
+				if isBlockValid(newBlock, oldLastIndex) {
+					candidateBlocks &amp;lt;- newBlock
+				}
+				io.WriteString(conn, &quot;\nEnter a new BPM:&quot;)
+			}
+		}
+	}()
+
+	// 循环会周期性的打印出最新的区块链信息
+	for {
+		time.Sleep(time.Minute)
+		mutex.Lock()
+		output, err := json.Marshal(Blockchain)
+		mutex.Unlock()
+		if err != nil {
+			log.Fatal(err)
+		}
+		io.WriteString(conn, string(output)+&quot;\n&quot;)
+	}
+
+}
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;io.WriteString(conn, &quot;Enter token balance:&quot;)&lt;/code&gt;允许验证者输入他持有的令牌数量，然后，该验证者被分配一个 &lt;code class=&quot;highlighter-rouge&quot;&gt;SHA256&lt;/code&gt;地址，随后该验证者地址和验证者的令牌数被添加到验证者列表&lt;code class=&quot;highlighter-rouge&quot;&gt;validators&lt;/code&gt; 中。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;接着我们输入BPM，验证者的脉搏值，并创建一个单独的Go协程来处理这块儿逻辑&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;delete(validators, address)&lt;/code&gt; 如果验证者试图提议一个被污染（例如伪造）的 &lt;code class=&quot;highlighter-rouge&quot;&gt;block&lt;/code&gt;，例如包含一个不是整数的BPM，那么程序会抛出一个错误，我们会立即从我们的验证器列表 &lt;code class=&quot;highlighter-rouge&quot;&gt;validators&lt;/code&gt; 中删除该验证者，他们将不再有资格参与到新块的铸造过程同时丢失相应的抵押令牌。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;正是因为这种抵押令牌的机制，使得PoS协议是一种更加可靠的机制。如果一个人试图伪造和破坏，那么他将被抓住，并且失去所有抵押和未来的权益，因此对于恶意者来说，是非常大的威慑。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;接着，我们用 &lt;code class=&quot;highlighter-rouge&quot;&gt;generateBlock&lt;/code&gt; 函数创建一个新的 &lt;code class=&quot;highlighter-rouge&quot;&gt;block&lt;/code&gt;，然后将其发送到 &lt;code class=&quot;highlighter-rouge&quot;&gt;candidateBlocks&lt;/code&gt; 通道进行进一步处理。将&lt;code class=&quot;highlighter-rouge&quot;&gt;Block&lt;/code&gt; 发送到通道使用的语法: &lt;code class=&quot;highlighter-rouge&quot;&gt;candidateBlocks &amp;lt;- newBlock&lt;/code&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;最后会循环打印出最新的区块链，这样每个验证者都能获知最新的状态。&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;选择获取记账权的节点&quot;&gt;选择获取记账权的节点&lt;/h3&gt;
+
+&lt;p&gt;下面是PoS的主要逻辑。我们需要编写代码以实现获胜验证者的选择;他们所持有的令牌数量越高，他们就越有可能被选为胜利者。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;// pickWinner creates a lottery pool of validators and chooses the validator who gets to forge a block to the blockchain
+// by random selecting from the pool, weighted by amount of tokens staked
+func pickWinner() {
+	time.Sleep(30 * time.Second)
+	mutex.Lock()
+	temp := tempBlocks
+	mutex.Unlock()
+
+	lotteryPool := []string{}
+	if len(temp) &amp;gt; 0 {
+
+		// slightly modified traditional proof of stake algorithm
+		// from all validators who submitted a block, weight them by the number of staked tokens
+		// in traditional proof of stake, validators can participate without submitting a block to be forged
+	OUTER:
+		for _, block := range temp {
+			// if already in lottery pool, skip
+			for _, node := range lotteryPool {
+				if block.Validator == node {
+					continue OUTER
+				}
+			}
+
+			// lock list of validators to prevent data race
+			mutex.Lock()
+			setValidators := validators
+			mutex.Unlock()
+
+			// 获取验证者的tokens
+			k, ok := setValidators[block.Validator]
+			if ok {
+				// 向 lotteryPool 追加 k 条数据，k 代表的是当前验证者的tokens
+				for i := 0; i &amp;lt; k; i++ {
+					lotteryPool = append(lotteryPool, block.Validator)
+				}
+			}
+		}
+
+		// 通过随机获得获胜节点的地址
+		s := rand.NewSource(time.Now().Unix())
+		r := rand.New(s)
+		lotteryWinner := lotteryPool[r.Intn(len(lotteryPool))]
+
+		// 把获胜者的区块添加到整条区块链上，然后通知所有节点关于胜利者的消息
+		for _, block := range temp {
+			if block.Validator == lotteryWinner {
+				mutex.Lock()
+				Blockchain = append(Blockchain, block)
+				mutex.Unlock()
+				for _ = range validators {
+					announcements &amp;lt;- &quot;\nwinning validator: &quot; + lotteryWinner + &quot;\n&quot;
+				}
+				break
+			}
+		}
+	}
+
+	mutex.Lock()
+	tempBlocks = []Block{}
+	mutex.Unlock()
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;每隔30秒，我们选出一个胜利者，这样对于每个验证者来说，都有时间提议新的区块，参与到竞争中来。接着创建一个&lt;code class=&quot;highlighter-rouge&quot;&gt;lotteryPool&lt;/code&gt;，它会持有所有验证者的地址，这些验证者都有机会成为一个胜利者。然后，对于提议块的暂存区域，我们会通过&lt;code class=&quot;highlighter-rouge&quot;&gt;if len(temp) &amp;gt; 0&lt;/code&gt;来判断是否已经有了被提议的区块。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;在&lt;code class=&quot;highlighter-rouge&quot;&gt;OUTER FOR&lt;/code&gt;循环中，要检查暂存区域是否和 &lt;code class=&quot;highlighter-rouge&quot;&gt;lotteryPool&lt;/code&gt; 中存在同样的验证者，如果存在，则跳过。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;在以 &lt;code class=&quot;highlighter-rouge&quot;&gt;k, ok := setValidators[block.Validator]&lt;/code&gt;开始的代码块中，我们确保了从&lt;code class=&quot;highlighter-rouge&quot;&gt;temp&lt;/code&gt;中取出来的验证者都是合法的，即这些验证者在验证者列表&lt;code class=&quot;highlighter-rouge&quot;&gt;validators&lt;/code&gt;已存在。若合法，则把该验证者加入到&lt;code class=&quot;highlighter-rouge&quot;&gt;lotteryPool&lt;/code&gt;中。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;那么我们怎么根据这些验证者持有的令牌数来给予他们合适的随机权重呢？&lt;/p&gt;
+
+    &lt;ul&gt;
+      &lt;li&gt;
+        &lt;p&gt;首先，用验证者的令牌填充&lt;code class=&quot;highlighter-rouge&quot;&gt;lotteryPool&lt;/code&gt;数组，例如一个验证者有100个令牌，那么在&lt;code class=&quot;highlighter-rouge&quot;&gt;lotteryPool&lt;/code&gt;中就将有100个元素填充；如果有1个令牌，那么将仅填充1个元素。&lt;/p&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;p&gt;然后，从&lt;code class=&quot;highlighter-rouge&quot;&gt;lotteryPool&lt;/code&gt;中随机选择一个元素，元素所属的验证者即是胜利者，把胜利验证者的地址赋值给lotteryWinner。这里能够看出来，如果验证者持有的令牌越多，那么他在数组中的元素也越多，他获胜的概率就越大；同时，持有令牌很少的验证者，也是有概率获胜的。&lt;/p&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;接着我们把获胜者的区块添加到整条区块链上，然后通知所有节点关于胜利者的消息：&lt;code class=&quot;highlighter-rouge&quot;&gt;announcements &amp;lt;- &quot;\nwinning validator: &quot; + lotteryWinner + &quot;\n&quot; &lt;/code&gt;。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;最后，清空tempBlocks，以便下次提议的进行。&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;主函数&quot;&gt;主函数&lt;/h3&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;func main() {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// 创建初始区块
+	t := time.Now()
+	genesisBlock := Block{}
+	genesisBlock = Block{0, t.String(), 0, calculateBlockHash(genesisBlock), &quot;&quot;, &quot;&quot;}
+	spew.Dump(genesisBlock)
+	Blockchain = append(Blockchain, genesisBlock)
+
+	httpPort := os.Getenv(&quot;PORT&quot;)
+
+	// 启动 TCP 服务
+	server, err := net.Listen(&quot;tcp&quot;, &quot;:&quot;+httpPort)
+	if err != nil {
+		log.Fatal(err)
+	}
+	log.Println(&quot;HTTP Server Listening on port :&quot;, httpPort)
+	defer server.Close()
+
+	// 启动了一个Go routine 从 candidateBlocks 通道中获取提议的区块，然后填充到临时缓冲区 tempBlocks 中
+	go func() {
+		for candidate := range candidateBlocks {
+			mutex.Lock()
+			tempBlocks = append(tempBlocks, candidate)
+			mutex.Unlock()
+		}
+	}()
+
+	// 启动了一个Go routine 完成 pickWinner 函数
+	go func() {
+		for {
+			pickWinner()
+		}
+	}()
+
+	// 接收验证者节点的连接
+	for {
+		conn, err := server.Accept()
+		if err != nil {
+			log.Fatal(err)
+		}
+		go handleConn(conn)
+	}
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;godotenv.Load()&lt;/code&gt; 会解析 &lt;code class=&quot;highlighter-rouge&quot;&gt;.env&lt;/code&gt; 文件并将相应的Key/Value对都放到环境变量中，通过 &lt;code class=&quot;highlighter-rouge&quot;&gt;os.Getenv&lt;/code&gt; 获取&lt;/li&gt;
+  &lt;li&gt;然后创建一个创世区块genesisBlock，形成了区块链。&lt;/li&gt;
+  &lt;li&gt;接着启动了Tcp服务，等待所有验证者的连接。&lt;/li&gt;
+  &lt;li&gt;启动了一个Go协程从 &lt;code class=&quot;highlighter-rouge&quot;&gt;candidateBlocks&lt;/code&gt; 通道中获取提议的区块，然后填充到临时缓冲区 &lt;code class=&quot;highlighter-rouge&quot;&gt;tempBlocks&lt;/code&gt; 中，最后启动了另外一个Go协程来完成 &lt;code class=&quot;highlighter-rouge&quot;&gt;pickWinner&lt;/code&gt; 函数。&lt;/li&gt;
+  &lt;li&gt;最后的for循环，用来接收验证者节点的连接。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;运行&quot;&gt;运行&lt;/h2&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;go run main.go&lt;/code&gt; 启动您的Go程序和TCP服务器，并会打印出初始区块的信息。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ go run main.go
+(main.Block) {
+ Index: (int) 0,
+ Timestamp: (string) (len=50) &quot;2018-05-08 16:45:27.14287 +0800 CST m=+0.000956793&quot;,
+ BPM: (int) 0,
+ Hash: (string) (len=64) &quot;96a296d224f285c67bee93c30f8a309157f0daa35dc5b87e410b78630a09cfc7&quot;,
+ PrevHash: (string) &quot;&quot;,
+ Validator: (string) &quot;&quot;
+}
+2018/05/08 16:45:27 HTTP Server Listening on port : 9000
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;打开新的终端，运行 &lt;code class=&quot;highlighter-rouge&quot;&gt;nc localhost 9000&lt;/code&gt;，
+输入 &lt;code class=&quot;highlighter-rouge&quot;&gt;tokens&lt;/code&gt; , 然后输入 &lt;code class=&quot;highlighter-rouge&quot;&gt;BPM&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://olgjbx93m.bkt.clouddn.com/WX20180508-165429.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;可以打开多个终端，输入不同的 &lt;code class=&quot;highlighter-rouge&quot;&gt;tokens&lt;/code&gt; ,来检验 PoS 算法&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://olgjbx93m.bkt.clouddn.com/WX20180508-165704.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;hr /&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/shuailaotou/booksofTN/blob/master/分布式系统原理介绍.pdf&quot;&gt;github源代码&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;喜欢就star一下吧！👻👻👻&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;如有错误描述，请评论纠正，谢谢大家！🐳🐳🐳&lt;/p&gt;
+&lt;/blockquote&gt;
+
+</description>
+        <pubDate>Thu, 31 May 2018 00:00:00 +0800</pubDate>
+        <link>http://localhost:4000/2018/05/31/Go%E5%AE%9E%E7%8E%B0Proof-of-Stake-%E5%85%B1%E8%AF%86%E6%9C%BA%E5%88%B6/</link>
+        <guid isPermaLink="true">http://localhost:4000/2018/05/31/Go%E5%AE%9E%E7%8E%B0Proof-of-Stake-%E5%85%B1%E8%AF%86%E6%9C%BA%E5%88%B6/</guid>
+        
+        <category>POS</category>
         
         
       </item>
@@ -2551,646 +3044,6 @@ func main() {
         <guid isPermaLink="true">http://localhost:4000/2018/05/03/Go%E8%AF%AD%E8%A8%80%E7%AE%80%E5%8D%95%E5%AE%9E%E7%8E%B0%E6%AF%94%E7%89%B9%E5%B8%81%E6%8C%96%E7%9F%BF%E5%8E%9F%E7%90%86/</guid>
         
         <category>挖矿</category>
-        
-        
-      </item>
-    
-      <item>
-        <title>Golang经典笔试题及答案（下篇）</title>
-        <description>&lt;blockquote&gt;
-  &lt;p&gt;整理：黎跃春&lt;/p&gt;
-
-  &lt;p&gt;博客：http://liyuechun.org&lt;/p&gt;
-
-  &lt;p&gt;官网：http://kongyixueyuan.com&lt;/p&gt;
-
-  &lt;p&gt;备注：如有错误，请指正，不断更新迭代&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;h3 id=&quot;1-下面代码能运行吗为什么&quot;&gt;1. 下面代码能运行吗？为什么&lt;/h3&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;type Param map[string]interface{}
-
-type Show struct {
-	Param
-}
-
-func main1() {
-	s := new(Show)
-	s.Param[&quot;RMB&quot;] = 10000
-}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;&lt;strong&gt;运行结果：&lt;/strong&gt;&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;panic: assignment to entry in nil map
-
-goroutine 1 [running]:
-main.main()
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;如上所示，运行过程中会发生异常，原因是因为字典&lt;code class=&quot;highlighter-rouge&quot;&gt;Param&lt;/code&gt;的默认值为&lt;code class=&quot;highlighter-rouge&quot;&gt;nil&lt;/code&gt;，当给字典&lt;code class=&quot;highlighter-rouge&quot;&gt;nil&lt;/code&gt;增加键值对是就会发生运行时错误&lt;code class=&quot;highlighter-rouge&quot;&gt;panic: assignment to entry in nil map&lt;/code&gt;。&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;正确的修改方案如下：&lt;/strong&gt;&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;package main
-
-import &quot;fmt&quot;
-
-type Param map[string]interface{}
-
-type Show struct {
-	Param
-}
-
-func main() {
-
-	// 创建Show结构体对象
-	s := new(Show)
-	// 为字典Param赋初始值
-	s.Param = Param{}
-	// 修改键值对
-	s.Param[&quot;RMB&quot;] = 10000
-	fmt.Println(s)
-}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;&lt;strong&gt;运行结果如下：&lt;/strong&gt;&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;amp;{map[RMB:10000]}
-
-Process finished with exit code 0
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;h3 id=&quot;2-请说出下面代码存在什么问题&quot;&gt;2. 请说出下面代码存在什么问题&lt;/h3&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;type student struct {
-	Name string
-}
-
-func f(v interface{}) {
-	switch msg := v.(type) {
-    	case *student, student:
-    		msg.Name
-	}
-}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;&lt;strong&gt;有两个问题：&lt;/strong&gt;&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;问题一：&lt;code class=&quot;highlighter-rouge&quot;&gt;interface{}&lt;/code&gt;是一个没有声明任何方法的接口。&lt;/li&gt;
-  &lt;li&gt;问题二：&lt;code class=&quot;highlighter-rouge&quot;&gt;Name&lt;/code&gt;是一个属性，而不是方法，&lt;code class=&quot;highlighter-rouge&quot;&gt;interface{}&lt;/code&gt;类型的变量无法调用属性。&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h3 id=&quot;3-写出打印的结果&quot;&gt;3. 写出打印的结果。&lt;/h3&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;type People struct {
-	name string `json:&quot;name&quot;`
-}
-
-func main() {
-	js := `{
-		&quot;name&quot;:&quot;11&quot;
-	}`
-	var p People
-	err := json.Unmarshal([]byte(js), &amp;amp;p)
-	if err != nil {
-		fmt.Println(&quot;err: &quot;, err)
-		return
-	}
-	fmt.Println(&quot;people: &quot;, p)
-}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;&lt;strong&gt;输出内容如下：&lt;/strong&gt;&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;people:  {}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;&lt;strong&gt;p中的属性值为空的原因是因为，name的首字母小写，修改成大写，重新运行即可。&lt;/strong&gt;&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;package main
-
-import (
-	&quot;encoding/json&quot;
-	&quot;fmt&quot;
-)
-
-type People struct {
-	Name string `json:&quot;name&quot;`
-}
-
-func main() {
-	js := `{
-        &quot;name&quot;:&quot;11&quot;
-    }`
-	var p People
-	err := json.Unmarshal([]byte(js), &amp;amp;p)
-	if err != nil {
-		fmt.Println(&quot;err: &quot;, err)
-		return
-	}
-	fmt.Println(&quot;people: &quot;, p)
-}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;&lt;strong&gt;运行结果如下：&lt;/strong&gt;&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;people:  {11}
-
-Process finished with exit code 0
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;h3 id=&quot;4-下面的代码是有问题的请说明原因&quot;&gt;4. 下面的代码是有问题的，请说明原因。&lt;/h3&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;package main
-
-import &quot;fmt&quot;
-
-type People struct {
-	Name string
-}
-
-func (p *People) String() string {
-	return fmt.Sprintf(&quot;print: %v&quot;, p)
-}
-
-func main() {
-	p := &amp;amp;People{}
-	p.String()
-}
-
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;&lt;strong&gt;运行结果如下：&lt;/strong&gt;&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;runtime: goroutine stack exceeds 1000000000-byte limit
-fatal error: stack overflow
-
-runtime stack:
-runtime.throw(0x10c122b, 0xe)
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;&lt;strong&gt;如下所示，上面的代码出现了栈溢出，原因是因为%v格式化字符串是本身会调用String()方法，上面的栈溢出是因为无限递归所致。&lt;/strong&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;5-请找出下面代码的问题所在&quot;&gt;5. 请找出下面代码的问题所在。&lt;/h3&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;package main
-
-import (
-	&quot;fmt&quot;
-	&quot;time&quot;
-)
-
-func main() {
-	ch := make(chan int, 1000)
-	go func() {
-		for i := 0; i &amp;lt; 10; i++ {
-			ch &amp;lt;- i
-		}
-	}()
-	go func() {
-		for {
-			a, ok := &amp;lt;-ch
-			if !ok {
-				fmt.Println(&quot;close&quot;)
-				return
-			}
-			fmt.Println(&quot;a: &quot;, a)
-		}
-	}()
-	close(ch)
-	fmt.Println(&quot;ok&quot;)
-	time.Sleep(time.Second * 100)
-}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;&lt;strong&gt;运行结果如下：&lt;/strong&gt;&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;panic: send on closed channel
-ok
-
-goroutine 5 [running]:
-main.main.func1(0xc420098000)
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;&lt;strong&gt;解析：出现上面错误的原因是因为提前关闭通道所致。&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;正确代码如下：&lt;/strong&gt;&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;package main
-
-import (
-	&quot;fmt&quot;
-	&quot;time&quot;
-)
-
-func main() {
-	// 创建一个缓冲通道
-	ch := make(chan int, 1000)
-
-	go func() {
-		for i := 0; i &amp;lt; 10; i++ {
-			ch &amp;lt;- i
-		}
-	}()
-
-	go func() {
-		for i := 0; i &amp;lt; 10; i++ {
-			a, ok := &amp;lt;-ch
-			
-			if !ok {
-				fmt.Println(&quot;close&quot;)
-				close(ch)
-				return
-			}
-			fmt.Println(&quot;a: &quot;, a)
-		}
-	}()
-
-	fmt.Println(&quot;ok&quot;)
-	time.Sleep(time.Second)
-}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;&lt;strong&gt;运行结果如下：&lt;/strong&gt;&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ok
-a:  0
-a:  1
-a:  2
-a:  3
-a:  4
-a:  5
-a:  6
-a:  7
-a:  8
-a:  9
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;h3 id=&quot;6-请说明下面代码书写是否正确&quot;&gt;6. 请说明下面代码书写是否正确。&lt;/h3&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;var value int32
-
-func SetValue(delta int32) {
-	for {
-		v := value
-		if atomic.CompareAndSwapInt32(&amp;amp;value, v(v+delta)) {
-			break
-		}
-	}
-}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;&lt;strong&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;atomic.CompareAndSwapInt32&lt;/code&gt;里面一共三个参数，上面的书写错误，正确的书写是：&lt;code class=&quot;highlighter-rouge&quot;&gt;atomic.CompareAndSwapInt32(&amp;amp;value, v,v+delta)&lt;/code&gt;&lt;/strong&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;
-    &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;func CompareAndSwapInt32(addr *int32, old, new int32) (swapped bool)&lt;/code&gt;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;第一个参数的值应该是指向被操作值的指针值。该值的类型即为&lt;code class=&quot;highlighter-rouge&quot;&gt;*int32&lt;/code&gt;。&lt;/li&gt;
-  &lt;li&gt;后两个参数的类型都是&lt;code class=&quot;highlighter-rouge&quot;&gt;int32&lt;/code&gt;类型。它们的值应该分别代表被操作值的旧值和新值&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;CompareAndSwapInt32·函数在被调用之后会先判断参数&lt;/code&gt;addr&lt;code class=&quot;highlighter-rouge&quot;&gt;指向的被操作值与参数&lt;/code&gt;old`的值是否相等。&lt;/li&gt;
-  &lt;li&gt;仅当此判断得到肯定的结果之后，该函数才会用参数&lt;code class=&quot;highlighter-rouge&quot;&gt;new&lt;/code&gt;代表的新值替换掉原先的旧值。否则，后面的替换操作就会被忽略。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;strong&gt;完整代码如下：&lt;/strong&gt;&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;package main
-
-import (
-	&quot;sync/atomic&quot;
-	&quot;fmt&quot;
-)
-
-var value int32
-
-func SetValue(delta int32) {
-	for {
-		v := value
-		// 比较并交换
-
-		if atomic.CompareAndSwapInt32(&amp;amp;value, v,v+delta) {
-			fmt.Println(value)
-			break
-		}
-	}
-}
-
-func main()  {
-	SetValue(100)
-}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;&lt;strong&gt;运行结果为&lt;code class=&quot;highlighter-rouge&quot;&gt;100&lt;/code&gt;.&lt;/strong&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;7-下面的程序运行后为什么会爆异常&quot;&gt;7. 下面的程序运行后为什么会爆异常。&lt;/h3&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;package main
-
-import (
-	&quot;fmt&quot;
-	&quot;time&quot;
-)
-
-type Project struct{}
-
-func (p *Project) deferError() {
-	if err := recover(); err != nil {
-		fmt.Println(&quot;recover: &quot;, err)
-	}
-}
-
-func (p *Project) exec(msgchan chan interface{}) {
-	for msg := range msgchan {
-		m := msg.(int)
-		fmt.Println(&quot;msg: &quot;, m)
-	}
-}
-
-func (p *Project) run(msgchan chan interface{}) {
-	for {
-		defer p.deferError()
-		go p.exec(msgchan)
-		time.Sleep(time.Second * 2)
-	}
-}
-
-func (p *Project) Main() {
-	a := make(chan interface{}, 100)
-	go p.run(a)
-	go func() {
-		for {
-			a &amp;lt;- &quot;1&quot;
-			time.Sleep(time.Second)
-		}
-	}()
-	time.Sleep(time.Second * 100)
-}
-
-func main() {
-	p := new(Project)
-	p.Main()
-}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;&lt;strong&gt;运行结果如下：&lt;/strong&gt;&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;panic: interface conversion: interface {} is string, not int
-
-goroutine 17 [running]:
-main.(*Project).exec(0x1157c08, 0xc420068060)
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;&lt;strong&gt;出现异常的原因是因为写入到管道的数据类型为&lt;code class=&quot;highlighter-rouge&quot;&gt;string&lt;/code&gt;,而&lt;code class=&quot;highlighter-rouge&quot;&gt;m := msg.(int)&lt;/code&gt;这句代码里面却使用了&lt;code class=&quot;highlighter-rouge&quot;&gt;int&lt;/code&gt;，修改方法，将&lt;code class=&quot;highlighter-rouge&quot;&gt;int&lt;/code&gt;修改为&lt;code class=&quot;highlighter-rouge&quot;&gt;string&lt;/code&gt;即可。&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;完整正确代码如下：&lt;/strong&gt;&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;package main
-
-import (
-	&quot;fmt&quot;
-	&quot;time&quot;
-)
-
-type Project struct{}
-
-func (p *Project) deferError() {
-	if err := recover(); err != nil {
-		fmt.Println(&quot;recover: &quot;, err)
-	}
-}
-
-func (p *Project) exec(msgchan chan interface{}) {
-	for msg := range msgchan {
-		m := msg.(string)
-		fmt.Println(&quot;msg: &quot;, m)
-	}
-}
-
-func (p *Project) run(msgchan chan interface{}) {
-	for {
-		defer p.deferError()
-		go p.exec(msgchan)
-		time.Sleep(time.Second * 2)
-	}
-}
-
-func (p *Project) Main() {
-	a := make(chan interface{}, 100)
-	go p.run(a)
-	go func() {
-		for {
-			a &amp;lt;- &quot;1&quot;
-			time.Sleep(time.Second)
-		}
-	}()
-	time.Sleep(time.Second * 100)
-}
-
-func main() {
-	p := new(Project)
-	p.Main()
-}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;&lt;strong&gt;运行结果如下：&lt;/strong&gt;&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;msg:  1
-msg:  1
-msg:  1
-.
-.
-.
-msg:  1
-msg:  1
-msg:  1
-msg:  1
-msg:  1
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;h3 id=&quot;8-请说出下面代码哪里写错了&quot;&gt;8. 请说出下面代码哪里写错了。&lt;/h3&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;func main() {
-	abc := make(chan int, 1000)
-	for i := 0; i &amp;lt; 10; i++ {
-		abc &amp;lt;- i
-	}
-	go func() {
-		for {
-			a := &amp;lt;-abc
-			fmt.Println(&quot;a: &quot;, a)
-		}
-	}()
-	close(abc)
-	fmt.Println(&quot;close&quot;)
-	time.Sleep(time.Second * 100)
-}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;go中的for循环是死循环，应该设置出口。正确代码如下：&lt;/code&gt;&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;package main
-
-import (
-	&quot;fmt&quot;
-	&quot;time&quot;
-)
-
-func main() {
-	abc := make(chan int, 1000)
-	for i := 0; i &amp;lt; 10; i++ {
-		abc &amp;lt;- i
-	}
-	go func() {
-		for {
-			a,ok := &amp;lt;-abc
-			if !ok {
-				fmt.Println(&quot;结束！&quot;)
-				return
-			}
-			fmt.Println(&quot;a: &quot;, a)
-		}
-	}()
-	close(abc)
-	fmt.Println(&quot;close&quot;)
-	time.Sleep(time.Second * 100)
-}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;&lt;strong&gt;运行结果为：&lt;/strong&gt;&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;close
-a:  0
-a:  1
-a:  2
-a:  3
-a:  4
-a:  5
-a:  6
-a:  7
-a:  8
-a:  9
-结束！
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;h3 id=&quot;9-请说出下面代码执行时为什么会报错&quot;&gt;9. 请说出下面代码，执行时为什么会报错&lt;/h3&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;type Student struct {
-	name string
-}
-
-func main() {
-	m := map[string]Student{&quot;people&quot;: {&quot;liyuechun&quot;}}
-	m[&quot;people&quot;].name = &quot;wuyanzu&quot;
-}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;&lt;strong&gt;答案：报错的原因是因为不能修改字典中&lt;code class=&quot;highlighter-rouge&quot;&gt;value&lt;/code&gt;为结构体的属性值。&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;代码作如下修改方可运行：&lt;/strong&gt;&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;package main
-
-import &quot;fmt&quot;
-
-type Student struct {
-	name string
-}
-
-func main() {
-	m := map[string]Student{&quot;people&quot;: {&quot;liyuechun&quot;}}
-	fmt.Println(m)
-	fmt.Println(m[&quot;people&quot;])
-
-	// 不能修改字典中结构体属性的值
-	//m[&quot;people&quot;].name = &quot;wuyanzu&quot;
-	
-	var s Student = m[&quot;people&quot;] //深拷贝
-	s.name = &quot;xietingfeng&quot;
-	fmt.Println(m)
-	fmt.Println(s)
-}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;&lt;strong&gt;运行结果如下：&lt;/strong&gt;&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;map[people:{liyuechun}]
-{liyuechun}
-map[people:{liyuechun}]
-{wuyanzu}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;h3 id=&quot;10-请说出下面的代码存在什么问题&quot;&gt;10. 请说出下面的代码存在什么问题&lt;/h3&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;type query func(string) string
-
-func exec(name string, vs ...query) string {
-	ch := make(chan string)
-	fn := func(i int) {
-		ch &amp;lt;- vs[i](name)
-	}
-	for i, _ := range vs {
-		go fn(i)
-	}
-	return &amp;lt;-ch
-}
-
-func main() {
-	ret := exec(&quot;111&quot;, func(n string) string {
-		return n + &quot;func1&quot;
-	}, func(n string) string {
-		return n + &quot;func2&quot;
-	}, func(n string) string {
-		return n + &quot;func3&quot;
-	}, func(n string) string {
-		return n + &quot;func4&quot;
-	})
-	fmt.Println(ret)
-}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;&lt;strong&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;return &amp;lt;-ch&lt;/code&gt;&lt;/strong&gt;之执行一次，所以不管传入多少&lt;code class=&quot;highlighter-rouge&quot;&gt;query&lt;/code&gt;函数，都只是读取最先执行完的&lt;code class=&quot;highlighter-rouge&quot;&gt;query&lt;/code&gt;。&lt;/p&gt;
-
-&lt;h3 id=&quot;关注区块链部落实时获取最新技术文章&quot;&gt;关注区块链部落，实时获取最新技术文章&lt;/h3&gt;
-
-&lt;p&gt;&lt;img src=&quot;http://om1c35wrq.bkt.clouddn.com/%E5%8C%BA%E5%9D%97%E9%93%BE%E9%83%A8%E8%90%BD-1.jpg&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
-
-</description>
-        <pubDate>Fri, 27 Apr 2018 00:00:00 +0800</pubDate>
-        <link>http://localhost:4000/2018/04/27/golang-interview/</link>
-        <guid isPermaLink="true">http://localhost:4000/2018/04/27/golang-interview/</guid>
-        
-        <category>笔试题</category>
         
         
       </item>
