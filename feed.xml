@@ -5,384 +5,9 @@
     <description>张帅，江湖人称帅哥，区块链技术全能技术人才。</description>
     <link>http://localhost:4000/</link>
     <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Thu, 31 May 2018 12:04:11 +0800</pubDate>
-    <lastBuildDate>Thu, 31 May 2018 12:04:11 +0800</lastBuildDate>
+    <pubDate>Thu, 31 May 2018 12:10:10 +0800</pubDate>
+    <lastBuildDate>Thu, 31 May 2018 12:10:10 +0800</lastBuildDate>
     <generator>Jekyll v3.5.1</generator>
-    
-      <item>
-        <title>使用Go实现Proof-of-Work 共识机制</title>
-        <description>&lt;h2 id=&quot;什么是-proof-of-work&quot;&gt;什么是 Proof-of-Work&lt;/h2&gt;
-
-&lt;p&gt;Proof-of-Work 简称 PoW，即为工作量证明。通过计算一个数值（ nonce ），使得拼揍上交易数据后内容的 Hash 值满足规定的上限。在节点成功找到满足的Hash值之后，会马上对全网进行广播打包区块，网络的节点收到广播打包区块，会立刻对其进行验证。&lt;/p&gt;
-
-&lt;p&gt;如果验证通过，则表明已经有节点成功解迷，自己就不再竞争当前区块打包，而是选择接受这个区块，记录到自己的账本中，然后进行下一个区块的竞争猜谜。
-网络中只有最快解谜的区块，才会添加的账本中，其他的节点进行复制，这样就保证了整个账本的唯一性。&lt;/p&gt;
-
-&lt;p&gt;假如节点有任何的作弊行为，都会导致网络的节点验证不通过，直接丢弃其打包的区块，这个区块就无法记录到总账本中，作弊的节点耗费的成本就白费了，因此在巨大的挖矿成本下，也使得矿工自觉自愿的遵守比特币系统的共识协议，也就确保了整个系统的安全。&lt;/p&gt;
-
-&lt;h2 id=&quot;工作量证明的优缺点&quot;&gt;工作量证明的优缺点&lt;/h2&gt;
-
-&lt;p&gt;优点：完全去中心化，节点自由进出；&lt;/p&gt;
-
-&lt;p&gt;缺点：目前bitcoin已经吸引全球大部分的算力，其它再用Pow共识机制的区块链应用很难获得相同的算力来保障自身的安全；挖矿造成大量的资源浪费；共识达成的周期较长，不适合商业应用&lt;/p&gt;
-
-&lt;h2 id=&quot;工作量证明的简单的例子&quot;&gt;工作量证明的简单的例子&lt;/h2&gt;
-
-&lt;p&gt;举个例子，给定的一个基本的字符串”Hello, world!”，我们给出的工作量要求是，可以在这个字符串后面添加一个叫做nonce的整数值，对变更后（添加nonce)的字符串进行SHA256哈希运算，如果得到的哈希结果（以16进制的形式表示）是以”0000”开头的，则验证通过。为了达到这个工作量证明的目标。我们需要不停的递增nonce值，对得到的新字符串进行SHA256哈希运算。按照这个规则，我们需要经过4251次计算才能找到恰好前4位为0的哈希散列。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&quot;Hello, world!0&quot; =&amp;gt; 1312af178c253f84028d480a6adc1e25e81caa44c749ec81976192e2ec934c64
-&quot;Hello, world!1&quot; =&amp;gt; e9afc424b79e4f6ab42d99c81156d3a17228d6e1eef4139be78e948a9332a7d8
-&quot;Hello, world!2&quot; =&amp;gt; ae37343a357a8297591625e7134cbea22f5928be8ca2a32aa475cf05fd4266b7
-...
-&quot;Hello, world!4248&quot; =&amp;gt; 6e110d98b388e77e9c6f042ac6b497cec46660deef75a55ebc7cfdf65cc0b965
-&quot;Hello, world!4249&quot; =&amp;gt; c004190b822f1669cac8dc37e761cb73652e7832fb814565702245cf26ebb9e6
-&quot;Hello, world!4250&quot; =&amp;gt; 0000c3af42fc31103f1fdc0151fa747ff87349a4714df7cc52ea464e12dcd4e9
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;h2 id=&quot;实现-proof-of-work-共识机制&quot;&gt;实现 Proof-of-Work 共识机制&lt;/h2&gt;
-
-&lt;h3 id=&quot;安装依赖软件&quot;&gt;安装依赖软件&lt;/h3&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ go get github.com/davecgh/go-spew/spew
-
-$ go get github.com/gorilla/mux
-
-$ go get github.com/joho/godotenv
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;
-    &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;spew&lt;/code&gt; 在控制台中格式化输出相应的结果。&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;gorilla/mux&lt;/code&gt; 是编写web处理程序的流行软件包。&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;godotenv&lt;/code&gt; 可以从我们项目的根目录的 &lt;code class=&quot;highlighter-rouge&quot;&gt;.env&lt;/code&gt; 文件中读取数据。&lt;/p&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;实现-pow-共识机制&quot;&gt;实现 PoW 共识机制&lt;/h3&gt;
-
-&lt;p&gt;新建 &lt;code class=&quot;highlighter-rouge&quot;&gt;.env&lt;/code&gt; ，添加 &lt;code class=&quot;highlighter-rouge&quot;&gt;ADDR=8080&lt;/code&gt;
-新建 &lt;code class=&quot;highlighter-rouge&quot;&gt;main.go&lt;/code&gt;，引入相应的包&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;package main
-
-import (
-        &quot;crypto/sha256&quot;
-        &quot;encoding/hex&quot;
-        &quot;encoding/json&quot;
-        &quot;fmt&quot;
-        &quot;io&quot;
-        &quot;log&quot;
-        &quot;net/http&quot;
-        &quot;os&quot;
-        &quot;strconv&quot;
-        &quot;strings&quot;
-        &quot;sync&quot;
-        &quot;time&quot;
-
-        &quot;github.com/davecgh/go-spew/spew&quot;
-        &quot;github.com/gorilla/mux&quot;
-        &quot;github.com/joho/godotenv&quot;
-)
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;h4 id=&quot;定义区块&quot;&gt;定义区块&lt;/h4&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;const difficulty = 1
-
-type Block struct {
-        Index      int
-        Timestamp  string
-        BPM        int
-        Hash       string
-        PrevHash   string
-        Difficulty int
-        Nonce      string
-}
-
-var Blockchain []Block
-
-type Message struct {
-        BPM int
-}
-
-var mutex = &amp;amp;sync.Mutex{}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;difficulty&lt;/code&gt; 代表难度系数，如果赋值为 &lt;code class=&quot;highlighter-rouge&quot;&gt;1&lt;/code&gt;，则需要判断生成区块时所产生的 Hash 前缀至少包含1个 &lt;code class=&quot;highlighter-rouge&quot;&gt;0&lt;/code&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Block&lt;/code&gt; 代表区块的结构体。
-    &lt;ul&gt;
-      &lt;li&gt;
-        &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Index&lt;/code&gt; 是区块链中数据记录的位置&lt;/p&gt;
-      &lt;/li&gt;
-      &lt;li&gt;
-        &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Timestamp&lt;/code&gt; 是自动确定的，并且是写入数据的时间&lt;/p&gt;
-      &lt;/li&gt;
-      &lt;li&gt;
-        &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;BPM&lt;/code&gt; 是每分钟跳动的次数，是你的脉率&lt;/p&gt;
-      &lt;/li&gt;
-      &lt;li&gt;
-        &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Hash&lt;/code&gt; 是代表这个数据记录的SHA256标识符&lt;/p&gt;
-      &lt;/li&gt;
-      &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;PrevHash&lt;/code&gt; 是链中上一条记录的SHA256标识符&lt;/li&gt;
-      &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Difficulty&lt;/code&gt; 是当前区块的难度系数&lt;/li&gt;
-      &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Nonce&lt;/code&gt; 是 PoW 挖矿中符合条件的数字&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Blockchain&lt;/code&gt; 是存放区块数据的集合&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Message&lt;/code&gt; 是使用 &lt;code class=&quot;highlighter-rouge&quot;&gt;POST&lt;/code&gt; 请求传递的数据&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;mutex&lt;/code&gt; 是为了防止同一时间产生多个区块&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4 id=&quot;生成区块&quot;&gt;生成区块&lt;/h4&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;func generateBlock(oldBlock Block, BPM int) Block {
-        var newBlock Block
-
-        t := time.Now()
-
-        newBlock.Index = oldBlock.Index + 1
-        newBlock.Timestamp = t.String()
-        newBlock.BPM = BPM
-        newBlock.PrevHash = oldBlock.Hash
-        newBlock.Difficulty = difficulty
-
-        for i := 0; ; i++ {
-                hex := fmt.Sprintf(&quot;%x&quot;, i)
-                newBlock.Nonce = hex
-                if !isHashValid(calculateHash(newBlock), newBlock.Difficulty) {
-                        fmt.Println(calculateHash(newBlock), &quot; do more work!&quot;)
-                        time.Sleep(time.Second)
-                        continue
-                } else {
-                        fmt.Println(calculateHash(newBlock), &quot; work done!&quot;)
-                        newBlock.Hash = calculateHash(newBlock)
-                        break
-                }
-
-        }
-        return newBlock
-}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;newBlock&lt;/code&gt; 中的 &lt;code class=&quot;highlighter-rouge&quot;&gt;PrevHash&lt;/code&gt; 存储的上一个区块的 &lt;code class=&quot;highlighter-rouge&quot;&gt;Hash&lt;/code&gt;。&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;for 循环&lt;/code&gt; 通过循环改变 &lt;code class=&quot;highlighter-rouge&quot;&gt;Nonce&lt;/code&gt;，然后选出符合相应难度系数的 &lt;code class=&quot;highlighter-rouge&quot;&gt;Nonce&lt;/code&gt;。&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;isHashValid&lt;/code&gt; 判断 hash，是否满足当前的难度系数。如果难度系数是2，则当前hash的前缀有2个0。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;func isHashValid(hash string, difficulty int) bool {
-        prefix := strings.Repeat(&quot;0&quot;, difficulty)
-        return strings.HasPrefix(hash, prefix)
-}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;
-    &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;strings.Repeat(&quot;0&quot;, difficulty)&lt;/code&gt; 复制 &lt;code class=&quot;highlighter-rouge&quot;&gt;difficulty&lt;/code&gt; 个&lt;code class=&quot;highlighter-rouge&quot;&gt;0&lt;/code&gt;，并返回新字符串，当 difficulty 为 &lt;code class=&quot;highlighter-rouge&quot;&gt;2&lt;/code&gt; ，则 prefix 为 &lt;code class=&quot;highlighter-rouge&quot;&gt;00&lt;/code&gt;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;strings.HasPrefix(hash, prefix)&lt;/code&gt; 判断字符串 &lt;code class=&quot;highlighter-rouge&quot;&gt;hash&lt;/code&gt; 是否包含前缀 &lt;code class=&quot;highlighter-rouge&quot;&gt;prefix&lt;/code&gt;&lt;/p&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;calculateHash&lt;/code&gt; 根据设定的规则，生成 Hash 值。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;func calculateHash(block Block) string {
-        record := strconv.Itoa(block.Index) + block.Timestamp + strconv.Itoa(block.BPM) + block.PrevHash + block.Nonce
-        h := sha256.New()
-        h.Write([]byte(record))
-        hashed := h.Sum(nil)
-        return hex.EncodeToString(hashed)
-}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;h4 id=&quot;验证区块&quot;&gt;验证区块&lt;/h4&gt;
-
-&lt;p&gt;我们通过检查 &lt;code class=&quot;highlighter-rouge&quot;&gt;Index&lt;/code&gt; 来确保它们按预期递增。我们也检查以确保我们 &lt;code class=&quot;highlighter-rouge&quot;&gt;PrevHash&lt;/code&gt; 的确与 &lt;code class=&quot;highlighter-rouge&quot;&gt;Hash&lt;/code&gt; 前一个区块相同。最后，我们希望通过在当前块上 &lt;code class=&quot;highlighter-rouge&quot;&gt;calculateHash&lt;/code&gt; 再次运行该函数来检查当前块的散列。让我们写一个 &lt;code class=&quot;highlighter-rouge&quot;&gt;isBlockValid&lt;/code&gt; 函数来完成所有这些事情并返回一个 &lt;code class=&quot;highlighter-rouge&quot;&gt;bool&lt;/code&gt;。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;func isBlockValid(newBlock, oldBlock Block) bool {
-        if oldBlock.Index+1 != newBlock.Index {
-                return false
-        }
-
-        if oldBlock.Hash != newBlock.PrevHash {
-                return false
-        }
-
-        if calculateHash(newBlock) != newBlock.Hash {
-                return false
-        }
-
-        return true
-}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;h3 id=&quot;web-服务器&quot;&gt;web 服务器&lt;/h3&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;func run() error {
-        mux := makeMuxRouter()
-        httpAddr := os.Getenv(&quot;ADDR&quot;)
-        log.Println(&quot;Listening on &quot;, os.Getenv(&quot;ADDR&quot;))
-        s := &amp;amp;http.Server{
-                Addr:           &quot;:&quot; + httpAddr,
-                Handler:        mux,
-                ReadTimeout:    10 * time.Second,
-                WriteTimeout:   10 * time.Second,
-                MaxHeaderBytes: 1 &amp;lt;&amp;lt; 20,
-        }
-
-        if err := s.ListenAndServe(); err != nil {
-                return err
-        }
-
-        return nil
-}
-
-func makeMuxRouter() http.Handler {
-        muxRouter := mux.NewRouter()
-        muxRouter.HandleFunc(&quot;/&quot;, handleGetBlockchain).Methods(&quot;GET&quot;)
-        muxRouter.HandleFunc(&quot;/&quot;, handleWriteBlock).Methods(&quot;POST&quot;)
-        return muxRouter
-}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;makeMuxRouter&lt;/code&gt; 主要定义路由处理，当收到 &lt;code class=&quot;highlighter-rouge&quot;&gt;GET&lt;/code&gt; 请求，就会调用 &lt;code class=&quot;highlighter-rouge&quot;&gt;handleGetBlockchain&lt;/code&gt; 方法。当收到 &lt;code class=&quot;highlighter-rouge&quot;&gt;POST&lt;/code&gt; 请求，就会调用 &lt;code class=&quot;highlighter-rouge&quot;&gt;handleWriteBlock&lt;/code&gt; 方法。&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;handleGetBlockchain&lt;/code&gt; 获取所有区块的列表信息。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;func handleGetBlockchain(w http.ResponseWriter, r *http.Request) {
-        bytes, err := json.MarshalIndent(Blockchain, &quot;&quot;, &quot;  &quot;)
-        if err != nil {
-                http.Error(w, err.Error(), http.StatusInternalServerError)
-                return
-        }
-        io.WriteString(w, string(bytes))
-}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;handleWriteBlock&lt;/code&gt; 主要是生成新的区块。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;func handleWriteBlock(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set(&quot;Content-Type&quot;, &quot;application/json&quot;)
-	var m Message
-
-	decoder := json.NewDecoder(r.Body)
-	if err := decoder.Decode(&amp;amp;m); err != nil {
-			respondWithJSON(w, r, http.StatusBadRequest, r.Body)
-			return
-	}   
-	defer r.Body.Close()
-
-	//ensure atomicity when creating new block
-	mutex.Lock()
-	newBlock := generateBlock(Blockchain[len(Blockchain)-1], m.BPM)
-	mutex.Unlock()
-
-	if isBlockValid(newBlock, Blockchain[len(Blockchain)-1]) {
-			Blockchain = append(Blockchain, newBlock)
-			spew.Dump(Blockchain)
-	}   
-
-	respondWithJSON(w, r, http.StatusCreated, newBlock)
-
-}
-
-func respondWithJSON(w http.ResponseWriter, r *http.Request, code int, payload interface{}) {
-	w.Header().Set(&quot;Content-Type&quot;, &quot;application/json&quot;)
-	response, err := json.MarshalIndent(payload, &quot;&quot;, &quot;  &quot;)
-	if err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(&quot;HTTP 500: Internal Server Error&quot;))
-			return
-	}
-	w.WriteHeader(code)
-	w.Write(response)
-}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;h3 id=&quot;主函数&quot;&gt;主函数&lt;/h3&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;func main() {
-	err := godotenv.Load()
-	if err != nil {
-			log.Fatal(err)
-	}   
-
-	go func() {
-			t := time.Now()
-			genesisBlock := Block{}
-			genesisBlock = Block{0, t.String(), 0, calculateHash(genesisBlock), &quot;&quot;, difficulty, &quot;&quot;} 
-			spew.Dump(genesisBlock)
-
-			mutex.Lock()
-			Blockchain = append(Blockchain, genesisBlock)
-			mutex.Unlock()
-	}() 
-	log.Fatal(run())
-
-}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;ul&gt;
-  &lt;li&gt;
-    &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;godotenv.Load()&lt;/code&gt; 允许我们从 根目录的文件 &lt;code class=&quot;highlighter-rouge&quot;&gt;.env&lt;/code&gt; 读取相应的变量。&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;genesisBlock&lt;/code&gt; 创建初始区块。&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;run()&lt;/code&gt; 启动 web 服务&lt;/p&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;启动web服务器&quot;&gt;启动web服务器&lt;/h3&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ go run main.go
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;p&gt;可以通过 &lt;code class=&quot;highlighter-rouge&quot;&gt;Postman&lt;/code&gt;软件模拟网络请求。&lt;/p&gt;
-
-&lt;p&gt;通过 &lt;code class=&quot;highlighter-rouge&quot;&gt;POST&lt;/code&gt; 访问 &lt;code class=&quot;highlighter-rouge&quot;&gt;http://localhost:8080&lt;/code&gt; 可以添加新的区块信息。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;http://olgjbx93m.bkt.clouddn.com/WX20180507-162511.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;可以在终端查看挖矿过程，如图所示：&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;http://olgjbx93m.bkt.clouddn.com/WX20180507-162255.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;通过 &lt;code class=&quot;highlighter-rouge&quot;&gt;GET&lt;/code&gt; 访问 &lt;code class=&quot;highlighter-rouge&quot;&gt;http://localhost:8080&lt;/code&gt; 可以获取区块链信息。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;http://olgjbx93m.bkt.clouddn.com/WX20180507-162527.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;源码下载&quot;&gt;源码下载&lt;/h3&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://github.com/shuailaotou/proofOfWork&quot;&gt;使用 go 实现 Proof-of-Work 共识机制&lt;/a&gt;&lt;/p&gt;
-
-</description>
-        <pubDate>Wed, 23 May 2018 00:00:00 +0800</pubDate>
-        <link>http://localhost:4000/2018/05/23/%E4%BD%BF%E7%94%A8Go%E5%AE%9E%E7%8E%B0ProofofWork%E5%85%B1%E8%AF%86%E6%9C%BA%E5%88%B6/</link>
-        <guid isPermaLink="true">http://localhost:4000/2018/05/23/%E4%BD%BF%E7%94%A8Go%E5%AE%9E%E7%8E%B0ProofofWork%E5%85%B1%E8%AF%86%E6%9C%BA%E5%88%B6/</guid>
-        
-        <category>pow</category>
-        
-        
-      </item>
     
       <item>
         <title>以太坊源码解析 - 下载、编译 go-ethereum ，搭建私有链</title>
@@ -857,11 +482,386 @@ INFO [05-29|22:37:32] Submitted transaction                    fullhash=0x493e8a
 &lt;/blockquote&gt;
 
 </description>
-        <pubDate>Sat, 19 May 2018 00:00:00 +0800</pubDate>
-        <link>http://localhost:4000/2018/05/19/%E4%BB%A5%E5%A4%AA%E5%9D%8A%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90+-+%E4%B8%8B%E8%BD%BD-%E7%BC%96%E8%AF%91+go-ethereum+-%E6%90%AD%E5%BB%BA%E7%A7%81%E6%9C%89%E9%93%BE/</link>
-        <guid isPermaLink="true">http://localhost:4000/2018/05/19/%E4%BB%A5%E5%A4%AA%E5%9D%8A%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90+-+%E4%B8%8B%E8%BD%BD-%E7%BC%96%E8%AF%91+go-ethereum+-%E6%90%AD%E5%BB%BA%E7%A7%81%E6%9C%89%E9%93%BE/</guid>
+        <pubDate>Thu, 31 May 2018 00:00:00 +0800</pubDate>
+        <link>http://localhost:4000/2018/05/31/%E4%BB%A5%E5%A4%AA%E5%9D%8A%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90+-+%E4%B8%8B%E8%BD%BD-%E7%BC%96%E8%AF%91+go-ethereum+-%E6%90%AD%E5%BB%BA%E7%A7%81%E6%9C%89%E9%93%BE/</link>
+        <guid isPermaLink="true">http://localhost:4000/2018/05/31/%E4%BB%A5%E5%A4%AA%E5%9D%8A%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90+-+%E4%B8%8B%E8%BD%BD-%E7%BC%96%E8%AF%91+go-ethereum+-%E6%90%AD%E5%BB%BA%E7%A7%81%E6%9C%89%E9%93%BE/</guid>
         
         <category>以太坊，私链</category>
+        
+        
+      </item>
+    
+      <item>
+        <title>使用Go实现Proof-of-Work 共识机制</title>
+        <description>&lt;h2 id=&quot;什么是-proof-of-work&quot;&gt;什么是 Proof-of-Work&lt;/h2&gt;
+
+&lt;p&gt;Proof-of-Work 简称 PoW，即为工作量证明。通过计算一个数值（ nonce ），使得拼揍上交易数据后内容的 Hash 值满足规定的上限。在节点成功找到满足的Hash值之后，会马上对全网进行广播打包区块，网络的节点收到广播打包区块，会立刻对其进行验证。&lt;/p&gt;
+
+&lt;p&gt;如果验证通过，则表明已经有节点成功解迷，自己就不再竞争当前区块打包，而是选择接受这个区块，记录到自己的账本中，然后进行下一个区块的竞争猜谜。
+网络中只有最快解谜的区块，才会添加的账本中，其他的节点进行复制，这样就保证了整个账本的唯一性。&lt;/p&gt;
+
+&lt;p&gt;假如节点有任何的作弊行为，都会导致网络的节点验证不通过，直接丢弃其打包的区块，这个区块就无法记录到总账本中，作弊的节点耗费的成本就白费了，因此在巨大的挖矿成本下，也使得矿工自觉自愿的遵守比特币系统的共识协议，也就确保了整个系统的安全。&lt;/p&gt;
+
+&lt;h2 id=&quot;工作量证明的优缺点&quot;&gt;工作量证明的优缺点&lt;/h2&gt;
+
+&lt;p&gt;优点：完全去中心化，节点自由进出；&lt;/p&gt;
+
+&lt;p&gt;缺点：目前bitcoin已经吸引全球大部分的算力，其它再用Pow共识机制的区块链应用很难获得相同的算力来保障自身的安全；挖矿造成大量的资源浪费；共识达成的周期较长，不适合商业应用&lt;/p&gt;
+
+&lt;h2 id=&quot;工作量证明的简单的例子&quot;&gt;工作量证明的简单的例子&lt;/h2&gt;
+
+&lt;p&gt;举个例子，给定的一个基本的字符串”Hello, world!”，我们给出的工作量要求是，可以在这个字符串后面添加一个叫做nonce的整数值，对变更后（添加nonce)的字符串进行SHA256哈希运算，如果得到的哈希结果（以16进制的形式表示）是以”0000”开头的，则验证通过。为了达到这个工作量证明的目标。我们需要不停的递增nonce值，对得到的新字符串进行SHA256哈希运算。按照这个规则，我们需要经过4251次计算才能找到恰好前4位为0的哈希散列。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&quot;Hello, world!0&quot; =&amp;gt; 1312af178c253f84028d480a6adc1e25e81caa44c749ec81976192e2ec934c64
+&quot;Hello, world!1&quot; =&amp;gt; e9afc424b79e4f6ab42d99c81156d3a17228d6e1eef4139be78e948a9332a7d8
+&quot;Hello, world!2&quot; =&amp;gt; ae37343a357a8297591625e7134cbea22f5928be8ca2a32aa475cf05fd4266b7
+...
+&quot;Hello, world!4248&quot; =&amp;gt; 6e110d98b388e77e9c6f042ac6b497cec46660deef75a55ebc7cfdf65cc0b965
+&quot;Hello, world!4249&quot; =&amp;gt; c004190b822f1669cac8dc37e761cb73652e7832fb814565702245cf26ebb9e6
+&quot;Hello, world!4250&quot; =&amp;gt; 0000c3af42fc31103f1fdc0151fa747ff87349a4714df7cc52ea464e12dcd4e9
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&quot;实现-proof-of-work-共识机制&quot;&gt;实现 Proof-of-Work 共识机制&lt;/h2&gt;
+
+&lt;h3 id=&quot;安装依赖软件&quot;&gt;安装依赖软件&lt;/h3&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ go get github.com/davecgh/go-spew/spew
+
+$ go get github.com/gorilla/mux
+
+$ go get github.com/joho/godotenv
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;spew&lt;/code&gt; 在控制台中格式化输出相应的结果。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;gorilla/mux&lt;/code&gt; 是编写web处理程序的流行软件包。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;godotenv&lt;/code&gt; 可以从我们项目的根目录的 &lt;code class=&quot;highlighter-rouge&quot;&gt;.env&lt;/code&gt; 文件中读取数据。&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;实现-pow-共识机制&quot;&gt;实现 PoW 共识机制&lt;/h3&gt;
+
+&lt;p&gt;新建 &lt;code class=&quot;highlighter-rouge&quot;&gt;.env&lt;/code&gt; ，添加 &lt;code class=&quot;highlighter-rouge&quot;&gt;ADDR=8080&lt;/code&gt;
+新建 &lt;code class=&quot;highlighter-rouge&quot;&gt;main.go&lt;/code&gt;，引入相应的包&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;package main
+
+import (
+        &quot;crypto/sha256&quot;
+        &quot;encoding/hex&quot;
+        &quot;encoding/json&quot;
+        &quot;fmt&quot;
+        &quot;io&quot;
+        &quot;log&quot;
+        &quot;net/http&quot;
+        &quot;os&quot;
+        &quot;strconv&quot;
+        &quot;strings&quot;
+        &quot;sync&quot;
+        &quot;time&quot;
+
+        &quot;github.com/davecgh/go-spew/spew&quot;
+        &quot;github.com/gorilla/mux&quot;
+        &quot;github.com/joho/godotenv&quot;
+)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h4 id=&quot;定义区块&quot;&gt;定义区块&lt;/h4&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;const difficulty = 1
+
+type Block struct {
+        Index      int
+        Timestamp  string
+        BPM        int
+        Hash       string
+        PrevHash   string
+        Difficulty int
+        Nonce      string
+}
+
+var Blockchain []Block
+
+type Message struct {
+        BPM int
+}
+
+var mutex = &amp;amp;sync.Mutex{}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;difficulty&lt;/code&gt; 代表难度系数，如果赋值为 &lt;code class=&quot;highlighter-rouge&quot;&gt;1&lt;/code&gt;，则需要判断生成区块时所产生的 Hash 前缀至少包含1个 &lt;code class=&quot;highlighter-rouge&quot;&gt;0&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Block&lt;/code&gt; 代表区块的结构体。
+    &lt;ul&gt;
+      &lt;li&gt;
+        &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Index&lt;/code&gt; 是区块链中数据记录的位置&lt;/p&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Timestamp&lt;/code&gt; 是自动确定的，并且是写入数据的时间&lt;/p&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;BPM&lt;/code&gt; 是每分钟跳动的次数，是你的脉率&lt;/p&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Hash&lt;/code&gt; 是代表这个数据记录的SHA256标识符&lt;/p&gt;
+      &lt;/li&gt;
+      &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;PrevHash&lt;/code&gt; 是链中上一条记录的SHA256标识符&lt;/li&gt;
+      &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Difficulty&lt;/code&gt; 是当前区块的难度系数&lt;/li&gt;
+      &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Nonce&lt;/code&gt; 是 PoW 挖矿中符合条件的数字&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Blockchain&lt;/code&gt; 是存放区块数据的集合&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Message&lt;/code&gt; 是使用 &lt;code class=&quot;highlighter-rouge&quot;&gt;POST&lt;/code&gt; 请求传递的数据&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;mutex&lt;/code&gt; 是为了防止同一时间产生多个区块&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;生成区块&quot;&gt;生成区块&lt;/h4&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;func generateBlock(oldBlock Block, BPM int) Block {
+        var newBlock Block
+
+        t := time.Now()
+
+        newBlock.Index = oldBlock.Index + 1
+        newBlock.Timestamp = t.String()
+        newBlock.BPM = BPM
+        newBlock.PrevHash = oldBlock.Hash
+        newBlock.Difficulty = difficulty
+
+        for i := 0; ; i++ {
+                hex := fmt.Sprintf(&quot;%x&quot;, i)
+                newBlock.Nonce = hex
+                if !isHashValid(calculateHash(newBlock), newBlock.Difficulty) {
+                        fmt.Println(calculateHash(newBlock), &quot; do more work!&quot;)
+                        time.Sleep(time.Second)
+                        continue
+                } else {
+                        fmt.Println(calculateHash(newBlock), &quot; work done!&quot;)
+                        newBlock.Hash = calculateHash(newBlock)
+                        break
+                }
+
+        }
+        return newBlock
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;newBlock&lt;/code&gt; 中的 &lt;code class=&quot;highlighter-rouge&quot;&gt;PrevHash&lt;/code&gt; 存储的上一个区块的 &lt;code class=&quot;highlighter-rouge&quot;&gt;Hash&lt;/code&gt;。&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;for 循环&lt;/code&gt; 通过循环改变 &lt;code class=&quot;highlighter-rouge&quot;&gt;Nonce&lt;/code&gt;，然后选出符合相应难度系数的 &lt;code class=&quot;highlighter-rouge&quot;&gt;Nonce&lt;/code&gt;。&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;isHashValid&lt;/code&gt; 判断 hash，是否满足当前的难度系数。如果难度系数是2，则当前hash的前缀有2个0。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;func isHashValid(hash string, difficulty int) bool {
+        prefix := strings.Repeat(&quot;0&quot;, difficulty)
+        return strings.HasPrefix(hash, prefix)
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;strings.Repeat(&quot;0&quot;, difficulty)&lt;/code&gt; 复制 &lt;code class=&quot;highlighter-rouge&quot;&gt;difficulty&lt;/code&gt; 个&lt;code class=&quot;highlighter-rouge&quot;&gt;0&lt;/code&gt;，并返回新字符串，当 difficulty 为 &lt;code class=&quot;highlighter-rouge&quot;&gt;2&lt;/code&gt; ，则 prefix 为 &lt;code class=&quot;highlighter-rouge&quot;&gt;00&lt;/code&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;strings.HasPrefix(hash, prefix)&lt;/code&gt; 判断字符串 &lt;code class=&quot;highlighter-rouge&quot;&gt;hash&lt;/code&gt; 是否包含前缀 &lt;code class=&quot;highlighter-rouge&quot;&gt;prefix&lt;/code&gt;&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;calculateHash&lt;/code&gt; 根据设定的规则，生成 Hash 值。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;func calculateHash(block Block) string {
+        record := strconv.Itoa(block.Index) + block.Timestamp + strconv.Itoa(block.BPM) + block.PrevHash + block.Nonce
+        h := sha256.New()
+        h.Write([]byte(record))
+        hashed := h.Sum(nil)
+        return hex.EncodeToString(hashed)
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h4 id=&quot;验证区块&quot;&gt;验证区块&lt;/h4&gt;
+
+&lt;p&gt;我们通过检查 &lt;code class=&quot;highlighter-rouge&quot;&gt;Index&lt;/code&gt; 来确保它们按预期递增。我们也检查以确保我们 &lt;code class=&quot;highlighter-rouge&quot;&gt;PrevHash&lt;/code&gt; 的确与 &lt;code class=&quot;highlighter-rouge&quot;&gt;Hash&lt;/code&gt; 前一个区块相同。最后，我们希望通过在当前块上 &lt;code class=&quot;highlighter-rouge&quot;&gt;calculateHash&lt;/code&gt; 再次运行该函数来检查当前块的散列。让我们写一个 &lt;code class=&quot;highlighter-rouge&quot;&gt;isBlockValid&lt;/code&gt; 函数来完成所有这些事情并返回一个 &lt;code class=&quot;highlighter-rouge&quot;&gt;bool&lt;/code&gt;。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;func isBlockValid(newBlock, oldBlock Block) bool {
+        if oldBlock.Index+1 != newBlock.Index {
+                return false
+        }
+
+        if oldBlock.Hash != newBlock.PrevHash {
+                return false
+        }
+
+        if calculateHash(newBlock) != newBlock.Hash {
+                return false
+        }
+
+        return true
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;web-服务器&quot;&gt;web 服务器&lt;/h3&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;func run() error {
+        mux := makeMuxRouter()
+        httpAddr := os.Getenv(&quot;ADDR&quot;)
+        log.Println(&quot;Listening on &quot;, os.Getenv(&quot;ADDR&quot;))
+        s := &amp;amp;http.Server{
+                Addr:           &quot;:&quot; + httpAddr,
+                Handler:        mux,
+                ReadTimeout:    10 * time.Second,
+                WriteTimeout:   10 * time.Second,
+                MaxHeaderBytes: 1 &amp;lt;&amp;lt; 20,
+        }
+
+        if err := s.ListenAndServe(); err != nil {
+                return err
+        }
+
+        return nil
+}
+
+func makeMuxRouter() http.Handler {
+        muxRouter := mux.NewRouter()
+        muxRouter.HandleFunc(&quot;/&quot;, handleGetBlockchain).Methods(&quot;GET&quot;)
+        muxRouter.HandleFunc(&quot;/&quot;, handleWriteBlock).Methods(&quot;POST&quot;)
+        return muxRouter
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;makeMuxRouter&lt;/code&gt; 主要定义路由处理，当收到 &lt;code class=&quot;highlighter-rouge&quot;&gt;GET&lt;/code&gt; 请求，就会调用 &lt;code class=&quot;highlighter-rouge&quot;&gt;handleGetBlockchain&lt;/code&gt; 方法。当收到 &lt;code class=&quot;highlighter-rouge&quot;&gt;POST&lt;/code&gt; 请求，就会调用 &lt;code class=&quot;highlighter-rouge&quot;&gt;handleWriteBlock&lt;/code&gt; 方法。&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;handleGetBlockchain&lt;/code&gt; 获取所有区块的列表信息。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;func handleGetBlockchain(w http.ResponseWriter, r *http.Request) {
+        bytes, err := json.MarshalIndent(Blockchain, &quot;&quot;, &quot;  &quot;)
+        if err != nil {
+                http.Error(w, err.Error(), http.StatusInternalServerError)
+                return
+        }
+        io.WriteString(w, string(bytes))
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;handleWriteBlock&lt;/code&gt; 主要是生成新的区块。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;func handleWriteBlock(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set(&quot;Content-Type&quot;, &quot;application/json&quot;)
+	var m Message
+
+	decoder := json.NewDecoder(r.Body)
+	if err := decoder.Decode(&amp;amp;m); err != nil {
+			respondWithJSON(w, r, http.StatusBadRequest, r.Body)
+			return
+	}   
+	defer r.Body.Close()
+
+	//ensure atomicity when creating new block
+	mutex.Lock()
+	newBlock := generateBlock(Blockchain[len(Blockchain)-1], m.BPM)
+	mutex.Unlock()
+
+	if isBlockValid(newBlock, Blockchain[len(Blockchain)-1]) {
+			Blockchain = append(Blockchain, newBlock)
+			spew.Dump(Blockchain)
+	}   
+
+	respondWithJSON(w, r, http.StatusCreated, newBlock)
+
+}
+
+func respondWithJSON(w http.ResponseWriter, r *http.Request, code int, payload interface{}) {
+	w.Header().Set(&quot;Content-Type&quot;, &quot;application/json&quot;)
+	response, err := json.MarshalIndent(payload, &quot;&quot;, &quot;  &quot;)
+	if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte(&quot;HTTP 500: Internal Server Error&quot;))
+			return
+	}
+	w.WriteHeader(code)
+	w.Write(response)
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;主函数&quot;&gt;主函数&lt;/h3&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;func main() {
+	err := godotenv.Load()
+	if err != nil {
+			log.Fatal(err)
+	}   
+
+	go func() {
+			t := time.Now()
+			genesisBlock := Block{}
+			genesisBlock = Block{0, t.String(), 0, calculateHash(genesisBlock), &quot;&quot;, difficulty, &quot;&quot;} 
+			spew.Dump(genesisBlock)
+
+			mutex.Lock()
+			Blockchain = append(Blockchain, genesisBlock)
+			mutex.Unlock()
+	}() 
+	log.Fatal(run())
+
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;godotenv.Load()&lt;/code&gt; 允许我们从 根目录的文件 &lt;code class=&quot;highlighter-rouge&quot;&gt;.env&lt;/code&gt; 读取相应的变量。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;genesisBlock&lt;/code&gt; 创建初始区块。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;run()&lt;/code&gt; 启动 web 服务&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;启动web服务器&quot;&gt;启动web服务器&lt;/h3&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ go run main.go
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;可以通过 &lt;code class=&quot;highlighter-rouge&quot;&gt;Postman&lt;/code&gt;软件模拟网络请求。&lt;/p&gt;
+
+&lt;p&gt;通过 &lt;code class=&quot;highlighter-rouge&quot;&gt;POST&lt;/code&gt; 访问 &lt;code class=&quot;highlighter-rouge&quot;&gt;http://localhost:8080&lt;/code&gt; 可以添加新的区块信息。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://olgjbx93m.bkt.clouddn.com/WX20180507-162511.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;可以在终端查看挖矿过程，如图所示：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://olgjbx93m.bkt.clouddn.com/WX20180507-162255.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;通过 &lt;code class=&quot;highlighter-rouge&quot;&gt;GET&lt;/code&gt; 访问 &lt;code class=&quot;highlighter-rouge&quot;&gt;http://localhost:8080&lt;/code&gt; 可以获取区块链信息。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://olgjbx93m.bkt.clouddn.com/WX20180507-162527.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;源码下载&quot;&gt;源码下载&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/shuailaotou/proofOfWork&quot;&gt;使用 go 实现 Proof-of-Work 共识机制&lt;/a&gt;&lt;/p&gt;
+
+</description>
+        <pubDate>Wed, 23 May 2018 00:00:00 +0800</pubDate>
+        <link>http://localhost:4000/2018/05/23/%E4%BD%BF%E7%94%A8Go%E5%AE%9E%E7%8E%B0ProofofWork%E5%85%B1%E8%AF%86%E6%9C%BA%E5%88%B6/</link>
+        <guid isPermaLink="true">http://localhost:4000/2018/05/23/%E4%BD%BF%E7%94%A8Go%E5%AE%9E%E7%8E%B0ProofofWork%E5%85%B1%E8%AF%86%E6%9C%BA%E5%88%B6/</guid>
+        
+        <category>pow</category>
         
         
       </item>
