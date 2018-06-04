@@ -1,0 +1,107 @@
+
+<hr />
+<p>layout: post
+title: “自定义加密算法实现–Go语言”
+date: 2018-06-04
+description: “自定义加密算法实现–Go语言”
+tag: 加密算法
+keywords: “go”
+—</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>package main
+
+import (
+	"bytes"
+	"fmt"
+	"encoding/base64"
+)
+
+
+func main() {
+
+
+//1232cdab89 为自定义的秘钥
+EncryCode :=Encrypt([]byte("hello world"),[]byte("1232cdab89"))
+    fmt.Println(base64.StdEncoding.EncodeToString(EncryCode))
+
+	// 解密
+	var DeCryptCode = Decrypt(EncryCode,[]byte("1232cdab89"))
+	//打印明文
+	fmt.Println(string(DeCryptCode))
+
+	
+}
+//orig明文，key 密钥
+func Encrypt(orig []byte,key []byte)[]byte  {
+ //加密方式，对密钥进行加法运算
+	sum := getAddIteam(key)
+
+	//给明文补码，默认按8取模
+	var pk_code = PKCS8Padding(orig,8)
+	
+	//补码之后的每一位都加上通过密钥算出的sum值
+	for k := 0; k &lt; len(pk_code); k++ {
+		pk_code[k] = pk_code[k] + byte(sum)
+
+	}
+    return pk_code
+
+
+}
+
+func Decrypt(orig []byte,key []byte)[]byte  {
+	sum := getAddIteam(key)
+
+	//解密
+	for k := 0; k &lt; len(orig); k++ {
+		orig[k] = orig[k] - byte(sum)
+	}
+
+//去补码
+	var pk_up_code  = PKCS8UnPadding(orig)
+	return pk_up_code
+
+	
+}
+
+//补码，按8取模，对8差几补几
+func PKCS8Padding(orig []byte,size int)[]byte  {
+
+	length:=len(orig)
+	padding :=  size - length%size
+	//向byte类型的数组中添加重复的添加padding
+	repeats:= bytes.Repeat([]byte{byte(padding)},padding)
+	return append(orig,repeats...)
+
+}
+//去码
+
+func PKCS8UnPadding(origData []byte)[]byte {
+
+	length:= len(origData)
+	updadding:= int(origData[length - 1])
+	return origData[:length - updadding]
+	
+}
+ //加密方式，对密钥进行加法运算
+
+func getAddIteam(key []byte) int  {
+
+
+	var sum  = 0
+	//实现将秘钥中的每个字节相加，通过sum实现orig的加密工作
+	for i := 0; i &lt; len(key); i++ {
+
+		sum = sum + int(key[i])
+
+	}
+	return sum
+}
+
+
+</code></pre>
+</div>
+<blockquote>
+  <p>如有错误描述，请评论纠正，谢谢大家！🐳🐳🐳</p>
+</blockquote>
+
